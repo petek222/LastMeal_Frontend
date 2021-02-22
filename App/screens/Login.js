@@ -32,15 +32,14 @@ const styles = StyleSheet.create({
         width: "70%",
         height: 45,
         marginBottom: 20,
-
-        alignItems: "center",
+        // alignItems: "center",
     },
 
     TextInput: {
         height: 50,
         flex: 1,
         padding: 10,
-        //   marginLeft: 20,
+        marginLeft: 20,
     },
 
     forgot_button: {
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function App() {
+export default ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -88,11 +87,11 @@ export default function App() {
             </View>
 
             <TouchableOpacity>
-                <Text style={styles.forgot_button}>Forgot Password?</Text>
+                <Text style={styles.forgot_button}>Forgot Password</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.loginBtn}>
-                <Text style={styles.loginText}>LOGIN</Text>
+            <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.push('Home')}>
+                <Text style={styles.loginText}>Log In</Text>
             </TouchableOpacity>
         </View>
     );
