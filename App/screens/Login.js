@@ -42,20 +42,26 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
 
-    forgot_button: {
+    forgotButt: {
         height: 30,
         marginBottom: 30,
     },
 
-    loginBtn: {
+    loginButt: {
         width: "80%",
         borderRadius: 25,
         height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 40,
+        // marginTop: 40,
         backgroundColor: "#f2c572",
+        marginBottom: 30,
     },
+    signupButt: {
+        height: 30,
+        marginBottom: 30,
+        // position: "absolute"
+    }
 });
 
 export default ({ navigation }) => {
@@ -87,11 +93,15 @@ export default ({ navigation }) => {
             </View>
 
             <TouchableOpacity>
-                <Text style={styles.forgot_button}>Forgot Password</Text>
+                <Text style={styles.forgotButt}>Forgot Password</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.push('Home')}>
+            <TouchableOpacity style={styles.loginButt} onPress={() => navigation.push('Home')}>
                 <Text style={styles.loginText}>Log In</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+                <Text style={styles.signupButt}>Sign Up</Text>
             </TouchableOpacity>
         </View>
     );
