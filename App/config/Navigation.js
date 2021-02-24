@@ -4,8 +4,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from '../screens/Home';
 import Login from '../screens/Login';
-
-// import Options from '../screens/Options';
+import Pantry from '../screens/Pantry';
+import Recipes from '../screens/Recipes';
+import Options from '../screens/Options';
 
 const MainStack = createStackNavigator();
 const MainStackScreen = () => (
@@ -14,7 +15,11 @@ const MainStackScreen = () => (
         // initialRouteName="Options"
         >
         <MainStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-        {/* <MainStack.Screen name="Options" component={Options} /> */}
+        <MainStack.Screen name="Home" component={Home} />
+        <MainStack.Screen name="Pantry" component={Pantry} />
+        <MainStack.Screen name="Recipes" component={Recipes} />
+        <MainStack.Screen name="Options" component={Options} />
+
     </MainStack.Navigator>
 );
 
