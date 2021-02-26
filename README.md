@@ -1,4 +1,4 @@
-# LastMeal: Native App
+## LastMeal: Native App Frontend
 
 Frontend for group 3 project, built in React-Native using Expo.
 
