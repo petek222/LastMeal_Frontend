@@ -12,8 +12,6 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -24,7 +22,6 @@ const styles = StyleSheet.create({
 
     image: {
         // marginBottom: 40,
-
         height: "30%",
         resizeMode: 'contain',
     },
@@ -34,11 +31,10 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: "70%",
         height: 45,
-        marginBottom: 30,
+        marginBottom: 20,
         // alignItems: "center",
         flexDirection: 'row',
         // justifyContent: 'center'
-
     },
 
     TextInput: {
@@ -54,7 +50,7 @@ const styles = StyleSheet.create({
         marginBottom: 60,
     },
 
-    loginButt: {
+    bigButt: {
         width: "80%",
         borderRadius: 25,
         height: 50,
@@ -64,7 +60,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#f2c572",
         marginBottom: 30,
     },
-    signupButt: {
+    smallButt: {
         height: 30,
         marginBottom: 30,
         // position: "absolute"
@@ -77,41 +73,62 @@ const styles = StyleSheet.create({
         marginTop: 13,
         marginRight: 13,
         // marginLeft: 20,
-
     }
-
 });
 
 export default ({ navigation }) => {
-    const [email, setEmail] = useState("");
-    // const [user, setUser] = useState("");
-    const [password, setPassword] = useState("");
 
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [first, setFirst] = useState("");
+    const [last, setLast] = useState("");
+
+    // for show/hide password functionality
     const [hidePass, setHidePass] = useState(true);
+
+    const register = () => {
+        return fetch('http://54.196.133.30:5000/v1/user/register', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                email: email,
+                first_name: first,
+                last_name: last
+            })
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                return json;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     return (
         <View style={styles.container}>
             <Image style={styles.image} source={require("../assets/logo.png")} />
 
             <StatusBar style="auto" />
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Email"
-                    placeholderTextColor="#003f5c"
-                    onChangeText={(email) => setEmail(email)}
-                />
-            </View>
 
-            {/* <View style={styles.inputView}>
+            {/* Username */}
+            <View style={styles.inputView}>
                 <TextInput
                     style={styles.TextInput}
                     placeholder="Username"
                     placeholderTextColor="#003f5c"
-                    onChangeText={(users) => setUser(user)}
+                    autoCapitalize="none"
+                    onChangeText={(username) => setUsername(username)}
                 />
-            </View> */}
+            </View>
 
+            {/* Password */}
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.TextInput}
@@ -130,8 +147,47 @@ export default ({ navigation }) => {
                 />
             </View>
 
-            <TouchableOpacity style={styles.loginButt} onPress={() => navigation.push('Home')}>
+            {/* Email */}
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.TextInput}
+                    placeholder="Email"
+                    placeholderTextColor="#003f5c"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    onChangeText={(email) => setEmail(email)}
+                />
+            </View>
+
+            {/* First Name */}
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.TextInput}
+                    placeholder="First Name"
+                    placeholderTextColor="#003f5c"
+                    onChangeText={(first) => setFirst(first)}
+                />
+            </View>
+
+            {/* Last Name */}
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.TextInput}
+                    placeholder="Last Name"
+                    placeholderTextColor="#003f5c"
+                    onChangeText={(last) => setLast(last)}
+                />
+            </View>
+
+            {/* <TouchableOpacity style={styles.bigButt} onPress={() => navigation.push('Home')}> */}
+            <TouchableOpacity style={styles.bigButt} 
+            disabled={!Boolean(username && password && email && first && last)}
+            onPress={() => register()}>
                 <Text style={styles.loginText}>Sign Up</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+                <Text style={styles.smallButt} onPress={() => navigation.push('Login')}>or Log In</Text>
             </TouchableOpacity>
 
         </View>
