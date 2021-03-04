@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
 
     image: {
         // marginBottom: 40,
-
         height: "30%",
         resizeMode: 'contain',
     },
@@ -64,8 +63,29 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation }) => {
-    const [email, setEmail] = useState("");
+    const [username, setusername] = useState("");
     const [password, setPassword] = useState("");
+
+    const login = () => {
+        return fetch('http://54.196.133.30:5000/v1/user/login', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                return json;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     return (
         <View style={styles.container}>
@@ -75,9 +95,10 @@ export default ({ navigation }) => {
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.TextInput}
-                    placeholder="Email"
+                    placeholder="Username"
                     placeholderTextColor="#003f5c"
-                    onChangeText={(email) => setEmail(email)}
+                    autoCapitalize="none"
+                    onChangeText={(username) => setusername(username)}
                 />
             </View>
 
@@ -95,12 +116,16 @@ export default ({ navigation }) => {
                 <Text style={styles.forgotButt}>Forgot Password</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.loginButt} onPress={() => navigation.push('Home')}>
+            {/* <TouchableOpacity style={styles.loginButt} onPress={() => navigation.push('Home')}> */}
+            <TouchableOpacity style={styles.loginButt}
+                // activeOpacity={username === '' || password === '' ? 1 : 0.5}
+                disabled={!Boolean(username && password)}
+                onPress={() => login()}>
                 <Text style={styles.loginText}>Log In</Text>
             </TouchableOpacity>
 
             <TouchableOpacity>
-                <Text style={styles.signupButt} onPress={() => navigation.push('Signup')}>Sign Up</Text>
+                <Text style={styles.signupButt} onPress={() => navigation.push('Signup')}>or Sign Up</Text>
             </TouchableOpacity>
         </View>
     );
