@@ -8,6 +8,9 @@ import {
     TextInput,
     Button,
     TouchableOpacity,
+    ToastAndroid,
+    Platform,
+    AlertIOS,
 } from "react-native";
 
 const styles = StyleSheet.create({
@@ -66,26 +69,62 @@ export default ({ navigation }) => {
     const [username, setusername] = useState("");
     const [password, setPassword] = useState("");
 
-    const login = () => {
-        return fetch('http://54.196.133.30:5000/v1/user/login', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
+    // const login = () => {
+    //     return fetch('http://54.196.133.30/v1/user/login', {
+    //         method: 'POST',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             username: username,
+    //             password: password
+    //         })
+    //     })
+    //         .then((response) => response.json())
+    //         .then((json) => {
+    //             notifyMessage(json);
+    //             return json;
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // };
+
+    const login = async () => {
+        try {
+            let response = await fetch('http://54.196.133.30/v1/user/login', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
             })
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                return json;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+            // let json = await response.json();
+
+            if (!response.ok) {
+                notifyMessage("Invalid username/password");
+            } else {
+                notifyMessage("Success");
+                navigation.push('Home');
+            }
+            // return json;
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+    function notifyMessage(msg) {
+        if (Platform.OS === 'android') {
+            ToastAndroid.show(msg, ToastAndroid.SHORT)
+        } else {
+            AlertIOS.alert(msg);
+        }
+    }
 
     return (
         <View style={styles.container}>

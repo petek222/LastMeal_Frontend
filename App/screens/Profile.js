@@ -13,6 +13,6 @@ const styles = StyleSheet.create({
 
 export default ({navigation}) => {
     return <View>
-        <Text>Welcom home</Text>
+        <Text>Some profile screen</Text>
     </View>
 }
