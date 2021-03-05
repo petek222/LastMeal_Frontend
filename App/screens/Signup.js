@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
     ToastAndroid,
     Platform,
-    AlertIOS,
+    Alert,
 } from "react-native";
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -148,7 +148,7 @@ export default ({ navigation }) => {
         if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT)
         } else {
-            AlertIOS.alert(msg);
+            Alert.alert(msg);
         }
     }
 
