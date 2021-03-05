@@ -22,7 +22,7 @@ const SignupStack = createStackNavigator();
 function LoginStackScreen() {
     return (
         <LoginStack.Navigator>
-         <LoginStack.Screen name="Login" component={Login} />
+            <LoginStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         </LoginStack.Navigator>
     );
 }
@@ -30,7 +30,7 @@ function LoginStackScreen() {
 function SignupStackScreen() {
     return (
         <SignupStack.Navigator>
-         <SignupStack.Screen name="Signup" component={Signup} />
+            <SignupStack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
         </SignupStack.Navigator>
     );
 }
@@ -79,7 +79,7 @@ export default () => (
       inactiveTintColor: 'gray',
       }}
         >
-            <Tab.Screen name="Login" component={LoginStackScreen} options={{ headerShown: false }}/>
+            <Tab.Screen name="Login" component={LoginStackScreen} options={{ headerShown: false }} />
             <Tab.Screen name="Signup" component={SignupStackScreen} options={{ headerShown: false }} />
             <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
             <Tab.Screen name="Pantry" component={Pantry} options={{ headerShown: false }} />
