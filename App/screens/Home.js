@@ -7,12 +7,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const screen = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-
-
+    safeAreaView: {
+        height: "100%",
+        width: "100%"
+    }
 })
 
 export default ({navigation}) => {
-    return <View>
-        <Text>Welcom home</Text>
-    </View>
+    return (
+        <SafeAreaView>
+            <Text>Welcome home!</Text>
+        </SafeAreaView>
+    )
+    
 }

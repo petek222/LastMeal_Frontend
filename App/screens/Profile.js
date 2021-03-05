@@ -12,7 +12,9 @@ const styles = StyleSheet.create({
 })
 
 export default ({navigation}) => {
-    return <View>
-        <Text>Some profile screen</Text>
-    </View>
+    return(
+        <View>
+            <Text>Some profile screen</Text>
+        </View>
+    ) 
 }
