@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
     ToastAndroid,
     Platform,
-    AlertIOS,
+    Alert,
 } from "react-native";
 
 const styles = StyleSheet.create({
@@ -122,7 +122,7 @@ export default ({ navigation }) => {
         if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT)
         } else {
-            AlertIOS.alert(msg);
+            Alert.alert(msg);
         }
     }
 
@@ -165,6 +165,9 @@ export default ({ navigation }) => {
 
             <TouchableOpacity>
                 <Text style={styles.signupButt} onPress={() => navigation.push('Signup')}>or Sign Up</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+                <Text style={styles.signupButt} onPress={() => navigation.push('Pantry')}>Pantry Demo</Text>
             </TouchableOpacity>
         </View>
     );
