@@ -69,28 +69,6 @@ export default ({ navigation }) => {
     const [username, setusername] = useState("");
     const [password, setPassword] = useState("");
 
-    // const login = () => {
-    //     return fetch('http://54.196.133.30/v1/user/login', {
-    //         method: 'POST',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             username: username,
-    //             password: password
-    //         })
-    //     })
-    //         .then((response) => response.json())
-    //         .then((json) => {
-    //             notifyMessage(json);
-    //             return json;
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
-
     const login = async () => {
         try {
             let response = await fetch('http://54.196.133.30/v1/user/login', {
@@ -109,8 +87,8 @@ export default ({ navigation }) => {
             if (!response.ok) {
                 notifyMessage("Invalid username/password");
             } else {
-                notifyMessage("Success");
-                navigation.push('Home');
+                notifyMessage("Success!");
+                navigation.push('Pantry');
             }
             // return json;
         } catch (error) {
@@ -166,8 +144,13 @@ export default ({ navigation }) => {
             <TouchableOpacity>
                 <Text style={styles.signupButt} onPress={() => navigation.push('Signup')}>or Sign Up</Text>
             </TouchableOpacity>
+
             <TouchableOpacity>
-                <Text style={styles.signupButt} onPress={() => navigation.push('Pantry')}>Pantry Demo</Text>
+                <Text style={[ {marginBottom: 10, color: 'red'}]} onPress={() => navigation.push('Pantry')}>Pantry Demo</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+                <Text style={[ {marginBottom: 10, color: 'red', }]} onPress={() => navigation.push('Profile')}>Profile Demo</Text>
             </TouchableOpacity>
         </View>
     );
