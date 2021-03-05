@@ -8,6 +8,9 @@ import {
     TextInput,
     Button,
     TouchableOpacity,
+    ToastAndroid,
+    Platform,
+    AlertIOS,
 } from "react-native";
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -87,29 +90,69 @@ export default ({ navigation }) => {
     // for show/hide password functionality
     const [hidePass, setHidePass] = useState(true);
 
-    const register = () => {
-        return fetch('http://54.196.133.30:5000/v1/user/register', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password,
-                email: email,
-                first_name: first,
-                last_name: last
+    // const register = () => {
+    //     return fetch('http://54.196.133.30/v1/user/register', {
+    //         method: 'POST',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             username: username,
+    //             password: password,
+    //             email: email,
+    //             first_name: first,
+    //             last_name: last
+    //         })
+    //     })
+    //         .then((response) => response.json())
+    //         .then((json) => {
+    //             return json;
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // };
+
+    const register = async () => {
+        try {
+            let response = await fetch('http://54.196.133.30/v1/user/register', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    email: email,
+                    first_name: first,
+                    last_name: last
+                })
             })
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                return json;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+            // let json = await response.json();
+
+            if (!response.ok) {
+                notifyMessage("Invalid input");
+            } else {
+                notifyMessage("Success");
+                navigation.push('Profile');
+            }
+            // return json;
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+    function notifyMessage(msg) {
+        if (Platform.OS === 'android') {
+            ToastAndroid.show(msg, ToastAndroid.SHORT)
+        } else {
+            AlertIOS.alert(msg);
+        }
+    }
+
+    
 
     return (
         <View style={styles.container}>
