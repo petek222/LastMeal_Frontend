@@ -1,10 +1,13 @@
 import React from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 
 const window = Dimensions.get('window');
+
+const statusBarHeight = Constants.statusBarHeight;
 
 const cardWidth = window.width * 0.9;
 const cardHeight = window.height * 0.12;
@@ -12,7 +15,8 @@ const cardHeight = window.height * 0.12;
 const styles = StyleSheet.create({
     safeAreaView: {
         height: "100%",
-        width: "100%"
+        width: "100%",
+        marginTop: statusBarHeight
     },
     scrollViewContent: {
         alignItems: 'center'
@@ -83,6 +87,9 @@ const PantryCard = (props) => {
 export default ({navigation}) => {
     return (
         <SafeAreaView style={styles.safeAreaView}>
+            {/* To make notification bar same color as background */}
+            <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
+
             <SearchBar platform="ios" placeholder="Search"></SearchBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>    
                 <View>

@@ -90,30 +90,6 @@ export default ({ navigation }) => {
     // for show/hide password functionality
     const [hidePass, setHidePass] = useState(true);
 
-    // const register = () => {
-    //     return fetch('http://54.196.133.30/v1/user/register', {
-    //         method: 'POST',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             username: username,
-    //             password: password,
-    //             email: email,
-    //             first_name: first,
-    //             last_name: last
-    //         })
-    //     })
-    //         .then((response) => response.json())
-    //         .then((json) => {
-    //             return json;
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
-
     const register = async () => {
         try {
             let response = await fetch('http://54.196.133.30/v1/user/register', {
@@ -135,7 +111,7 @@ export default ({ navigation }) => {
             if (!response.ok) {
                 notifyMessage("Invalid input");
             } else {
-                notifyMessage("Success");
+                notifyMessage("Success!");
                 navigation.push('Profile');
             }
             // return json;
@@ -151,8 +127,6 @@ export default ({ navigation }) => {
             Alert.alert(msg);
         }
     }
-
-    
 
     return (
         <View style={styles.container}>

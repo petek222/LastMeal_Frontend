@@ -14,7 +14,7 @@ const MainStack = createStackNavigator();
 const MainStackScreen = () => (
     <MainStack.Navigator
         // headerMode='none'
-        // initialRouteName="Options"
+        // initialRouteName="Profile"
         >
         <MainStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <MainStack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
