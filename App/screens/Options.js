@@ -7,11 +7,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const screen = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-
+    safeAreaView: {
+        height: "100%",
+        width: "200%"
+    }
 })
 
 export default ({navigation}) => {
-    return <View>
-        <Text>asdf</Text>
-    </View>
+    return (
+        <SafeAreaView style={{styles}}>
+            <Text>Option Screen</Text>
+        </SafeAreaView>
+    )
+    
 }

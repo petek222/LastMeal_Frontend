@@ -88,7 +88,7 @@ export default ({ navigation }) => {
                 notifyMessage("Invalid username/password");
             } else {
                 notifyMessage("Success!");
-                navigation.push('Pantry');
+                navigation.navigate('Pantry');
             }
             // return json;
         } catch (error) {
@@ -142,15 +142,7 @@ export default ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity>
-                <Text style={styles.signupButt} onPress={() => navigation.push('Signup')}>or Sign Up</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-                <Text style={[ {marginBottom: 10, color: 'red'}]} onPress={() => navigation.push('Pantry')}>Pantry Demo</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-                <Text style={[ {marginBottom: 10, color: 'red', }]} onPress={() => navigation.push('Profile')}>Profile Demo</Text>
+                <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
             </TouchableOpacity>
         </View>
     );

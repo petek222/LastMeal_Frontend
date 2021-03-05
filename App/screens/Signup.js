@@ -112,7 +112,7 @@ export default ({ navigation }) => {
                 notifyMessage("Invalid input");
             } else {
                 notifyMessage("Success!");
-                navigation.push('Profile');
+                navigation.navigate('Profile');
             }
             // return json;
         } catch (error) {
@@ -204,7 +204,7 @@ export default ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity>
-                <Text style={styles.smallButt} onPress={() => navigation.push('Login')}>or Log In</Text>
+                <Text style={styles.smallButt} onPress={() => navigation.navigate('Login')}>or Log In</Text>
             </TouchableOpacity>
 
         </View>
