@@ -42,11 +42,7 @@ export default () => (
          screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-            if (route.name === 'Home') {
-              iconName = focused
-              ? 'ios-home'
-              : 'ios-home-outline';
-            } else if (route.name === 'Options') {
+            if (route.name === 'Options') {
               iconName = focused
               ? 'ios-cog'
               : 'ios-cog-outline';
@@ -86,7 +82,6 @@ export default () => (
             <Tab.Screen name="Login" component={LoginStackScreen} options={{ headerShown: false }}/>
             <Tab.Screen name="Signup" component={SignupStackScreen} options={{ headerShown: false }} />
             <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
-            <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Pantry" component={Pantry} options={{ headerShown: false }} />
             <Tab.Screen name="Recipes" component={Recipes} options={{ headerShown: false }} />
             <Tab.Screen name="Options" component={Options} />
