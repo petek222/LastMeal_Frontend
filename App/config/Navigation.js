@@ -12,32 +12,11 @@ import Options from '../screens/Options';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
-// const MainStack = createStackNavigator();
-
 const Tab = createBottomTabNavigator()
-const LoginStack = createStackNavigator();
-const SignupStack = createStackNavigator();
+const Stack = createStackNavigator();
 
-function LoginStackScreen() {
+function ProfileTabs() {
     return (
-        <LoginStack.Navigator>
-            <LoginStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-        </LoginStack.Navigator>
-    );
-}
-
-function SignupStackScreen() {
-    return (
-        <SignupStack.Navigator>
-            <SignupStack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
-        </SignupStack.Navigator>
-    );
-}
-
-
-export default () => (
-    <NavigationContainer>
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
@@ -51,11 +30,13 @@ export default () => (
                             ? 'ios-cog'
                             : 'ios-cog-outline';
                     }
+                    // to remove
                     else if (route.name === 'Login') {
                         iconName = focused
                             ? 'ios-log-in'
                             : 'ios-log-in-outline';
                     }
+                    // to remove
                     else if (route.name === "Signup") {
                         iconName = focused
                             ? 'ios-create'
@@ -84,13 +65,23 @@ export default () => (
                 inactiveTintColor: 'gray',
             }}
         >
-            <Tab.Screen name="Login" component={LoginStackScreen} options={{ headerShown: false }} />
-            <Tab.Screen name="Signup" component={SignupStackScreen} options={{ headerShown: false }} />
+
             <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
-            <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Pantry" component={Pantry} options={{ headerShown: false }} />
             <Tab.Screen name="Recipes" component={Recipes} options={{ headerShown: false }} />
             <Tab.Screen name="Options" component={Options} />
         </Tab.Navigator>
+    );
+}
+
+export default () => (
+    <NavigationContainer>
+        <Stack.Navigator
+            // initialRouteName="Login"
+        >
+            <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+        </Stack.Navigator>
     </NavigationContainer>
 )
