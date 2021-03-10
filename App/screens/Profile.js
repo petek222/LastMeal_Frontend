@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Avatar } from "react-native-elements";
@@ -66,6 +65,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
+    safeAreaView: {
+        height: "100%",
+        width: "200%"
+    }
 })
 
 const UserInfo = ({ title, info }) => {
@@ -84,12 +87,17 @@ export default ({ navigation }) => {
     return (
         // <SafeAreaView style={{ marginTop: statusBarHeight, backgroundColor: 'white', flex: 1 }}>
         // <SafeAreaView style={{backgroundColor: 'white', flex: 1 }}>
+        // <SafeAreaView >
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
 
             <Text style={{ fontSize: 40 }}>Profile</Text>
             {/* <Image style={styles.image} source={require("../assets/profilepic.jpg")} /> */}
             <Avatar
+                avatarStyle={{
+                    borderWidth: 3,
+                    borderColor: '#6be3d9'
+                }}
                 rounded
                 source={require("../assets/profilepic.jpg")}
                 size="xlarge"
@@ -98,9 +106,17 @@ export default ({ navigation }) => {
             <UserInfo title={'Name'} info={'Bobb'} />
             <UserInfo title={'Username'} info={'Bobbb'} />
             <UserInfo title={'Email'} info={'Bobbbb'} />
+            {/* <View style={{position: 'absolute', right: 0}}> */}
+            <View style={{ position: 'absolute', bottom: 10 }}>
+                {/* <View style={{flexDirection: 'row-reverse'}}> */}
+
+                <TouchableOpacity>
+                    <Text onPress={() => navigation.navigate('Login')}>Log Out</Text>
+                </TouchableOpacity>
+            </View>
 
         </View>
-
+        // </SafeAreaView>
         // </SafeAreaView>
     )
 }

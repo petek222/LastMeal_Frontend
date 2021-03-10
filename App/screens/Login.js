@@ -88,7 +88,7 @@ export default ({ navigation }) => {
                 notifyMessage("Invalid username/password");
             } else {
                 notifyMessage("Success!");
-                navigation.navigate('Pantry');
+                navigation.navigate('Profile', { screen: 'Pantry' });
             }
             // return json;
         } catch (error) {
@@ -133,7 +133,6 @@ export default ({ navigation }) => {
                 <Text style={styles.forgotButt}>Forgot Password</Text>
             </TouchableOpacity>
 
-            {/* <TouchableOpacity style={styles.loginButt} onPress={() => navigation.push('Home')}> */}
             <TouchableOpacity style={styles.loginButt}
                 // activeOpacity={username === '' || password === '' ? 1 : 0.5}
                 disabled={!Boolean(username && password)}
@@ -143,6 +142,10 @@ export default ({ navigation }) => {
 
             <TouchableOpacity>
                 <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+                <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>Click Me</Text>
             </TouchableOpacity>
         </View>
     );
