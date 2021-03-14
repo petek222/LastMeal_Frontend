@@ -196,10 +196,9 @@ export default ({ navigation }) => {
                 />
             </View>
 
-            {/* <TouchableOpacity style={styles.bigButt} onPress={() => navigation.push('Home')}> */}
-            <TouchableOpacity style={styles.bigButt} 
-            disabled={!Boolean(username && password && email && first && last)}
-            onPress={() => register()}>
+            <TouchableOpacity style={styles.bigButt}
+                disabled={!Boolean(username && password && email && first && last)}
+                onPress={() => register()}>
                 <Text style={styles.loginText}>Sign Up</Text>
             </TouchableOpacity>
 
