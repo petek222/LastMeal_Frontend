@@ -103,14 +103,11 @@ export default ({ navigation }) => {
             });
             // let json = await response.json();
 
-            if (response.status === 201) {
-                notifyMessage("Success!");
-                navigation.navigate('Profile');
-            } else {
-                notifyMessage("Invalid input");
-            }
+            notifyMessage("Success!");
+            navigation.navigate('Profile');
             // return json;
         } catch (error) {
+            notifyMessage("Invalid input");
             console.error(error);
         }
     };

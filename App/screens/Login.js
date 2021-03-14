@@ -78,14 +78,11 @@ export default ({ navigation }) => {
                 });
             // let json = await response.json();
 
-            if (response.status === 200) {
-                notifyMessage("Success!");
-                navigation.navigate('Profile', { screen: 'Pantry' });
-            } else {
-                notifyMessage("Invalid username/password");
-            }
+            notifyMessage("Success!");
+            navigation.navigate('Profile', { screen: 'Pantry' });
             // return json;
         } catch (error) {
+            notifyMessage("Invalid username/password");
             console.error(error);
         }
     };
