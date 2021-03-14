@@ -12,6 +12,7 @@ import {
     Platform,
     Alert,
 } from "react-native";
+import api from "../api/api";
 
 const styles = StyleSheet.create({
     container: {
@@ -71,24 +72,17 @@ export default ({ navigation }) => {
 
     const login = async () => {
         try {
-            let response = await fetch('http://54.196.133.30/v1/user/login', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+            let response = await api.post('/user/login', {
                     username: username,
                     password: password
-                })
-            })
+                });
             // let json = await response.json();
 
-            if (!response.ok) {
-                notifyMessage("Invalid username/password");
-            } else {
+            if (response.status === 200) {
                 notifyMessage("Success!");
                 navigation.navigate('Profile', { screen: 'Pantry' });
+            } else {
+                notifyMessage("Invalid username/password");
             }
             // return json;
         } catch (error) {
