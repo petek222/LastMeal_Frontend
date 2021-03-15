@@ -22,7 +22,9 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
-    "react-native-elements": "^3.2.0",
+    "react-native-autocomplete-input": "^4.2.0",
+    "react-native-dropdown-autocomplete": "^1.0.18",
+    "react-native-elements": "^3.3.1",
     "react-native-gesture-handler": "^1.10.1",
     "react-native-navigation-bar": "^0.2.1",
     "react-native-paper": "^4.7.2",
@@ -32,7 +34,8 @@
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
     "react-navigation-stack": "^2.10.4",
-    "react-navigation-tabs": "^2.11.0"
+    "react-navigation-tabs": "^2.11.0",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
