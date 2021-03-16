@@ -13,6 +13,7 @@ import {
     Alert,
 } from "react-native";
 import api from "../api/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
     container: {
@@ -76,7 +77,7 @@ export default ({ navigation }) => {
                     username: username,
                     password: password
                 });
-            // let json = await response.json();
+            await AsyncStorage.setItem("token", response.data.token);
 
             notifyMessage("Success!");
             navigation.navigate('Profile', { screen: 'Pantry' });
