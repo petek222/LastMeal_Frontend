@@ -12,6 +12,8 @@ import {
     Platform,
     Alert,
 } from "react-native";
+import api from "../api/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
     container: {
@@ -71,27 +73,17 @@ export default ({ navigation }) => {
 
     const login = async () => {
         try {
-            let response = await fetch('http://54.196.133.30/v1/user/login', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+            let response = await api.post('/user/login', {
                     username: username,
                     password: password
-                })
-            })
-            // let json = await response.json();
+                });
+            await AsyncStorage.setItem("token", response.data.token);
 
-            if (!response.ok) {
-                notifyMessage("Invalid username/password");
-            } else {
-                notifyMessage("Success!");
-                navigation.navigate('Profile', { screen: 'Pantry' });
-            }
+            notifyMessage("Success!");
+            navigation.navigate('Profile', { screen: 'Pantry' });
             // return json;
         } catch (error) {
+            notifyMessage("Invalid username/password");
             console.error(error);
         }
     };
