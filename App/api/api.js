@@ -11,6 +11,7 @@ api.interceptors.request.use(async (config) => {
     if (value !== null) {
         config.headers['Authorization'] = `Bearer ${value}`;
     }
+    console.log('Config');
     console.log(config);
     return config;
 }, err => {

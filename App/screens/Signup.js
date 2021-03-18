@@ -12,9 +12,8 @@ import {
     Platform,
     Alert,
 } from "react-native";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
 import api from '../api/api';
 
 const styles = StyleSheet.create({
@@ -95,19 +94,29 @@ export default ({ navigation }) => {
     const register = async () => {
         try {
             let response = await api.post('/user/register', {
-                    username: username,
-                    password: password,
-                    email: email,
-                    first_name: first,
-                    last_name: last
+                username: username,
+                password: password,
+                email: email,
+                first_name: first,
+                last_name: last
             });
             // let json = await response.json();
+            console.log('Response');
+            console.log(response);
+
+            // saves data for the profile page
+            await AsyncStorage.setItem("first", first);
+            await AsyncStorage.setItem("last", last);
+            await AsyncStorage.setItem("email", email);
+            await AsyncStorage.setItem("username", username);
 
             notifyMessage("Success!");
             navigation.navigate('Profile');
             // return json;
         } catch (error) {
             notifyMessage("Invalid input");
+            // notifyMessage(error);
+
             console.error(error);
         }
     };
