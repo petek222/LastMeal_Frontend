@@ -102,16 +102,14 @@ export default ({navigation}) => {
 
     const addPantryItem = async () => {
 
+        navigation.navigate('Pantry');
+
         // Figure out how to grab username of logged in user
-        let username = "test"
+        let username = "FILL_IN_WITH_ASYNC_STORAGE_USERNAME"
 
-        try {
+        try {            
 
-            console.log("Ingredient Params")
-            console.log(ingredientName)
-            console.log(quantity)
-            console.log(expiration)
-
+            // CHANGE URL TO BE SERVER PATH
             let response = await fetch(`http://localhost:5000/v1/pantry/create/${username}`, {
                 method: 'POST',
                 headers: {
@@ -123,13 +121,11 @@ export default ({navigation}) => {
                     expiration_date: expiration
                 })
             })
-            // let json = await response.json();
-
             if (!response.ok) {
                 notifyMessage("Invalid input");
             } else {
                 notifyMessage("Ingredient Added to Pantry");
-                navigation.navigate('Pantry');
+                navigation.navigate('Pantry'); // navigate to pantry upon ingredient submission
             }
             // return json;
         } catch (error) {
@@ -189,7 +185,7 @@ export default ({navigation}) => {
             </View>
 
             <TouchableOpacity style={styles.bigButt}
-                disabled={!Boolean(ingredientName && quantity && expiration)}
+                disabled={!Boolean(ingredientName && quantity && expiration)} // Add notification here if fields not input
                 onPress={() => addPantryItem()}>
                 <Text style={styles.loginText}>Add Item to Pantry</Text>
             </TouchableOpacity>
