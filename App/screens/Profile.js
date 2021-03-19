@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { createContext, useState, useEffect, useReducer } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Avatar } from "react-native-elements";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Gravatar, GravatarApi } from 'react-native-gravatar';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Thumbnail } from 'native-base';
 
 import Constants from 'expo-constants';
-
+import { Component } from 'react';
 
 const screen = Dimensions.get('window');
 
@@ -68,9 +69,14 @@ const styles = StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "200%"
+    },
+    roundedProfileImage: {
+        width: 150, height: 150, borderWidth: 3,
+        borderColor: '#6be3d9', borderRadius: 75
     }
 })
 
+// Component for each bit of user info
 const UserInfo = ({ title, info }) => {
     return (
         <View style={styles.section}>
@@ -83,7 +89,72 @@ const UserInfo = ({ title, info }) => {
     )
 }
 
+// const UserContext = createContext('nope');
+
+const getFirst = async () => {
+    try {
+        const user = await AsyncStorage.getItem('first');
+        return user;
+    } catch (e) {
+        console.log('Failed to fetch the data from storage');
+    }
+}
+
+const getName = async () => {
+    try {
+        const user = await AsyncStorage.getItem('first') + ' ' + await AsyncStorage.getItem('last');
+        return user;
+    } catch (e) {
+        console.log('Failed to fetch the data from storage');
+    }
+}
+
+const getEmail = async () => {
+    try {
+        const user = await AsyncStorage.getItem('email');
+        return user;
+    } catch (e) {
+        console.log('Failed to fetch the data from storage');
+    }
+}
+
+const getUsername = async () => {
+    try {
+        const user = await AsyncStorage.getItem('username');
+        return user;
+    } catch (e) {
+        console.log('Failed to fetch the data from storage');
+    }
+}
+
 export default ({ navigation }) => {
+    // const [user, dispatch] = useReducer(userReducer, {});
+    const [first, setFirst] = useState("Developer");
+    const [name, setName] = useState("Developer Account");
+    const [email, setEmail] = useState("none");
+    const [username, setUsername] = useState("none");
+    const [avatarUrl, setAvatar] = useState("");
+
+
+    // fetch user info on load
+    useEffect(() => {
+        async function fetchUser() {
+            const first = await getFirst();
+            const name = await getName();
+            const username = await getUsername();
+            const email = await getEmail();
+            setFirst(first);
+            setName(name);
+            setUsername(username);
+            setEmail(email);
+
+            // let gravatar = require('gravatar');
+            // const picUrl = gravatar.url(email, {s: '200'});
+            // setAvatar(picUrl);
+        }
+        fetchUser();
+    }, []);
+
     return (
         // <SafeAreaView style={{ marginTop: statusBarHeight, backgroundColor: 'white', flex: 1 }}>
         // <SafeAreaView style={{backgroundColor: 'white', flex: 1 }}>
@@ -91,21 +162,30 @@ export default ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
 
-            <Text style={{ fontSize: 40 }}>Profile</Text>
+            <Text style={{ fontSize: 40 }}>Hi, {first}</Text>
             {/* <Image style={styles.image} source={require("../assets/profilepic.jpg")} /> */}
-            <Avatar
+            {/* <Avatar
                 avatarStyle={{
                     borderWidth: 3,
                     borderColor: '#6be3d9'
                 }}
                 rounded
-                source={require("../assets/profilepic.jpg")}
+                // source={require("../assets/profilepic.jpg")}
+                source={avatarUrl}
                 size="xlarge"
-            />
+            /> */}
 
-            <UserInfo title={'Name'} info={'Bobb'} />
-            <UserInfo title={'Username'} info={'Bobbb'} />
-            <UserInfo title={'Email'} info={'Bobbbb'} />
+            <Gravatar options={{
+                email: email,
+                parameters: { "size": "500", "d": "mm" },
+                secure: true
+            }}
+                style={styles.roundedProfileImage} />
+
+            <UserInfo title={'Name'} info={name} />
+            <UserInfo title={'Username'} info={username} />
+            <UserInfo title={'Email'} info={email} />
+
             {/* <View style={{position: 'absolute', right: 0}}> */}
             <View style={{ position: 'absolute', bottom: 10 }}>
                 {/* <View style={{flexDirection: 'row-reverse'}}> */}
