@@ -12,6 +12,8 @@ import {
     Platform,
     Alert,
 } from "react-native";
+import api from "../api/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
     container: {
@@ -66,32 +68,39 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation }) => {
-    const [username, setusername] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const login = async () => {
         try {
-            let response = await fetch('http://54.196.133.30/v1/user/login', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+            let response = await api.post('/user/login', {
                     username: username,
                     password: password
-                })
-            })
-            // let json = await response.json();
+                });
+            await AsyncStorage.setItem("token", response.data.token);
 
-            if (!response.ok) {
-                notifyMessage("Invalid username/password");
-            } else {
-                notifyMessage("Success!");
-                navigation.navigate('Profile', { screen: 'Pantry' });
-            }
+            // console.log('Response');
+            // console.log(response);
+            // console.log('here');
+            // console.log(response.config.data.username);
+
+            // get user info
+            let userResponse = await api.get(`/user/${username}`);
+
+            // saves data for the profile page
+            // is there a better way to do this?
+            await AsyncStorage.setItem("first", userResponse.data.first_name);
+            await AsyncStorage.setItem("last", userResponse.data.last_name);
+            await AsyncStorage.setItem("email", userResponse.data.email);
+            await AsyncStorage.setItem("username", userResponse.data.username);
+
+            notifyMessage("Success!");
+            navigation.navigate('Profile', { screen: 'Pantry' });
             // return json;
         } catch (error) {
+            notifyMessage("Invalid username/password");
+            // notifyMessage(error.toString);
+
             console.error(error);
         }
     };
@@ -115,7 +124,7 @@ export default ({ navigation }) => {
                     placeholder="Username"
                     placeholderTextColor="#003f5c"
                     autoCapitalize="none"
-                    onChangeText={(username) => setusername(username)}
+                    onChangeText={(username) => setUsername(username)}
                 />
             </View>
 

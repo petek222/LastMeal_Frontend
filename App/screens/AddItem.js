@@ -15,6 +15,8 @@ import {
 
 import DatePicker from 'react-native-datepicker'
 import moment from 'moment';
+import api from '../api/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // JSON data for use in autocomplete
 const ingredientData = require('../assets/ingredientList.json')
@@ -105,30 +107,44 @@ export default ({navigation}) => {
         navigation.navigate('Pantry');
 
         // Figure out how to grab username of logged in user
-        let username = "FILL_IN_WITH_ASYNC_STORAGE_USERNAME"
+        // let username = "FILL_IN_WITH_ASYNC_STORAGE_USERNAME"
+
+        let username = await AsyncStorage.getItem("username");
+
+        // let response = await api.post('/user/register', {
+        //     username: username,
+        //     password: password,
+        //     email: email,
+        //     first_name: first,
+        //     last_name: last
+        // });
 
         try {            
 
-            // CHANGE URL TO BE SERVER PATH
-            let response = await fetch(`http://localhost:5000/v1/pantry/create/${username}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: ingredientName,
-                    quantity: quantity,
-                    expiration_date: expiration
-                })
-            })
-            if (!response.ok) {
-                notifyMessage("Invalid input");
-            } else {
-                notifyMessage("Ingredient Added to Pantry");
-                navigation.navigate('Pantry'); // navigate to pantry upon ingredient submission
-            }
+            let response = await api.post(`/pantry/create/${username}`, {
+                name: ingredientName,
+                quantity: quantity,
+                expiration_date: expiration
+            });
+
+            console.log("Ingredient Addition Response")
+            console.log(response)
+            // // CHANGE URL TO BE SERVER PATH
+            // let response = await fetch(`http://localhost:5000/v1/pantry/create/${username}`, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         name: ingredientName,
+            //         quantity: quantity,
+            //         expiration_date: expiration
+            //     })
+            notifyMessage("Ingredient Added to Pantry");
+            navigation.navigate('Pantry'); // navigate to pantry upon ingredient submission
             // return json;
         } catch (error) {
+            notifyMessage("Invalid input");
             console.error(error);
         }
     };

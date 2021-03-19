@@ -78,7 +78,7 @@ function ProfileTabs() {
 export default () => (
     <NavigationContainer>
         <Stack.Navigator
-            // initialRouteName="Login"
+            initialRouteName="Login"
         >
             <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
