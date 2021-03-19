@@ -2,13 +2,12 @@ import React, { createContext, useState, useEffect, useReducer } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Avatar } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Gravatar, GravatarApi } from 'react-native-gravatar';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Thumbnail } from 'native-base';
 
 import Constants from 'expo-constants';
 import { Component } from 'react';
-
 
 const screen = Dimensions.get('window');
 
@@ -70,6 +69,10 @@ const styles = StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "200%"
+    },
+    roundedProfileImage: {
+        width: 150, height: 150, borderWidth: 3,
+        borderColor: '#6be3d9', borderRadius: 75
     }
 })
 
@@ -130,18 +133,24 @@ export default ({ navigation }) => {
     const [name, setName] = useState("Developer Account");
     const [email, setEmail] = useState("none");
     const [username, setUsername] = useState("none");
+    const [avatarUrl, setAvatar] = useState("");
+
 
     // fetch user info on load
     useEffect(() => {
         async function fetchUser() {
             const first = await getFirst();
-            const name = await getName();            
-            const username = await getUsername();            
+            const name = await getName();
+            const username = await getUsername();
             const email = await getEmail();
             setFirst(first);
             setName(name);
             setUsername(username);
             setEmail(email);
+
+            // let gravatar = require('gravatar');
+            // const picUrl = gravatar.url(email, {s: '200'});
+            // setAvatar(picUrl);
         }
         fetchUser();
     }, []);
@@ -155,15 +164,23 @@ export default ({ navigation }) => {
 
             <Text style={{ fontSize: 40 }}>Hi, {first}</Text>
             {/* <Image style={styles.image} source={require("../assets/profilepic.jpg")} /> */}
-            <Avatar
+            {/* <Avatar
                 avatarStyle={{
                     borderWidth: 3,
                     borderColor: '#6be3d9'
                 }}
                 rounded
-                source={require("../assets/profilepic.jpg")}
+                // source={require("../assets/profilepic.jpg")}
+                source={avatarUrl}
                 size="xlarge"
-            />
+            /> */}
+
+            <Gravatar options={{
+                email: email,
+                parameters: { "size": "500", "d": "mm" },
+                secure: true
+            }}
+                style={styles.roundedProfileImage} />
 
             <UserInfo title={'Name'} info={name} />
             <UserInfo title={'Username'} info={username} />
