@@ -3,7 +3,9 @@ import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
+import { FAB } from 'react-native-paper';
 import Constants from 'expo-constants';
+import Autocomplete from 'react-native-autocomplete-input'
 
 const window = Dimensions.get('window');
 
@@ -61,8 +63,27 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         justifyContent: 'space-between',
         padding: 5   
+    },
+    fab: { // Check this styling absolutism
+        position: 'absolute',
+        margin: 60,
+        right: -50,
+        bottom: 0,
     }
   });
+
+//   <Text style={styles.smallButt} onPress={() => navigation.navigate('Login')}>or Log In</Text>
+
+const AddIngredientButton = (props) => {
+    return (
+        <FAB
+        style={styles.fab}
+        small
+        icon="plus"
+        onPress={() => props.nav.navigate('AddItem')}
+      />
+    )
+};
 
 const PantryCard = (props) => {
 
@@ -99,6 +120,7 @@ export default ({navigation}) => {
                     <PantryCard title="Yogurt" expr="4/1"></PantryCard>
                 </View>
             </ScrollView>
+            <AddIngredientButton nav={navigation}></AddIngredientButton>
         </SafeAreaView>
     );
 }
