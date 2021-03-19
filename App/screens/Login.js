@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
         // marginBottom: 40,
         height: "30%",
         resizeMode: 'contain',
+        padding: 10,
     },
 
     inputView: {
@@ -115,7 +116,7 @@ export default ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require("../assets/logo.png")} />
+            <Image style={styles.image} source={require("../assets/lastmeal.png")} />
 
             <StatusBar style="auto" />
             <View style={styles.inputView}>
@@ -153,9 +154,9 @@ export default ({ navigation }) => {
                 <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
                 <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>Click Me</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 }
