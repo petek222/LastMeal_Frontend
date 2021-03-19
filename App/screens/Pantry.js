@@ -9,9 +9,10 @@ import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Autocomplete from 'react-native-autocomplete-input'
 import { createClient } from 'pexels';
+import { useIsFocused } from "@react-navigation/native";
 
 const window = Dimensions.get('window');
-const client = createClient('563492ad6f917000010000011aae2c9774fe4ab1a7d08dcd07ff7ba8');
+const client = createClient('563492ad6f91700001000001c65e60214fe9449e892de0345e0272ab');
 
 const statusBarHeight = Constants.statusBarHeight;
 
@@ -97,35 +98,35 @@ const PantryCard = (props) => {
         return convDate.toLocaleDateString()
     }
 
-    const generateThumbnail = () => {
+    // const generateThumbnail = () => {
 
-        let query = props.title;
+    //     let query = props.title;
 
-        let image_link = ""
+    //     let image_link = ""
 
-        client.photos.search({ query, per_page: 1 }).then(photos => {
-            console.log("HERE I AM!")
-            console.log(photos)
+    //     client.photos.search({ query, per_page: 1 }).then(photos => {
+    //         console.log("HERE I AM!")
+    //         console.log(photos)
 
-            let image = photos.photos[0].src.small;
-            console.log("TEST")
-            console.log(image)
-            // We can then throw the image into an array of some kind
-            // Refer to these individually in the ingredient-generating loop portion
+    //         let image = photos.photos[0].src.small;
+    //         console.log("TEST")
+    //         console.log(image)
+    //         // We can then throw the image into an array of some kind
+    //         // Refer to these individually in the ingredient-generating loop portion
 
-            image_link = image
-            return image_link
-        });
+    //         image_link = image
+    //         return image_link
+    //     });
 
-        // return image_link
-    }
+    //     // return image_link
+    // }
 
 
     // Figure out why image not rendering here
     return (
         <View style={styles.itemCard}>
             <View style={styles.itemCardContent}>
-                <Thumbnail source={{uri: generateThumbnail()}} /> 
+                <Thumbnail source={require(`../assets/chicken.jpg`)} /> 
                 <View style={styles.itemCardText}>
                     <Text style={styles.foodNameText}>{props.title}</Text>
 
@@ -145,19 +146,32 @@ const PantryCard = (props) => {
 export default ({navigation}) => {
 
     let [ingredients, setIngredients] = useState([]);
+    let [imageArray, setImageArray] = useState([]);
+
+    const isFocused = useIsFocused()
 
     //let test = [{"name": "apple", "quantity": 2, "expiration_date": "2021-3-24"}, {"name": "cucumber", "quantity": 5, "expiration_date": "2021-3-23"}];
 
     useEffect(() => {
-        getItems();
-    }, []);
+        async function generatePantry() {
+            console.log("HELP ME")
+            let ingredientList = await getItems();
+            console.log("In pantry generation")
+            console.log(ingredientList)
+            // await generateThumbnail(ingredientList)
+        }
+        generatePantry()
+    }, [isFocused]);
 
     const getItems = async () => {
         try {
             let username = await getUsername();
+            console.log("USERNAME")
+            console.log(username)
             let response = await api.get(`/pantry/${username}`);
             if(response.data.ingredients) {
-                setIngredients(response.data.ingredients);
+                await setIngredients(response.data.ingredients);
+                return response.data.ingredients
             }
         } catch(err) {
             console.log(err);
@@ -173,6 +187,87 @@ export default ({navigation}) => {
         }
     }
 
+    const generateThumbnail = (props) => {
+
+        // console.log("IN HERE!")
+        // console.log(props);
+
+        let imageLinkArray = []
+
+        props.forEach(ingredient => {
+            let query = ingredient.name;
+            let object = ingredient
+            
+            client.photos.search({ query, per_page: 1 }).then(photos => {
+
+                console.log("Checking Photos")
+                console.log(photos)
+    
+                let image = photos.photos[0].src.small;
+                // We can then throw the image into an array of some kind
+                // Refer to these individually in the ingredient-generating loop portion
+    
+                image_link = image
+
+                console.log("CHECK ING OBJECT")
+                console.log(ingredient)
+
+                console.log("Check link")
+                console.log(image_link)
+                object['image'] = image_link
+
+                console.log("CHECK ING OBJECT AFTER")
+                console.log(object)
+
+                imageLinkArray.push(object)
+                // setIngredients(imageLinkArray)
+
+
+                // console.log("Check Array")
+                // imageLinkArray.push(image)
+                // console.log(imageLinkArray)
+                // setImageArray(imageLinkArray)
+                // return image_link
+
+            });
+
+            // console.log("SETTING FINAL ARRAY")
+            // console.log(imageLinkArray)
+            // setIngredients(imageLinkArray)
+
+        })
+
+        
+        console.log("SETTING FINAL ARRAY")
+        console.log(imageLinkArray)
+        setIngredients(imageLinkArray)
+
+        // console.log("Setting image links")
+        // console.log(imageLinkArray)
+        // setImageArray(imageLinkArray)
+
+        // let query = props.name;
+
+        // // let image_link = ""
+
+        // client.photos.search({ query, per_page: 1 }).then(photos => {
+        //     console.log("HERE I AM!")
+        //     console.log(photos)
+
+        //     let image = photos.photos[0].src.small;
+        //     console.log("TEST")
+        //     console.log(image)
+        //     // We can then throw the image into an array of some kind
+        //     // Refer to these individually in the ingredient-generating loop portion
+
+        //     image_link = image
+        //     return image_link
+        // });
+
+        // return image_link
+    }
+
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
@@ -181,7 +276,11 @@ export default ({navigation}) => {
             <ScrollView contentContainerStyle={styles.scrollViewContent}>    
                 <View>
                     {
+                        // key starts at 0 here
                         ingredients.map((ingredient, i) => {
+
+                            // Prop to include for thumbnail generation
+                            // image={ingredient.image}
                             return (
                                 <PantryCard
                                     key={i}

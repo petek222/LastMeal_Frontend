@@ -108,6 +108,9 @@ export default ({navigation}) => {
 
         let username = await AsyncStorage.getItem("username");
 
+        console.log("HERE HERE")
+        console.log(username)
+
         try {            
 
             let response = await api.post(`/pantry/create/${username}`, {
