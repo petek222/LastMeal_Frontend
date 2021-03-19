@@ -131,7 +131,7 @@ export default ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require("../assets/logo.png")} />
+            <Image style={styles.image} source={require("../assets/lastmeal.png")} />
 
             <StatusBar style="auto" />
 
