@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
@@ -6,8 +6,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { FAB } from 'react-native-paper';
 import Constants from 'expo-constants';
 import Autocomplete from 'react-native-autocomplete-input'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../api/api';
+import { createClient } from 'pexels';
 
 const window = Dimensions.get('window');
+
+// Pexels API client
+const client = createClient('563492ad6f917000010000011aae2c9774fe4ab1a7d08dcd07ff7ba8');
 
 const statusBarHeight = Constants.statusBarHeight;
 
@@ -72,8 +78,6 @@ const styles = StyleSheet.create({
     }
   });
 
-//   <Text style={styles.smallButt} onPress={() => navigation.navigate('Login')}>or Log In</Text>
-
 const AddIngredientButton = (props) => {
     return (
         <FAB
@@ -90,7 +94,7 @@ const PantryCard = (props) => {
     return (
         <View style={styles.itemCard}>
             <View style={styles.itemCardContent}>
-                <Thumbnail source={require(`../assets/chicken.jpg`)} />
+                <Thumbnail source={{uri: "https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"}} />
                 <View style={styles.itemCardText}>
                     <Text style={styles.foodNameText}>{props.title}</Text>
                     <Text style={styles.expirationText}>Expiration: {props.expr}</Text>
@@ -106,6 +110,39 @@ const PantryCard = (props) => {
 }
 
 export default ({navigation}) => {
+
+    const [pantryList, setPantryList] = useState([]);
+
+    useEffect(() => {
+        async function fetchPantry() {
+            let username = await AsyncStorage.getItem("username");
+
+            let response = await api.get(`/pantry/${username}`);
+            const data = await response.data;
+
+            data.ingredients.forEach(ingredient => {
+
+                let query = ingredient.name;
+
+                client.photos.search({ query, per_page: 1 }).then(photos => {
+                    console.log("HERE I AM!")
+                    console.log(photos)
+                    // We can then throw the image into an array of some kind
+                    // Refer to these individually in the ingredient-generating loop portion
+                });
+
+            })
+    
+            console.log("SHALOM")
+            console.log(data)
+
+            setPantryList(data.ingredients)
+            // Maybe set the image array here too
+        
+        }
+        fetchPantry()
+      }, []);
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
