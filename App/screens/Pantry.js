@@ -93,40 +93,50 @@ const AddIngredientButton = (props) => {
 const PantryCard = (props) => {
 
     const formatDate = (obj) => {
+
+        console.log("TESTING DATE")
+        console.log(obj);
+
         let epochDate = obj.$date
         let convDate = new Date(epochDate)
         return convDate.toLocaleDateString()
     }
 
-    // const generateThumbnail = () => {
+    const generateThumbnail = () => {
 
-    //     let query = props.title;
+        let query = props.title;
 
-    //     let image_link = ""
+        let image_link = ""
 
-    //     client.photos.search({ query, per_page: 1 }).then(photos => {
-    //         console.log("HERE I AM!")
-    //         console.log(photos)
+        client.photos.search({ query, per_page: 1 }).then(photos => {
+            console.log("HERE I AM!")
+            console.log(photos)
 
-    //         let image = photos.photos[0].src.small;
-    //         console.log("TEST")
-    //         console.log(image)
-    //         // We can then throw the image into an array of some kind
-    //         // Refer to these individually in the ingredient-generating loop portion
+            let image = photos.photos[0].src.small;
+            console.log("TEST")
+            console.log(image)
+            // We can then throw the image into an array of some kind
+            // Refer to these individually in the ingredient-generating loop portion
 
-    //         image_link = image
-    //         return image_link
-    //     });
+            image_link = image
+            return image_link
+        });
 
-    //     // return image_link
-    // }
+        // return image_link
+    }
 
+    // Thumbnail source
+    // source={require(`../assets/chicken.jpg`)
+
+    console.log("HERE")
+    console.log(props.image);
+    console.log(props.expr)
 
     // Figure out why image not rendering here
     return (
         <View style={styles.itemCard}>
             <View style={styles.itemCardContent}>
-                <Thumbnail source={require(`../assets/chicken.jpg`)} /> 
+                <Thumbnail source={props.image ? {uri: props.image} : {source: require('../assets/chicken.jpg')}} /> 
                 <View style={styles.itemCardText}>
                     <Text style={styles.foodNameText}>{props.title}</Text>
 
@@ -154,7 +164,6 @@ export default ({navigation}) => {
 
     useEffect(() => {
         async function generatePantry() {
-            console.log("HELP ME")
             let ingredientList = await getItems();
             console.log("In pantry generation")
             console.log(ingredientList)
@@ -186,6 +195,10 @@ export default ({navigation}) => {
             console.log('Failed to fetch the data from storage');
         }
     }
+
+    // Example Links
+    // Apple: https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&h=130
+    // Ginger: https://images.pexels.com/photos/1337585/pexels-photo-1337585.jpeg?auto=compress&cs=tinysrgb&h=130
 
     const generateThumbnail = (props) => {
 
@@ -238,9 +251,9 @@ export default ({navigation}) => {
         })
 
         
-        console.log("SETTING FINAL ARRAY")
-        console.log(imageLinkArray)
-        setIngredients(imageLinkArray)
+        // console.log("SETTING FINAL ARRAY")
+        // console.log(imageLinkArray)
+        // setIngredients(imageLinkArray)
 
         // console.log("Setting image links")
         // console.log(imageLinkArray)
@@ -267,6 +280,11 @@ export default ({navigation}) => {
         // return image_link
     }
 
+    exampleDate  = {"Object": {
+        "$date": 1617148800000
+      }
+    }
+
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -275,6 +293,9 @@ export default ({navigation}) => {
             <SearchBar platform="ios" placeholder="Search"></SearchBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>    
                 <View>
+                    <PantryCard title={"Apple"} expr={{"$date": 1617148800000}} quantity={5} image={"https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&h=130"}></PantryCard>
+                    <PantryCard title={"Ginger"} expr={{"$date": 1718848800000}} quantity={1} image={"https://images.pexels.com/photos/1337585/pexels-photo-1337585.jpeg?auto=compress&cs=tinysrgb&h=130"}></PantryCard>
+
                     {
                         // key starts at 0 here
                         ingredients.map((ingredient, i) => {
@@ -283,6 +304,7 @@ export default ({navigation}) => {
                             // image={ingredient.image}
                             return (
                                 <PantryCard
+                                    image={"https://images-na.ssl-images-amazon.com/images/I/719JxkiwTVL._SL1500_.jpg"}
                                     key={i}
                                     title={ingredient.name} 
                                     expr={ingredient.expiration_date} 
