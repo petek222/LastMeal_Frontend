@@ -106,18 +106,10 @@ export default ({navigation}) => {
 
         navigation.navigate('Pantry');
 
-        // Figure out how to grab username of logged in user
-        // let username = "FILL_IN_WITH_ASYNC_STORAGE_USERNAME"
-
         let username = await AsyncStorage.getItem("username");
 
-        // let response = await api.post('/user/register', {
-        //     username: username,
-        //     password: password,
-        //     email: email,
-        //     first_name: first,
-        //     last_name: last
-        // });
+        console.log("HERE HERE")
+        console.log(username)
 
         try {            
 
@@ -129,17 +121,6 @@ export default ({navigation}) => {
 
             console.log("Ingredient Addition Response")
             console.log(response)
-            // // CHANGE URL TO BE SERVER PATH
-            // let response = await fetch(`http://localhost:5000/v1/pantry/create/${username}`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            //         name: ingredientName,
-            //         quantity: quantity,
-            //         expiration_date: expiration
-            //     })
             notifyMessage("Ingredient Added to Pantry");
             navigation.navigate('Pantry'); // navigate to pantry upon ingredient submission
             // return json;

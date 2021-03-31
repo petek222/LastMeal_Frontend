@@ -111,7 +111,7 @@ export default ({ navigation }) => {
             await AsyncStorage.setItem("username", username);
 
             notifyMessage("Success!");
-            navigation.navigate('Profile');
+            navigation.navigate('Login');
             // return json;
         } catch (error) {
             notifyMessage("Invalid input");

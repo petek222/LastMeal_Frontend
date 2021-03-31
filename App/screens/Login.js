@@ -96,7 +96,7 @@ export default ({ navigation }) => {
             await AsyncStorage.setItem("username", userResponse.data.username);
 
             notifyMessage("Success!");
-            navigation.navigate('Profile', { screen: 'Pantry' });
+            navigation.navigate('Profile', { screen: 'Profile' });
             // return json;
         } catch (error) {
             notifyMessage("Invalid username/password");
