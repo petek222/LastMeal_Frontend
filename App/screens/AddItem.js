@@ -17,6 +17,11 @@ import DatePicker from 'react-native-datepicker'
 import moment from 'moment';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Autocomplete, withKeyboardAwareScrollView} from "react-native-dropdown-autocomplete";
+var stringSimilarity = require("string-similarity");
+import Dropdown from 'react-dropdown';
+import DropDownPicker from 'react-native-dropdown-picker';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 // JSON data for use in autocomplete
 const ingredientData = require('../assets/ingredientList.json')
@@ -71,9 +76,15 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     smallButt: {
-        height: 30,
+        height: 45,
         marginBottom: 30,
         // position: "absolute"
+        alignItems: "center",
+        justifyContent: "center",
+        // marginTop: 40,
+        backgroundColor: "#f2c572",
+        width: "50%",
+        borderRadius: 25
     },
     hidePassButt: {
         // backgroundColor: 'red',
@@ -93,6 +104,9 @@ export default ({navigation}) => {
     const [ingredientName, setIngredientName] = useState("");
     const [quantity, setQuantity] = useState(0); 
     const [expiration, setExpiration] = useState(new Date()); // Set a value for the expiration date
+
+    const [renderDropdown, setRenderDropdown] = useState(false);
+    const [suggestionList, setSuggestionList] = useState([]);
 
     function notifyMessage(msg) {
         if (Platform.OS === 'android') {
@@ -130,6 +144,54 @@ export default ({navigation}) => {
         }
     };
 
+    const ingredientSearch = (ingredientName) => {
+
+        let match = stringSimilarity.findBestMatch(ingredientName, ingredientData);
+
+        let comparisonList = match.ratings;
+        let resultList = [];
+
+        comparisonList.sort(function(a, b) {
+            return a.rating - b.rating
+        })
+
+        comparisonList.reverse()
+
+        // Limiting suggestions to 10 possible; can be longer if desired
+        for (let i = 0; i < 10; i++) {
+            resultList.push(comparisonList[i].target);
+        }
+
+        // return the list of value suggestions
+        console.log("HOLA");
+        console.log(resultList);
+
+        setSuggestionList(resultList);
+        return resultList;
+    }
+
+    const DropdownMenuSelection = () => {
+
+        console.log("HERE WE ARE");
+        console.log(suggestionList.length)
+        // const options = suggestionList;
+
+        const defaultOption = suggestionList[0];
+
+        // onChangeText={(quantity) => setQuantity(quantity)}
+        
+        // Add styling to the dropdown modal here
+        return (
+            <ModalDropdown 
+                style={styles.inputView}
+                textStyle = {{fontWeight:'bold', textAlign: 'right', fontSize: 15, marginLeft: 20}}
+                dropdownStyle={{width:170}}
+                options={suggestionList}
+                onSelect={(value) => setIngredientName(value)}
+            />
+        )
+    }
+
     return (
         <View style={styles.container}>
 
@@ -142,7 +204,18 @@ export default ({navigation}) => {
                     autoCapitalize="none"
                     onChangeText={(ingredient) => setIngredientName(ingredient)}
                 />
+
+            <TouchableOpacity style={styles.smallButt}
+                disabled={!Boolean(ingredientName)} // Add notification here if fields not input
+                onPress={() => {
+                    setRenderDropdown(true);
+                    ingredientSearch(ingredientName)
+                    }}>
+                <Text style={styles.loginText}>Search</Text>
+            </TouchableOpacity>
             </View>
+
+            {renderDropdown ? <DropdownMenuSelection /> : null}
 
             {/* Quantity */}
             <View style={styles.inputView}>
