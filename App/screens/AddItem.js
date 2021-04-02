@@ -1,4 +1,3 @@
-import { SearchBar } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
 import {
     StyleSheet,
@@ -17,11 +16,13 @@ import DatePicker from 'react-native-datepicker'
 import moment from 'moment';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Autocomplete, withKeyboardAwareScrollView} from "react-native-dropdown-autocomplete";
 var stringSimilarity = require("string-similarity");
-import Dropdown from 'react-dropdown';
-import DropDownPicker from 'react-native-dropdown-picker';
 import ModalDropdown from 'react-native-modal-dropdown';
+
+// Code below surpresses warning log boxes at bottom of app
+import {LogBox, YellowBox} from 'react-native';
+LogBox.ignoreAllLogs();
+
 
 // JSON data for use in autocomplete
 const ingredientData = require('../assets/ingredientList.json')
@@ -36,9 +37,10 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        // marginBottom: 40,
-        height: "30%",
-        resizeMode: 'contain',
+        marginBottom: 40,
+        marginTop: -20,
+        height: "20%",
+        resizeMode: 'contain'
     },
 
     inputView: {
@@ -123,7 +125,9 @@ export default ({navigation}) => {
         let username = await AsyncStorage.getItem("username");
 
         console.log("HERE HERE")
-        console.log(username)
+        console.log(ingredientName)
+        console.log(quantity)
+        console.log(expiration)
 
         try {            
 
@@ -172,28 +176,28 @@ export default ({navigation}) => {
 
     const DropdownMenuSelection = () => {
 
-        console.log("HERE WE ARE");
-        console.log(suggestionList.length)
-        // const options = suggestionList;
-
+        // We can render this default option if we want
         const defaultOption = suggestionList[0];
 
-        // onChangeText={(quantity) => setQuantity(quantity)}
-        
-        // Add styling to the dropdown modal here
         return (
             <ModalDropdown 
                 style={styles.inputView}
-                textStyle = {{fontWeight:'bold', textAlign: 'right', fontSize: 15, marginLeft: 20}}
-                dropdownStyle={{width:170}}
+                defaultValue={'Ingredient Options (Click Me):'}
+                dropdownTextStyle={{ backgroundColor: '#fff', fontSize: 18, color: '#000000' }}/*Style here*/
+                textStyle={{ fontSize: 14, color: '#2a3439', alignSelf: 'flex-start', marginLeft: 30, height: 50, marginTop: 15}}
+                dropdownStyle={{ flex: 1, width: '70%', marginVertical: 10, borderWidth: 1, borderColor: '#D3D3D3' }}
                 options={suggestionList}
-                onSelect={(value) => setIngredientName(value)}
+                onSelect={(value) => {
+                    setIngredientName(suggestionList[value])
+                    setRenderDropdown(false)
+                }}
             />
         )
     }
 
     return (
         <View style={styles.container}>
+            <Image style={styles.image} source={require("../assets/add_ingredient.png")} />
 
             {/* Ingredient Name */}
             <View style={styles.inputView}>
@@ -203,6 +207,7 @@ export default ({navigation}) => {
                     placeholderTextColor="#003f5c"
                     autoCapitalize="none"
                     onChangeText={(ingredient) => setIngredientName(ingredient)}
+                    value={ingredientName}
                 />
 
             <TouchableOpacity style={styles.smallButt}
@@ -242,12 +247,13 @@ export default ({navigation}) => {
                     position: 'absolute',
                     left: 2,
                     top: 4,
-                    marginLeft: 0
+                    marginLeft: 20
                 },
                 dateInput: {
-                    marginLeft: 36
+                    marginLeft: 56
                 },
-                dateText: "Select Expiration Date"
+                placeholderText: "Select Expiration Date",
+                dateText: "Select Expiration Date",
                 // ... You can check the source to find the other keys.
                 }}
             onDateChange={(date) => {setExpiration(date)}}
