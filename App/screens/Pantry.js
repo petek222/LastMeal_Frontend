@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,8 @@ import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Autocomplete from 'react-native-autocomplete-input'
 import { useIsFocused } from "@react-navigation/native";
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+
 
 const window = Dimensions.get('window');
 
@@ -72,7 +74,50 @@ const styles = StyleSheet.create({
         margin: 60,
         right: -50,
         bottom: 0,
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10
+        // elevation: 2
+      },
+      buttonOpen: {
+        backgroundColor: "#ff5151",
+        width: 100
+      },
+      buttonClose: {
+        backgroundColor: "#6be3d9",
+        width: 70
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+      }
   });
 
 const AddIngredientButton = (props) => {
@@ -86,34 +131,125 @@ const AddIngredientButton = (props) => {
     )
 };
 
+const DeletionModal = (props) => {
+
+    const [modalVisible, setModalVisible] = useState(false);
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => {
+                    setModalVisible(!modalVisible)
+                    props.remove(false)
+                }}
+              >
+                <Text style={styles.textStyle}>Yes</Text>
+              </TouchableOpacity>
+              <Text>  </Text>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => {
+                    setModalVisible(!modalVisible)
+                    props.remove(true)
+                }}
+              >
+                <Text style={styles.textStyle}>No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
+            <Ionicons name="ios-close-circle-outline" style={{fontSize: 25, marginTop: 20}} />
+        </TouchableOpacity>
+      </View>
+    );
+}
+
 const PantryCard = (props) => {
 
-    const formatDate = (obj) => {
+    console.log("CHECK")
+    console.log(props)
 
+    const [viewComponent, setViewComponent] = useState(true);
+    const [viewDeletion, setViewDeletion] = useState(false);
+    const [deletionChoice, setDeletionChoice] = useState(false)
+
+    const formatDate = (obj) => {
         let epochDate = obj.$date
         let convDate = new Date(epochDate)
         return convDate.toLocaleDateString()
     }
 
-    // Figure out why image not rendering here
-    return (
-        <View style={styles.itemCard}>
-            <View style={styles.itemCardContent}>
-                <Thumbnail source={props.image ? {uri: props.image} : {source: require('../assets/chicken.jpg')}} /> 
-                <View style={styles.itemCardText}>
-                    <Text style={styles.foodNameText}>{props.title}</Text>
+    const stateCallback = async (result) => {
 
-                    <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>
+        // Remove Card from Pantry if 'Yes' confirmation selected
+        setViewComponent(result);
 
-                    <Text style={styles.expirationText}>Quantity: {props.quantity ? props.quantity : "Not specified"}</Text>
+        // Delete card from Pantry storage is 'Yes' confirmation selected (ie. 'false' result)
+        if (!result) {
+
+            // Make call to API to delete ingredient from user account
+            let username = await AsyncStorage.getItem("username");
+
+            console.log("Removing item to pantry")
+            console.log(props.title)
+            console.log(props.quantity)
+            console.log(props.expr)
+
+            // Below is where the actual API call will be made; update Pantry API accordingly
+            // try {            
+
+            //     let response = await api.delete(`/pantry/delete/${props.title}`);
+    
+            //     console.log("Ingredient Deletion Response")
+            //     console.log(response)
+            //     // return json;
+            // } catch (error) {
+            //     notifyMessage("Deletion Failed");
+            //     console.error(error);
+            // }
+
+        }
+
+    }
+
+    if (viewComponent) {
+        return (
+            <View style={styles.itemCard} id={props.title}>
+                <View style={styles.itemCardContent}>
+                    <Thumbnail source={props.image ? {uri: props.image} : {source: require('../assets/chicken.jpg')}} /> 
+                    <View style={styles.itemCardText}>
+                        <Text style={styles.foodNameText}>{props.title}</Text>
+    
+                        <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>
+    
+                        <Text style={styles.expirationText}>Quantity: {props.quantity ? props.quantity : "Not specified"}</Text>
+                    </View>
+                </View>
+                {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
+                <View style={styles.cardButtons}>
+                    <Ionicons name="heart-outline" style={{fontSize: 25}} />
+                    <DeletionModal item={props.title} remove={stateCallback} ></DeletionModal>
                 </View>
             </View>
-            <View style={styles.cardButtons}>
-                <Ionicons name="heart-outline" style={{fontSize: 20}} />
-                <Ionicons name="ios-close-circle-outline" style={{fontSize: 20}} />
-            </View>
-        </View>
-    )
+        )
+    }
+
+    else {
+        return null;
+    }
 }
 
 export default ({navigation}) => {

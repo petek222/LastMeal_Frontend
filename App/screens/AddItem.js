@@ -124,7 +124,7 @@ export default ({navigation}) => {
 
         let username = await AsyncStorage.getItem("username");
 
-        console.log("HERE HERE")
+        console.log("Adding item to pantry")
         console.log(ingredientName)
         console.log(quantity)
         console.log(expiration)
@@ -256,7 +256,9 @@ export default ({navigation}) => {
                 dateText: "Select Expiration Date",
                 // ... You can check the source to find the other keys.
                 }}
-            onDateChange={(date) => {setExpiration(date)}}
+            onDateChange={(date) => {
+                setExpiration(date)
+            }}
             />
             </View>
 
