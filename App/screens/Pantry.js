@@ -179,12 +179,13 @@ const DeletionModal = (props) => {
 
 const PantryCard = (props) => {
 
-    console.log("CHECK")
-    console.log(props)
+    // console.log("CHECK")
+    // console.log(props)
 
-    const [viewComponent, setViewComponent] = useState(true);
+    const [viewComponent, setViewComponent] = useState(props.view);
     const [viewDeletion, setViewDeletion] = useState(false);
     const [deletionChoice, setDeletionChoice] = useState(false)
+    const [deletedItem, setDeletedItem] = useState('')
 
     const formatDate = (obj) => {
         let epochDate = obj.$date
@@ -204,6 +205,7 @@ const PantryCard = (props) => {
             let username = await AsyncStorage.getItem("username");
 
             console.log("Removing item to pantry")
+            console.log(username)
             console.log(props.title)
             console.log(props.quantity)
             console.log(props.expr)
@@ -216,6 +218,8 @@ const PantryCard = (props) => {
     
                 console.log("Ingredient Deletion Response")
                 console.log(response)
+                setDeletedItem(props.title)
+                // setViewComponent(true);
                 // return json;
             } catch (error) {
                 notifyMessage("Deletion Failed");
@@ -226,7 +230,7 @@ const PantryCard = (props) => {
 
     }
 
-    if (viewComponent) {
+    if (props.title != deletedItem) {
         return (
             <View style={styles.itemCard} id={props.title}>
                 <View style={styles.itemCardContent}>
@@ -347,7 +351,9 @@ export default ({navigation}) => {
                                     key={i}
                                     title={ingredient.name} 
                                     expr={ingredient.expiration_date} 
-                                    quantity={ingredient.quantity}>
+                                    quantity={ingredient.quantity}
+                                    view={true}
+                                    >
                                 </PantryCard>
                             );
                         })
