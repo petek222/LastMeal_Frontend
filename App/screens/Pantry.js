@@ -208,18 +208,19 @@ const PantryCard = (props) => {
             console.log(props.quantity)
             console.log(props.expr)
 
-            // Below is where the actual API call will be made; update Pantry API accordingly
-            // try {            
+            // Call the API to delete the object from db
+            // http://localhost:5000/v1/pantry/delete/petek222?ingredient=Chicken
+            try {            
 
-            //     let response = await api.delete(`/pantry/delete/${props.title}`);
+                let response = await api.delete(`/pantry/delete/${username}?ingredient=${props.title}`);
     
-            //     console.log("Ingredient Deletion Response")
-            //     console.log(response)
-            //     // return json;
-            // } catch (error) {
-            //     notifyMessage("Deletion Failed");
-            //     console.error(error);
-            // }
+                console.log("Ingredient Deletion Response")
+                console.log(response)
+                // return json;
+            } catch (error) {
+                notifyMessage("Deletion Failed");
+                console.error(error);
+            }
 
         }
 
