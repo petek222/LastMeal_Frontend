@@ -177,6 +177,27 @@ const DeletionModal = (props) => {
     );
 }
 
+// Ingredient-Recipe Generation selection feature (ie. heart icons)
+const IngredientSelect = (props) => {
+
+    const [select, isSelected] = useState('')
+    const [color, setColor] = useState('#000000');
+
+    return (
+        <TouchableOpacity>
+            <Ionicons name="heart-outline" color={color} style={{fontSize: 25}} onPress={() => {
+                if (color !== '#FF1493') {
+                    setColor('#FF1493')
+                }
+                else {
+                    setColor('#000000')
+                }
+            }}/>
+        </TouchableOpacity>
+    )
+
+}
+
 const PantryCard = (props) => {
 
     // console.log("CHECK")
@@ -245,7 +266,8 @@ const PantryCard = (props) => {
                 </View>
                 {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
                 <View style={styles.cardButtons}>
-                    <Ionicons name="heart-outline" style={{fontSize: 25}} />
+                    {/* <Ionicons name="heart-outline" style={{fontSize: 25}} /> */}
+                    <IngredientSelect></IngredientSelect>
                     <DeletionModal item={props.title} remove={stateCallback} ></DeletionModal>
                 </View>
             </View>
