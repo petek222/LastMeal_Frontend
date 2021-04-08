@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     infoContent: {
         fontSize: 16,
         paddingTop: 5,
-        paddingBottom: 10
+        paddingBottom: 20
     },
 });
 
@@ -72,14 +72,18 @@ export default ({navigation}) => {
                 <View style={styles.bodyContainer}>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Description</Text>
-                        <Text style={styles.infoContent}>Recipe description goes here, might not be necessary</Text>
+                        <Text style={styles.infoContent}>Delicious greek chicken best served with pita bread, tzatziki sauce and rice.</Text>
+                    </View>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.infoHeader}>Cook Time</Text>
+                        <Text style={styles.infoContent}>30 mins</Text>
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Ingredients</Text>
                         <Text style={styles.infoContent}>Recipe ingredients go here.</Text>
                     </View>
                     <View style={styles.infoContainer}>
-                        <Text style={styles.infoHeader}>Steps</Text>
+                        <Text style={styles.infoHeader}>Instructions</Text>
                         <Text style={styles.infoContent}>Recipe steps go here.</Text>
                     </View>
                 </View>
