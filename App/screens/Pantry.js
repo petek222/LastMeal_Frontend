@@ -138,7 +138,16 @@ const GenerateRecipesButton = (props) => {
         style={styles.fab}
         small
         label={"Generate Recipes"}
-        onPress={() => props.nav.navigate('Recipes')}
+        onPress={() => {
+            console.log("Selected Ingredients")
+            console.log(props.items)
+            recipeIngredients = props.items
+
+            // Make some API call here to actually generate the recipes
+
+            // navigate to recipe page
+            props.nav.navigate('Recipes')
+        }}
       />
     )
 }
@@ -199,15 +208,13 @@ const IngredientSelect = (props) => {
         <TouchableOpacity  onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
             console.log("HERE")
             if (color !== '#FF1493') {
-                console.log("PINK")
-                await props.selectIngredient(currentElements => [...currentElements, props.item])
                 setColor('#FF1493')
-                console.log("HERE")
-                console.log(props.ingredientSelections)
+                await props.selectIngredient(currentElements => [...currentElements, props.item])
             }
             else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
                 console.log("BLACK")
                 setColor('#000000')
+                await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
         }}>
             <Ionicons name="heart-outline" color={color} style={{fontSize: 25}}/>
@@ -376,7 +383,7 @@ export default ({navigation}) => {
         }
     }
 
-    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton item={"SELECTED"} delete_init={true}></GenerateRecipesButton>: <AddIngredientButton nav={navigation}></AddIngredientButton>
+    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>: <AddIngredientButton nav={navigation}></AddIngredientButton>
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
