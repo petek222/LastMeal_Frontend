@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Autocomplete from 'react-native-autocomplete-input'
 import { useIsFocused } from "@react-navigation/native";
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+// import { TouchableHighlight } from 'react-native-gesture-handler';
 
 
 const window = Dimensions.get('window');
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
         justifyContent: 'space-between',
-        padding: 5   
+        padding: 5
     },
     fab: { // Check this styling absolutism
         position: 'absolute',
@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: 22
-      },
-      modalView: {
+    },
+    modalView: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
@@ -89,45 +89,45 @@ const styles = StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
-          width: 0,
-          height: 2
+            width: 0,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
-      },
-      button: {
+    },
+    button: {
         borderRadius: 20,
         padding: 10
         // elevation: 2
-      },
-      buttonOpen: {
+    },
+    buttonOpen: {
         backgroundColor: "#ff5151",
         width: 100
-      },
-      buttonClose: {
+    },
+    buttonClose: {
         backgroundColor: "#6be3d9",
         width: 70
-      },
-      textStyle: {
+    },
+    textStyle: {
         color: "white",
         fontWeight: "bold",
         textAlign: "center"
-      },
-      modalText: {
+    },
+    modalText: {
         marginBottom: 15,
         textAlign: "center"
-      }
-  });
+    }
+});
 
 const AddIngredientButton = (props) => {
     return (
         <FAB
-        style={styles.fab}
-        small
-        icon="plus"
-        onPress={() => props.nav.navigate('AddItem')}
-      />
+            style={styles.fab}
+            small
+            icon="plus"
+            onPress={() => props.nav.navigate('AddItem')}
+        />
     )
 };
 
@@ -135,45 +135,46 @@ const DeletionModal = (props) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => {
-                    setModalVisible(!modalVisible)
-                    props.remove(false)
+        <View style={styles.centeredView}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
                 }}
-              >
-                <Text style={styles.textStyle}>Yes</Text>
-              </TouchableOpacity>
-              <Text>  </Text>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => {
-                    setModalVisible(!modalVisible)
-                    props.remove(true)
-                }}
-              >
-                <Text style={styles.textStyle}>No</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-        <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
-            <Ionicons name="ios-close-circle-outline" style={{fontSize: 25, marginTop: 20}} />
-        </TouchableOpacity>
-      </View>
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
+                        <TouchableOpacity
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => {
+                                setModalVisible(!modalVisible);
+                                props.remove(false);
+                            }}
+                        >
+                            <Text style={styles.textStyle}>Yes</Text>
+                        </TouchableOpacity>
+                        <Text>  </Text>
+                        <TouchableOpacity
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => {
+                                setModalVisible(!modalVisible);
+                                props.remove(true);
+                            }}
+                        >
+                            <Text style={styles.textStyle}>No</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                </View>
+            </Modal>
+            <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
+                <Ionicons name="ios-close-circle-outline" style={{ fontSize: 25, marginTop: 20 }} />
+            </TouchableOpacity>
+        </View>
     );
 }
 
@@ -212,10 +213,10 @@ const PantryCard = (props) => {
 
             // Call the API to delete the object from db
             // http://localhost:5000/v1/pantry/delete/petek222?ingredient=Chicken
-            try {            
+            try {
 
                 let response = await api.delete(`/pantry/delete/${username}?ingredient=${props.title}`);
-    
+
                 console.log("Ingredient Deletion Response")
                 console.log(response)
                 setDeletedItem(props.title)
@@ -234,18 +235,18 @@ const PantryCard = (props) => {
         return (
             <View style={styles.itemCard} id={props.title}>
                 <View style={styles.itemCardContent}>
-                    <Thumbnail source={props.image ? {uri: props.image} : {source: require('../assets/chicken.jpg')}} /> 
+                    <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
                     <View style={styles.itemCardText}>
                         <Text style={styles.foodNameText}>{props.title}</Text>
-    
+
                         <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>
-    
+
                         <Text style={styles.expirationText}>Quantity: {props.quantity ? props.quantity : "Not specified"}</Text>
                     </View>
                 </View>
                 {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
                 <View style={styles.cardButtons}>
-                    <Ionicons name="heart-outline" style={{fontSize: 25}} />
+                    <Ionicons name="heart-outline" style={{ fontSize: 25 }} />
                     <DeletionModal item={props.title} remove={stateCallback} ></DeletionModal>
                 </View>
             </View>
@@ -257,7 +258,7 @@ const PantryCard = (props) => {
     }
 }
 
-export default ({navigation}) => {
+export default ({ navigation }) => {
 
     let [ingredients, setIngredients] = useState([]);
     let [imageArray, setImageArray] = useState([]);
@@ -275,7 +276,7 @@ export default ({navigation}) => {
 
 
     const generateThumbnail = async (ingredientList) => {
-        
+
         const promises = [];
 
         ingredientList.map((ingredient, i) => {
@@ -317,11 +318,11 @@ export default ({navigation}) => {
         try {
             let username = await getUsername();
             let response = await api.get(`/pantry/${username}`);
-            if(response.data.ingredients) {
+            if (response.data.ingredients) {
                 await setIngredients(response.data.ingredients);
                 return response.data.ingredients
             }
-        } catch(err) {
+        } catch (err) {
             console.log(err);
         }
     };
@@ -340,7 +341,7 @@ export default ({navigation}) => {
             {/* To make notification bar same color as background */}
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
             <SearchBar platform="ios" placeholder="Search"></SearchBar>
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>    
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {
                         // generate ingredient cards
@@ -349,11 +350,11 @@ export default ({navigation}) => {
                                 <PantryCard
                                     image={imageArray[i]}
                                     key={i}
-                                    title={ingredient.name} 
-                                    expr={ingredient.expiration_date} 
+                                    title={ingredient.name}
+                                    expr={ingredient.expiration_date}
                                     quantity={ingredient.quantity}
                                     view={true}
-                                    >
+                                >
                                 </PantryCard>
                             );
                         })
