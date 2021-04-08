@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,8 @@ import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Autocomplete from 'react-native-autocomplete-input'
 import { useIsFocused } from "@react-navigation/native";
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+import * as Animatable from 'react-native-animatable';
 
 
 const window = Dimensions.get('window');
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
         justifyContent: 'space-between',
-        padding: 5   
+        padding: 5
     },
     fab: { // Check this styling absolutism
         position: 'absolute',
@@ -80,8 +81,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: 22
-      },
-      modalView: {
+    },
+    modalView: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
@@ -89,102 +90,149 @@ const styles = StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
-          width: 0,
-          height: 2
+            width: 0,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
-      },
-      button: {
+    },
+    button: {
         borderRadius: 20,
         padding: 10
         // elevation: 2
-      },
-      buttonOpen: {
+    },
+    buttonOpen: {
         backgroundColor: "#ff5151",
         width: 100
-      },
-      buttonClose: {
+    },
+    buttonClose: {
         backgroundColor: "#6be3d9",
         width: 70
-      },
-      textStyle: {
+    },
+    textStyle: {
         color: "white",
         fontWeight: "bold",
         textAlign: "center"
-      },
-      modalText: {
+    },
+    modalText: {
         marginBottom: 15,
         textAlign: "center"
-      }
-  });
+    }
+});
 
 const AddIngredientButton = (props) => {
     return (
         <FAB
-        style={styles.fab}
-        small
-        icon="plus"
-        onPress={() => props.nav.navigate('AddItem')}
-      />
+            style={styles.fab}
+            small
+            icon="plus"
+            onPress={() => props.nav.navigate('AddItem')}
+        />
     )
 };
+
+const GenerateRecipesButton = (props) => {
+    return (
+        <FAB
+        style={styles.fab}
+        small
+        label={"Generate Recipes"}
+        onPress={() => {
+            console.log("Selected Ingredients")
+            console.log(props.items)
+            recipeIngredients = props.items
+
+            // Make some API call here to actually generate the recipes
+
+            // navigate to recipe page
+            props.nav.navigate('Recipes')
+        }}
+      />
+    )
+}
 
 const DeletionModal = (props) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => {
-                    setModalVisible(!modalVisible)
-                    props.remove(false)
+        <View style={styles.centeredView}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
                 }}
-              >
-                <Text style={styles.textStyle}>Yes</Text>
-              </TouchableOpacity>
-              <Text>  </Text>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => {
-                    setModalVisible(!modalVisible)
-                    props.remove(true)
-                }}
-              >
-                <Text style={styles.textStyle}>No</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-        <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
-            <Ionicons name="ios-close-circle-outline" style={{fontSize: 25, marginTop: 20}} />
-        </TouchableOpacity>
-      </View>
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
+                        <TouchableOpacity
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => {
+                                setModalVisible(!modalVisible);
+                                props.remove(false);
+                            }}
+                        >
+                            <Text style={styles.textStyle}>Yes</Text>
+                        </TouchableOpacity>
+                        <Text>  </Text>
+                        <TouchableOpacity
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => {
+                                setModalVisible(!modalVisible);
+                                props.remove(true);
+                            }}
+                        >
+                            <Text style={styles.textStyle}>No</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                </View>
+            </Modal>
+            <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
+                <Ionicons name="ios-close-circle-outline" style={{ fontSize: 25, marginTop: 20 }} />
+            </TouchableOpacity>
+        </View>
     );
+}
+
+// Ingredient-Recipe Generation selection feature (ie. heart icons)
+const IngredientSelect = (props) => {
+
+    const [select, isSelected] = useState('')
+    const [color, setColor] = useState('#000000');
+
+    return (
+        <TouchableOpacity  onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
+            console.log("HERE")
+            if (color !== '#FF1493') {
+                setColor('#FF1493')
+                await props.selectIngredient(currentElements => [...currentElements, props.item])
+            }
+            else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
+                console.log("BLACK")
+                setColor('#000000')
+                await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
+            }
+        }}>
+            <Ionicons name="heart-outline" color={color} style={{fontSize: 25}}/>
+        </TouchableOpacity>
+    )
+
 }
 
 const PantryCard = (props) => {
 
-    console.log("CHECK")
-    console.log(props)
+    // console.log("CHECK")
+    // console.log(props)
 
-    const [viewComponent, setViewComponent] = useState(true);
+    const [viewComponent, setViewComponent] = useState(props.view);
     const [viewDeletion, setViewDeletion] = useState(false);
     const [deletionChoice, setDeletionChoice] = useState(false)
+    const [deletedItem, setDeletedItem] = useState('')
 
     const formatDate = (obj) => {
         let epochDate = obj.$date
@@ -204,43 +252,48 @@ const PantryCard = (props) => {
             let username = await AsyncStorage.getItem("username");
 
             console.log("Removing item to pantry")
+            console.log(username)
             console.log(props.title)
             console.log(props.quantity)
             console.log(props.expr)
 
-            // Below is where the actual API call will be made; update Pantry API accordingly
-            // try {            
+            // Call the API to delete the object from db
+            // http://localhost:5000/v1/pantry/delete/petek222?ingredient=Chicken
+            try {
 
-            //     let response = await api.delete(`/pantry/delete/${props.title}`);
-    
-            //     console.log("Ingredient Deletion Response")
-            //     console.log(response)
-            //     // return json;
-            // } catch (error) {
-            //     notifyMessage("Deletion Failed");
-            //     console.error(error);
-            // }
+                let response = await api.delete(`/pantry/delete/${username}?ingredient=${props.title}`);
+
+                console.log("Ingredient Deletion Response")
+                console.log(response)
+                setDeletedItem(props.title)
+                // setViewComponent(true);
+                // return json;
+            } catch (error) {
+                notifyMessage("Deletion Failed");
+                console.error(error);
+            }
 
         }
 
     }
 
-    if (viewComponent) {
+    if (props.title != deletedItem) {
         return (
             <View style={styles.itemCard} id={props.title}>
                 <View style={styles.itemCardContent}>
-                    <Thumbnail source={props.image ? {uri: props.image} : {source: require('../assets/chicken.jpg')}} /> 
+                    <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
                     <View style={styles.itemCardText}>
                         <Text style={styles.foodNameText}>{props.title}</Text>
-    
+
                         <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>
-    
+
                         <Text style={styles.expirationText}>Quantity: {props.quantity ? props.quantity : "Not specified"}</Text>
                     </View>
                 </View>
                 {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
                 <View style={styles.cardButtons}>
-                    <Ionicons name="heart-outline" style={{fontSize: 25}} />
+                    {/* <Ionicons name="heart-outline" style={{fontSize: 25}} /> */}
+                    <IngredientSelect item={props.title} ingredientSelections={props.ingredientSelections} selectIngredient={props.selectIngredient}></IngredientSelect>
                     <DeletionModal item={props.title} remove={stateCallback} ></DeletionModal>
                 </View>
             </View>
@@ -252,10 +305,11 @@ const PantryCard = (props) => {
     }
 }
 
-export default ({navigation}) => {
+export default ({ navigation }) => {
 
     let [ingredients, setIngredients] = useState([]);
     let [imageArray, setImageArray] = useState([]);
+    let [ingredientSelections, setIngredientSelections] = useState([]);
 
     const isFocused = useIsFocused()
 
@@ -270,7 +324,7 @@ export default ({navigation}) => {
 
 
     const generateThumbnail = async (ingredientList) => {
-        
+
         const promises = [];
 
         ingredientList.map((ingredient, i) => {
@@ -312,11 +366,11 @@ export default ({navigation}) => {
         try {
             let username = await getUsername();
             let response = await api.get(`/pantry/${username}`);
-            if(response.data.ingredients) {
+            if (response.data.ingredients) {
                 await setIngredients(response.data.ingredients);
                 return response.data.ingredients
             }
-        } catch(err) {
+        } catch (err) {
             console.log(err);
         }
     };
@@ -330,12 +384,14 @@ export default ({navigation}) => {
         }
     }
 
+    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>: <AddIngredientButton nav={navigation}></AddIngredientButton>
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
             <SearchBar platform="ios" placeholder="Search"></SearchBar>
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>    
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {
                         // generate ingredient cards
@@ -344,16 +400,22 @@ export default ({navigation}) => {
                                 <PantryCard
                                     image={imageArray[i]}
                                     key={i}
-                                    title={ingredient.name} 
-                                    expr={ingredient.expiration_date} 
-                                    quantity={ingredient.quantity}>
+                                    title={ingredient.name}
+                                    expr={ingredient.expiration_date}
+                                    quantity={ingredient.quantity}
+                                    view={true}
+                                    selectIngredient={setIngredientSelections}
+                                    ingredientSelections={ingredientSelections}
+                                    >
                                 </PantryCard>
                             );
                         })
                     }
                 </View>
             </ScrollView>
-            <AddIngredientButton nav={navigation}></AddIngredientButton>
+            <Animatable.View animation={ingredientSelections.length > 0? 'slideInUp': 'lightSpeedIn'}>
+                {actionButton}
+            </Animatable.View>
         </SafeAreaView>
     );
 }
