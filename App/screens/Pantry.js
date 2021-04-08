@@ -412,7 +412,7 @@ export default ({navigation}) => {
                     }
                 </View>
             </ScrollView>
-            <Animatable.View animation={ingredientSelections.length > 0? 'slideInUp': 'slideInRight'}>
+            <Animatable.View animation={ingredientSelections.length > 0? 'slideInUp': 'lightSpeedIn'}>
                 {actionButton}
             </Animatable.View>
         </SafeAreaView>
