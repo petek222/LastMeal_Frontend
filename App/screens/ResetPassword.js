@@ -105,20 +105,14 @@ export default ({ navigation }) => {
 
             // If username-password combo correct
             if (response.status == 200) {
-
                 // If the confirm password matches the new password
                 if (newPassword === confirmNewPassword && newPassword !== password) {
-
-                    // Make the request
-                    console.log("Properly Matched! Executing Reset Request...")
-
+                    console.log("Properly Matched! Executing Reset Request...") // Make the request
                     try {
                         let response = await api.put(`/user/password/${username}`, {
                             password: newPassword
                         });
-
                         console.log(response)
-
                         if (response.status == 201) {
                             notifyMessage("Password Reset Successfully");
                             navigation.navigate('Login', { screen: 'Login' }); // navigate back to login upon success
@@ -129,19 +123,16 @@ export default ({ navigation }) => {
                         notifyMessage("An Error Has Occurred");
                     }
                 }
-
                 else if (newPassword === password) {
                     console.log("New Password must be different than old Password")
                     notifyMessage("New Password must be different than old Password");
                 }
-
                 // If the confirm password doesnt match the new password
                 else {
                     console.log("New Password and Confirm Password do not Match")
                     notifyMessage("New Passwords Do Not Match");
                 }
             }
-
             // If username-password combo incorrect / doesnt exist
             else {
                 console.log("An Error Has Occurred")
