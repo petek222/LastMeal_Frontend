@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Autocomplete from 'react-native-autocomplete-input'
 import { useIsFocused } from "@react-navigation/native";
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import * as Animatable from 'react-native-animatable';
 
 
 const window = Dimensions.get('window');
@@ -131,6 +132,26 @@ const AddIngredientButton = (props) => {
     )
 };
 
+const GenerateRecipesButton = (props) => {
+    return (
+        <FAB
+        style={styles.fab}
+        small
+        label={"Generate Recipes"}
+        onPress={() => {
+            console.log("Selected Ingredients")
+            console.log(props.items)
+            recipeIngredients = props.items
+
+            // Make some API call here to actually generate the recipes
+
+            // navigate to recipe page
+            props.nav.navigate('Recipes')
+        }}
+      />
+    )
+}
+
 const DeletionModal = (props) => {
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -175,6 +196,31 @@ const DeletionModal = (props) => {
         </TouchableOpacity>
       </View>
     );
+}
+
+// Ingredient-Recipe Generation selection feature (ie. heart icons)
+const IngredientSelect = (props) => {
+
+    const [select, isSelected] = useState('')
+    const [color, setColor] = useState('#000000');
+
+    return (
+        <TouchableOpacity  onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
+            console.log("HERE")
+            if (color !== '#FF1493') {
+                setColor('#FF1493')
+                await props.selectIngredient(currentElements => [...currentElements, props.item])
+            }
+            else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
+                console.log("BLACK")
+                setColor('#000000')
+                await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
+            }
+        }}>
+            <Ionicons name="heart-outline" color={color} style={{fontSize: 25}}/>
+        </TouchableOpacity>
+    )
+
 }
 
 const PantryCard = (props) => {
@@ -245,7 +291,8 @@ const PantryCard = (props) => {
                 </View>
                 {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
                 <View style={styles.cardButtons}>
-                    <Ionicons name="heart-outline" style={{fontSize: 25}} />
+                    {/* <Ionicons name="heart-outline" style={{fontSize: 25}} /> */}
+                    <IngredientSelect item={props.title} ingredientSelections={props.ingredientSelections} selectIngredient={props.selectIngredient}></IngredientSelect>
                     <DeletionModal item={props.title} remove={stateCallback} ></DeletionModal>
                 </View>
             </View>
@@ -261,6 +308,7 @@ export default ({navigation}) => {
 
     let [ingredients, setIngredients] = useState([]);
     let [imageArray, setImageArray] = useState([]);
+    let [ingredientSelections, setIngredientSelections] = useState([]);
 
     const isFocused = useIsFocused()
 
@@ -335,6 +383,8 @@ export default ({navigation}) => {
         }
     }
 
+    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>: <AddIngredientButton nav={navigation}></AddIngredientButton>
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
@@ -353,6 +403,8 @@ export default ({navigation}) => {
                                     expr={ingredient.expiration_date} 
                                     quantity={ingredient.quantity}
                                     view={true}
+                                    selectIngredient={setIngredientSelections}
+                                    ingredientSelections={ingredientSelections}
                                     >
                                 </PantryCard>
                             );
@@ -360,7 +412,9 @@ export default ({navigation}) => {
                     }
                 </View>
             </ScrollView>
-            <AddIngredientButton nav={navigation}></AddIngredientButton>
+            <Animatable.View animation={ingredientSelections.length > 0? 'slideInUp': 'lightSpeedIn'}>
+                {actionButton}
+            </Animatable.View>
         </SafeAreaView>
     );
 }
