@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -390,7 +390,7 @@ export default ({ navigation }) => {
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
-            <SearchBar platform="ios" placeholder="Search"></SearchBar>
+            <SearchBar platform={Platform.OS === "ios" ? "ios" : "android"} placeholder="Search"></SearchBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {
