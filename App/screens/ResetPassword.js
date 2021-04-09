@@ -84,6 +84,7 @@ export default ({ navigation }) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [userEmail, setEmail] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
@@ -93,18 +94,16 @@ export default ({ navigation }) => {
     const [hideConfirmPass, setHideConfirmPass] = useState(true)
 
     // Function for performing password reset
-    const resetPassword = async () => {
+    const changePassword = async () => {
         try {
-            let response = await api.post('/user/login', {
-                username: username,
-                password: password
-            });
 
-            console.log("Reset Password Response")
+            let response = await api.get(`/user/${username}`);
+
+            console.log("HELP Password Response")
             console.log(response)
 
-            // If username-password combo correct
-            if (response.status == 200) {
+            // If username-email combo correct
+            if (response.data.email == userEmail) {
                 // If the confirm password matches the new password
                 if (newPassword === confirmNewPassword && newPassword !== password) {
                     console.log("Properly Matched! Executing Reset Request...") // Make the request
@@ -114,7 +113,7 @@ export default ({ navigation }) => {
                         });
                         console.log(response)
                         if (response.status == 201) {
-                            notifyMessage("Password Reset Successfully");
+                            notifyMessage("Password Changed Successfully");
                             navigation.navigate('Login', { screen: 'Login' }); // navigate back to login upon success
                         }
                     }
@@ -135,12 +134,12 @@ export default ({ navigation }) => {
             }
             // If username-password combo incorrect / doesnt exist
             else {
-                console.log("An Error Has Occurred")
-                notifyMessage("An Error Has Occurred");
+                console.log("Username/Email Incorrect")
+                notifyMessage("Username/Email Incorrect");
             }
 
         } catch (error) {
-            notifyMessage("Username/Original Password Incorrect"); 
+            notifyMessage("Username/Email Incorrect"); 
             console.error(error);
         }
     };
@@ -170,22 +169,15 @@ export default ({ navigation }) => {
                 />
             </View>
 
-            {/* Password */}
+            {/* Email */}
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.TextInput}
-                    placeholder="Password"
+                    placeholder="Email"
                     placeholderTextColor="#003f5c"
+                    autoCapitalize="none"
                     // secureTextEntry={true}
-                    secureTextEntry={hidePass ? true : false}
-                    onChangeText={(password) => setPassword(password)}
-                />
-
-                <Icon style={styles.hidePassButt}
-                    name={hidePass ? 'eye-slash' : 'eye'}
-                    size={18}
-                    color="grey"
-                    onPress={() => setHidePass(!hidePass)}
+                    onChangeText={(userEmail) => setEmail(userEmail)}
                 />
             </View>
 
@@ -229,9 +221,9 @@ export default ({ navigation }) => {
 
 
             <TouchableOpacity style={styles.bigButt}
-                disabled={!Boolean(username && password && newPassword)}
-                onPress={() => resetPassword()}>
-                <Text style={styles.loginText}>Reset Password</Text>
+                disabled={!Boolean(username && userEmail && newPassword && confirmNewPassword)}
+                onPress={() => changePassword()}>
+                <Text style={styles.loginText}>Change Password</Text>
             </TouchableOpacity>
 
         </View>
