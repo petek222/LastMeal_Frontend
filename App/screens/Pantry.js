@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 
+var stringSimilarity = require("string-similarity");
 
 const window = Dimensions.get('window');
 
@@ -135,20 +136,20 @@ const AddIngredientButton = (props) => {
 const GenerateRecipesButton = (props) => {
     return (
         <FAB
-        style={styles.fab}
-        small
-        label={"Generate Recipes"}
-        onPress={() => {
-            console.log("Selected Ingredients")
-            console.log(props.items)
-            recipeIngredients = props.items
+            style={styles.fab}
+            small
+            label={"Generate Recipes"}
+            onPress={() => {
+                console.log("Selected Ingredients")
+                console.log(props.items)
+                recipeIngredients = props.items
 
-            // Make some API call here to actually generate the recipes
+                // Make some API call here to actually generate the recipes
 
-            // navigate to recipe page
-            props.nav.navigate('Recipes')
-        }}
-      />
+                // navigate to recipe page
+                props.nav.navigate('Recipes')
+            }}
+        />
     )
 }
 
@@ -206,7 +207,7 @@ const IngredientSelect = (props) => {
     const [color, setColor] = useState('#000000');
 
     return (
-        <TouchableOpacity  onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
+        <TouchableOpacity onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
             console.log("HERE")
             if (color !== '#FF1493') {
                 setColor('#FF1493')
@@ -218,7 +219,7 @@ const IngredientSelect = (props) => {
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
         }}>
-            <Ionicons name="heart-outline" color={color} style={{fontSize: 25}}/>
+            <Ionicons name="heart-outline" color={color} style={{ fontSize: 25 }} />
         </TouchableOpacity>
     )
 
@@ -310,6 +311,8 @@ export default ({ navigation }) => {
     let [ingredients, setIngredients] = useState([]);
     let [imageArray, setImageArray] = useState([]);
     let [ingredientSelections, setIngredientSelections] = useState([]);
+    let [search, setSearch] = useState('');
+
 
     const isFocused = useIsFocused()
 
@@ -384,38 +387,70 @@ export default ({ navigation }) => {
         }
     }
 
-    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>: <AddIngredientButton nav={navigation}></AddIngredientButton>
+    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton> : <AddIngredientButton nav={navigation}></AddIngredientButton>
+
+    updateSearch = (str) => {
+        setSearch(str);
+        // console.log(search);
+        console.log("heres ingredint");
+        // console.log(ingredients[0]);
+        // console.log(search);
+
+    };
+
+    let button;
+    
+    if (Platform.OS === "ios") {
+        button = (<Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
+            {actionButton}
+        </Animatable.View>)
+    } else {
+        button = actionButton;
+    }
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
-            <SearchBar platform="ios" placeholder="Search"></SearchBar>
+            <SearchBar
+                platform={Platform.OS === "ios" ? "ios" : "android"}
+                placeholder="Search"
+                onChangeText={this.updateSearch}></SearchBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {
                         // generate ingredient cards
                         ingredients.map((ingredient, i) => {
-                            return (
-                                <PantryCard
-                                    image={imageArray[i]}
-                                    key={i}
-                                    title={ingredient.name}
-                                    expr={ingredient.expiration_date}
-                                    quantity={ingredient.quantity}
-                                    view={true}
-                                    selectIngredient={setIngredientSelections}
-                                    ingredientSelections={ingredientSelections}
+
+                            //search through cards
+                            if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
+                                // if (search === '' || stringSimilarity.compareTwoStrings(search.toString(), ingredient.name) > 0.1) {
+
+                                return (
+                                    <PantryCard
+                                        image={imageArray[i]}
+                                        key={i}
+                                        title={ingredient.name}
+                                        expr={ingredient.expiration_date}
+                                        quantity={ingredient.quantity}
+                                        view={true}
+                                        selectIngredient={setIngredientSelections}
+                                        ingredientSelections={ingredientSelections}
                                     >
-                                </PantryCard>
-                            );
+                                    </PantryCard>
+                                );
+                            } else {
+                                // console.log("no match");
+                                return;
+                            }
                         })
                     }
                 </View>
             </ScrollView>
-            <Animatable.View animation={ingredientSelections.length > 0? 'slideInUp': 'lightSpeedIn'}>
+            {/* <Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
                 {actionButton}
-            </Animatable.View>
+            </Animatable.View> */}
+            {button}
         </SafeAreaView>
     );
 }
