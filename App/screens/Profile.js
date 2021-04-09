@@ -3,9 +3,7 @@ import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpa
 import { Avatar } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Gravatar, GravatarApi } from 'react-native-gravatar';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import Constants from 'expo-constants';
 import { Component } from 'react';
 
@@ -190,8 +188,11 @@ export default ({ navigation }) => {
             <View style={{ position: 'absolute', bottom: 10 }}>
                 {/* <View style={{flexDirection: 'row-reverse'}}> */}
 
-                <TouchableOpacity>
-                    <Text onPress={() => navigation.navigate('Login')}>Log Out</Text>
+                <TouchableOpacity onPress={async () => {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Login');
+                }}>
+                    <Text>Log Out</Text>
                 </TouchableOpacity>
             </View>
 
