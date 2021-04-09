@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
-        marginTop: statusBarHeight
+        marginTop: statusBarHeight,
     },
     scrollViewContent: {
         alignItems: 'center'
@@ -35,10 +35,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: cardWidth,
         height: cardHeight,
-        margin: '2%',
+        // margin: '2%',
+        marginBottom: '2%',
         borderRadius: 10,
         borderColor: '#E2E2E2',
-        borderWidth: 2,
+        borderWidth: 1,
         shadowOffset: {
             width: 2,
             height: 4,
@@ -73,9 +74,9 @@ const styles = StyleSheet.create({
     },
     fab: { // Check this styling absolutism
         position: 'absolute',
-        margin: 60,
-        right: -50,
-        bottom: 0,
+        margin: 20,
+        right: 0,
+        bottom: 30,
     },
     centeredView: {
         flex: 1,
@@ -119,14 +120,26 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
-    }
+    },
+    sortButt: {
+        // width: "80%", 
+        borderRadius: 15,
+        height: 30,
+        width: 60,
+        alignItems: "center",
+        justifyContent: "center",
+        // marginTop: 40,
+        backgroundColor: "#f2c572",
+        margin: 5,
+        // marginBottom: 30,
+    },
 });
 
 const AddIngredientButton = (props) => {
     return (
         <FAB
             style={styles.fab}
-            small
+            medium
             icon="plus"
             onPress={() => props.nav.navigate('AddItem')}
         />
@@ -138,7 +151,7 @@ const GenerateRecipesButton = (props) => {
         <FAB
             style={styles.fab}
             small
-            label={"Generate Recipes"}
+            label="Generate Recipes"
             onPress={() => {
                 console.log("Selected Ingredients")
                 console.log(props.items)
@@ -194,7 +207,7 @@ const DeletionModal = (props) => {
                 </View>
             </Modal>
             <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
-                <Ionicons name="ios-close-circle-outline" style={{ fontSize: 25, marginTop: 20 }} />
+                <Ionicons name="trash-outline" style={{ fontSize: 30 }} />
             </TouchableOpacity>
         </View>
     );
@@ -209,8 +222,8 @@ const IngredientSelect = (props) => {
     return (
         <TouchableOpacity onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
             console.log("HERE")
-            if (color !== '#FF1493') {
-                setColor('#FF1493')
+            if (color !== '#6be3d9') {
+                setColor('#6be3d9')
                 await props.selectIngredient(currentElements => [...currentElements, props.item])
             }
             else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
@@ -219,7 +232,7 @@ const IngredientSelect = (props) => {
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
         }}>
-            <Ionicons name="heart-outline" color={color} style={{ fontSize: 25 }} />
+            <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 30 }} />
         </TouchableOpacity>
     )
 
@@ -399,7 +412,7 @@ export default ({ navigation }) => {
     };
 
     let button;
-    
+
     if (Platform.OS === "ios") {
         button = (<Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
             {actionButton}
@@ -416,6 +429,25 @@ export default ({ navigation }) => {
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"
                 onChangeText={this.updateSearch}></SearchBar>
+
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
+                <Text>Sort: </Text>
+                <TouchableOpacity
+                    style={styles.sortButt}
+                    onPress={() => {
+
+                    }}>
+                    <Text>Name</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.sortButt}
+                    onPress={() => {
+
+                    }}>
+                    <Text>Date</Text>
+                </TouchableOpacity>
+            </View>
+
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {
@@ -424,7 +456,6 @@ export default ({ navigation }) => {
 
                             //search through cards
                             if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
-                                // if (search === '' || stringSimilarity.compareTwoStrings(search.toString(), ingredient.name) > 0.1) {
 
                                 return (
                                     <PantryCard
