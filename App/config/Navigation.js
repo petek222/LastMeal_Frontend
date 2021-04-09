@@ -11,6 +11,7 @@ import Recipes from '../screens/Recipes';
 import Options from '../screens/Options';
 import AddItem from '../screens/AddItem';
 import RecipeInfo from '../screens/RecipeInfo';
+import ResetPassword from '../screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -86,6 +87,7 @@ export default () => (
             <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
             <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
             <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
+            <Stack.Screen name="ResetPassword" component={ResetPassword} options={{headerShown: false}} />
         </Stack.Navigator>
     </NavigationContainer>
 )
