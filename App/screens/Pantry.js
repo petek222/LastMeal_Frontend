@@ -120,7 +120,19 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
-    }
+    },
+    sortButt: {
+        // width: "80%", 
+        borderRadius: 15,
+        height: 30,
+        width: 60,
+        alignItems: "center",
+        justifyContent: "center",
+        // marginTop: 40,
+        backgroundColor: "#f2c572",
+        margin: 5,
+        // marginBottom: 30,
+    },
 });
 
 const AddIngredientButton = (props) => {
@@ -417,6 +429,25 @@ export default ({ navigation }) => {
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"
                 onChangeText={this.updateSearch}></SearchBar>
+
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
+                <Text>Sort: </Text>
+                <TouchableOpacity
+                    style={styles.sortButt}
+                    onPress={() => {
+
+                    }}>
+                    <Text>Name</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.sortButt}
+                    onPress={() => {
+
+                    }}>
+                    <Text>Date</Text>
+                </TouchableOpacity>
+            </View>
+
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {
@@ -425,7 +456,6 @@ export default ({ navigation }) => {
 
                             //search through cards
                             if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
-                                // if (search === '' || stringSimilarity.compareTwoStrings(search.toString(), ingredient.name) > 0.1) {
 
                                 return (
                                     <PantryCard

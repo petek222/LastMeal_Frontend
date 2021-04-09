@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#f2c572",
         marginBottom: 30,
     },
+    
     signupButt: {
         height: 30,
         marginBottom: 30,
