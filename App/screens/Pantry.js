@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
         width: cardWidth,
         height: cardHeight,
         // margin: '2%',
-        marginTop: '2%',
+        marginBottom: '2%',
         borderRadius: 10,
         borderColor: '#E2E2E2',
-        borderWidth: 2,
+        borderWidth: 1,
         shadowOffset: {
             width: 2,
             height: 4,
