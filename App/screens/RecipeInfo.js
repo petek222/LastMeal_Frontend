@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     nameContainer: {
-        maxWidth: windowWidth * 0.6
+        maxWidth: windowWidth * 0.55
     },
     recipeNameText: {
         fontSize: 36,
