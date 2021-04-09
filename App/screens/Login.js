@@ -140,7 +140,7 @@ export default ({ navigation }) => {
             </View>
 
             <TouchableOpacity>
-                <Text style={styles.forgotButt}>Forgot Password</Text>
+                <Text style={styles.forgotButt} onPress={() => navigation.navigate('ResetPassword')}>Forgot Password</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.loginButt}
