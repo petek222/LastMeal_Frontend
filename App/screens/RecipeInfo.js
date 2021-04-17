@@ -86,12 +86,6 @@ export default ({navigation}) => {
                         <Text style={styles.infoHeader}>Instructions</Text>
                         <Text style={styles.infoContent}>Recipe steps go here.</Text>
                     </View>
-                    <TouchableOpacity onPress={() => {
-                        PushNotification.popInitialNotification((notification) => {
-                            console.log('Initial Notification', notification);
-                          });
-                    }}>
-                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </SafeAreaView>
