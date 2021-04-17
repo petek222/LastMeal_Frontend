@@ -87,9 +87,6 @@ export default ({navigation}) => {
                             console.log('Initial Notification', notification);
                           });
                     }}>
-                        <View style={styles.infoContainer}>
-                            <Text style={styles.infoHeader}>Push Me for Notification Test</Text>
-                        </View>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

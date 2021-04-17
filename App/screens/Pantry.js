@@ -64,6 +64,10 @@ const styles = StyleSheet.create({
     expirationText: {
         fontSize: 12
     },
+    warnExpirationText: {
+        fontSize: 12,
+        color: '#ff6961'
+    },
     cardButtons: {
         flex: 1,
         alignItems: 'flex-end',
@@ -277,6 +281,9 @@ const PantryCard = (props) => {
 
     }
 
+    console.log("HELP HERE");
+    console.log(props.warnNotification)
+
     if (props.title != deletedItem) {
         return (
             <View style={styles.itemCard} id={props.title}>
@@ -285,7 +292,8 @@ const PantryCard = (props) => {
                     <View style={styles.itemCardText}>
                         <Text style={styles.foodNameText}>{props.title}</Text>
 
-                        <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>
+                        {props.warnNotification ? <Text style={styles.warnExpirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text> : <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>}
+                        {/* <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text> */}
 
                         <Text style={styles.expirationText}>Quantity: {props.quantity ? props.quantity : "Not specified"}</Text>
                     </View>
@@ -396,6 +404,17 @@ export default ({ navigation }) => {
                     {
                         // generate ingredient cards
                         ingredients.map((ingredient, i) => {
+
+                            // Grab dates, convert to seconds
+                            let currentDateSeconds = new Date().getTime() / 1000
+                            let expirationDateSeconds = ingredient.expiration_date.$date / 1000
+                            let warnNotification = false
+
+                            // If item is within 2 days (ie. 259200 seconds) of expiring, set styling
+                            if (expirationDateSeconds - 259200 < currentDateSeconds) {
+                                warnNotification = true
+                            }
+
                             return (
                                 <PantryCard
                                     image={imageArray[i]}
@@ -406,6 +425,7 @@ export default ({ navigation }) => {
                                     view={true}
                                     selectIngredient={setIngredientSelections}
                                     ingredientSelections={ingredientSelections}
+                                    warnNotification={warnNotification}
                                     >
                                 </PantryCard>
                             );

@@ -201,14 +201,3 @@ export default ({ navigation }) => {
         // </SafeAreaView>
     )
 }
-
-// async function schedulePushNotification() {
-//     await Notifications.scheduleNotificationAsync({
-//       content: {
-//         title: "Your food bad",
-//         body: 'Uh oh',
-//         data: { data: 'data' },
-//       },
-//       trigger: { seconds: 2 },
-//     });
-//   }
