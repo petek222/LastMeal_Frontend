@@ -187,11 +187,6 @@ export default ({ navigation }) => {
             <UserInfo title={'Username'} info={username} />
             <UserInfo title={'Email'} info={email} />
 
-            <TouchableOpacity style={styles.bigButt}
-                onPress={async () => await schedulePushNotification()}>
-                <Text style={styles.loginText}>Test Push Notifications in-app</Text>
-            </TouchableOpacity>
-
             {/* <View style={{position: 'absolute', right: 0}}> */}
             <View style={{ position: 'absolute', bottom: 10 }}>
                 {/* <View style={{flexDirection: 'row-reverse'}}> */}
@@ -207,13 +202,13 @@ export default ({ navigation }) => {
     )
 }
 
-async function schedulePushNotification() {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Your food bad",
-        body: 'Uh oh',
-        data: { data: 'data' },
-      },
-      trigger: { seconds: 2 },
-    });
-  }
+// async function schedulePushNotification() {
+//     await Notifications.scheduleNotificationAsync({
+//       content: {
+//         title: "Your food bad",
+//         body: 'Uh oh',
+//         data: { data: 'data' },
+//       },
+//       trigger: { seconds: 2 },
+//     });
+//   }

@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     ToastAndroid,
     Platform,
-    Alert
+    Alert,
+    Switch
 } from "react-native";
 
 import DatePicker from 'react-native-datepicker'
@@ -18,6 +19,7 @@ import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 var stringSimilarity = require("string-similarity");
 import ModalDropdown from 'react-native-modal-dropdown';
+import * as Notifications from 'expo-notifications';
 
 // Code below surpresses warning log boxes at bottom of app
 import {LogBox, YellowBox} from 'react-native';
@@ -45,6 +47,16 @@ const styles = StyleSheet.create({
 
     inputView: {
         backgroundColor: "#6be3d9",
+        borderRadius: 30,
+        width: "70%",
+        height: 45,
+        marginBottom: 20,
+        // alignItems: "center",
+        flexDirection: 'row',
+        // justifyContent: 'center'
+    },
+
+    switchView: {
         borderRadius: 30,
         width: "70%",
         height: 45,
@@ -96,6 +108,10 @@ const styles = StyleSheet.create({
         marginTop: 13,
         marginRight: 13,
         // marginLeft: 20,
+    },
+    notificationSwitch: { // add/tweak styling more as needed
+        marginTop: 8,
+        marginRight: 20
     }
 });
 
@@ -110,6 +126,9 @@ export default ({navigation}) => {
     const [renderDropdown, setRenderDropdown] = useState(false);
     const [suggestionList, setSuggestionList] = useState([]);
 
+    const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
+    const toggleSwitch = () => setIsNotificationEnabled(previousState => !previousState);
+
     function notifyMessage(msg) {
         if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT)
@@ -119,6 +138,25 @@ export default ({navigation}) => {
     }
 
     const addPantryItem = async () => {
+
+        // Upon adding the item to the pantry, check if they want to schedule a push notification
+        // This will currently schedule the notification for a day before the expiration date; we 
+        // want this to be configurable in the options menu eventually
+        if (isNotificationEnabled) {
+            console.log("Enabling Notifications")
+            console.log(ingredientName);
+            console.log(quantity)
+            console.log(expiration);
+
+            // Generates seconds for each
+            let expirationDate = (new Date(expiration).getTime()) / 1000
+
+            console.log("Testing date computation")
+
+            console.log(expirationDate - 86400)
+
+            await schedulePushNotification(ingredientName, expirationDate)
+        }
 
         navigation.navigate('Pantry');
 
@@ -262,6 +300,26 @@ export default ({navigation}) => {
             />
             </View>
 
+            <View style={styles.inputView}>
+            <TextInput
+                    style={styles.TextInput}
+                    placeholder="Enable Item Notifications"
+                    placeholderTextColor="#003f5c"
+                    // secureTextEntry={true}
+                    editable={false}
+                    selectTextOnFocus={false}
+                />
+                <Switch
+                    style={styles.notificationSwitch}
+                    trackColor={{ false: "#767577", true: "#eb6fbb" }}
+                    thumbColor={isNotificationEnabled ? "#f2c572" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isNotificationEnabled}
+                />
+
+            </View>
+
             <TouchableOpacity style={styles.bigButt}
                 disabled={!Boolean(ingredientName && quantity && expiration)} // Add notification here if fields not input
                 onPress={() => addPantryItem()}>
@@ -271,3 +329,15 @@ export default ({navigation}) => {
         </View>
     );
 }
+
+// Function that actually schedules notifications
+async function schedulePushNotification(ingredientName, timer) {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Expiration Notification",
+        body: `Your ${ingredientName} is going to expire in 1 day`, // If time is configurable, change this message
+        data: { data: 'data' }, // add any data here if desired
+      },
+      trigger: { seconds: timer },
+    });
+  }
