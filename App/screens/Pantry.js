@@ -66,6 +66,10 @@ const styles = StyleSheet.create({
     expirationText: {
         fontSize: 12
     },
+    warnExpirationText: {
+        fontSize: 12,
+        color: '#ff6961'
+    },
     cardButtons: {
         flex: 1,
         alignItems: 'flex-end',
@@ -207,7 +211,7 @@ const DeletionModal = (props) => {
                 </View>
             </Modal>
             <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
-                <Ionicons name="trash-outline" style={{ fontSize: 30 }} />
+                <Ionicons name="trash-outline" style={{ fontSize: 25, marginTop: 20 }} />
             </TouchableOpacity>
         </View>
     );
@@ -232,7 +236,7 @@ const IngredientSelect = (props) => {
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
         }}>
-            <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 30 }} />
+            <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 25 }} />
         </TouchableOpacity>
     )
 
@@ -299,7 +303,8 @@ const PantryCard = (props) => {
                     <View style={styles.itemCardText}>
                         <Text style={styles.foodNameText}>{props.title}</Text>
 
-                        <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>
+                        {props.warnNotification ? <Text style={styles.warnExpirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text> : <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>}
+                        {/* <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text> */}
 
                         <Text style={styles.expirationText}>Quantity: {props.quantity ? props.quantity : "Not specified"}</Text>
                     </View>
@@ -454,6 +459,16 @@ export default ({ navigation }) => {
                         // generate ingredient cards
                         ingredients.map((ingredient, i) => {
 
+                            // Grab dates, convert to seconds
+                            let currentDateSeconds = new Date().getTime() / 1000
+                            let expirationDateSeconds = ingredient.expiration_date.$date / 1000
+                            let warnNotification = false
+                            
+                            // If item is within 2 days (ie. 259200 seconds) of expiring, set styling
+                            if (expirationDateSeconds - 259200 < currentDateSeconds) {
+                                warnNotification = true
+                            }
+
                             //search through cards
                             if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
 
@@ -467,6 +482,7 @@ export default ({ navigation }) => {
                                         view={true}
                                         selectIngredient={setIngredientSelections}
                                         ingredientSelections={ingredientSelections}
+                                        warnNotification={warnNotification}
                                     >
                                     </PantryCard>
                                 );

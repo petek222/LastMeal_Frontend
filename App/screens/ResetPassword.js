@@ -105,7 +105,7 @@ export default ({ navigation }) => {
             // If username-email combo correct
             if (response.data.email == userEmail) {
                 // If the confirm password matches the new password
-                if (newPassword === confirmNewPassword && newPassword !== password) {
+                if (newPassword === confirmNewPassword) {
                     console.log("Properly Matched! Executing Reset Request...") // Make the request
                     try {
                         let response = await api.put(`/user/password/${username}`, {
@@ -121,10 +121,6 @@ export default ({ navigation }) => {
                         console.log(error)
                         notifyMessage("An Error Has Occurred");
                     }
-                }
-                else if (newPassword === password) {
-                    console.log("New Password must be different than old Password")
-                    notifyMessage("New Password must be different than old Password");
                 }
                 // If the confirm password doesnt match the new password
                 else {

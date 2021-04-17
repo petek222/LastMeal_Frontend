@@ -4,6 +4,8 @@ import { Avatar } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Gravatar, GravatarApi } from 'react-native-gravatar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Notifications from 'expo-notifications';
+
 import Constants from 'expo-constants';
 import { Component } from 'react';
 
