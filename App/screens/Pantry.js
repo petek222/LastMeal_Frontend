@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 
+var stringSimilarity = require("string-similarity");
 
 const window = Dimensions.get('window');
 
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
-        marginTop: statusBarHeight
+        marginTop: statusBarHeight,
     },
     scrollViewContent: {
         alignItems: 'center'
@@ -34,10 +35,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: cardWidth,
         height: cardHeight,
-        margin: '2%',
+        // margin: '2%',
+        marginBottom: '2%',
         borderRadius: 10,
         borderColor: '#E2E2E2',
-        borderWidth: 2,
+        borderWidth: 1,
         shadowOffset: {
             width: 2,
             height: 4,
@@ -76,9 +78,9 @@ const styles = StyleSheet.create({
     },
     fab: { // Check this styling absolutism
         position: 'absolute',
-        margin: 60,
-        right: -50,
-        bottom: 0,
+        margin: 20,
+        right: 0,
+        bottom: 30,
     },
     centeredView: {
         flex: 1,
@@ -122,14 +124,26 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
-    }
+    },
+    sortButt: {
+        // width: "80%", 
+        borderRadius: 15,
+        height: 30,
+        width: 60,
+        alignItems: "center",
+        justifyContent: "center",
+        // marginTop: 40,
+        backgroundColor: "#f2c572",
+        margin: 5,
+        // marginBottom: 30,
+    },
 });
 
 const AddIngredientButton = (props) => {
     return (
         <FAB
             style={styles.fab}
-            small
+            medium
             icon="plus"
             onPress={() => props.nav.navigate('AddItem')}
         />
@@ -139,20 +153,20 @@ const AddIngredientButton = (props) => {
 const GenerateRecipesButton = (props) => {
     return (
         <FAB
-        style={styles.fab}
-        small
-        label={"Generate Recipes"}
-        onPress={() => {
-            console.log("Selected Ingredients")
-            console.log(props.items)
-            recipeIngredients = props.items
+            style={styles.fab}
+            small
+            label="Generate Recipes"
+            onPress={() => {
+                console.log("Selected Ingredients")
+                console.log(props.items)
+                recipeIngredients = props.items
 
-            // Make some API call here to actually generate the recipes
+                // Make some API call here to actually generate the recipes
 
-            // navigate to recipe page
-            props.nav.navigate('Recipes')
-        }}
-      />
+                // navigate to recipe page
+                props.nav.navigate('Recipes')
+            }}
+        />
     )
 }
 
@@ -197,7 +211,7 @@ const DeletionModal = (props) => {
                 </View>
             </Modal>
             <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
-                <Ionicons name="ios-close-circle-outline" style={{ fontSize: 25, marginTop: 20 }} />
+                <Ionicons name="trash-outline" style={{ fontSize: 25, marginTop: 20 }} />
             </TouchableOpacity>
         </View>
     );
@@ -210,10 +224,10 @@ const IngredientSelect = (props) => {
     const [color, setColor] = useState('#000000');
 
     return (
-        <TouchableOpacity  onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
+        <TouchableOpacity onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
             console.log("HERE")
-            if (color !== '#FF1493') {
-                setColor('#FF1493')
+            if (color !== '#6be3d9') {
+                setColor('#6be3d9')
                 await props.selectIngredient(currentElements => [...currentElements, props.item])
             }
             else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
@@ -222,7 +236,7 @@ const IngredientSelect = (props) => {
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
         }}>
-            <Ionicons name="heart-outline" color={color} style={{fontSize: 25}}/>
+            <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 25 }} />
         </TouchableOpacity>
     )
 
@@ -281,9 +295,6 @@ const PantryCard = (props) => {
 
     }
 
-    console.log("HELP HERE");
-    console.log(props.warnNotification)
-
     if (props.title != deletedItem) {
         return (
             <View style={styles.itemCard} id={props.title}>
@@ -318,6 +329,8 @@ export default ({ navigation }) => {
     let [ingredients, setIngredients] = useState([]);
     let [imageArray, setImageArray] = useState([]);
     let [ingredientSelections, setIngredientSelections] = useState([]);
+    let [search, setSearch] = useState('');
+
 
     const isFocused = useIsFocused()
 
@@ -392,13 +405,54 @@ export default ({ navigation }) => {
         }
     }
 
-    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>: <AddIngredientButton nav={navigation}></AddIngredientButton>
+    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton> : <AddIngredientButton nav={navigation}></AddIngredientButton>
+
+    updateSearch = (str) => {
+        setSearch(str);
+        // console.log(search);
+        console.log("heres ingredint");
+        // console.log(ingredients[0]);
+        // console.log(search);
+
+    };
+
+    let button;
+
+    if (Platform.OS === "ios") {
+        button = (<Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
+            {actionButton}
+        </Animatable.View>)
+    } else {
+        button = actionButton;
+    }
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
-            <SearchBar platform="ios" placeholder="Search"></SearchBar>
+            <SearchBar
+                platform={Platform.OS === "ios" ? "ios" : "android"}
+                placeholder="Search"
+                onChangeText={this.updateSearch}></SearchBar>
+
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
+                <Text>Sort: </Text>
+                <TouchableOpacity
+                    style={styles.sortButt}
+                    onPress={() => {
+
+                    }}>
+                    <Text>Name</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.sortButt}
+                    onPress={() => {
+
+                    }}>
+                    <Text>Date</Text>
+                </TouchableOpacity>
+            </View>
+
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {
@@ -409,33 +463,41 @@ export default ({ navigation }) => {
                             let currentDateSeconds = new Date().getTime() / 1000
                             let expirationDateSeconds = ingredient.expiration_date.$date / 1000
                             let warnNotification = false
-
+                            
                             // If item is within 2 days (ie. 259200 seconds) of expiring, set styling
                             if (expirationDateSeconds - 259200 < currentDateSeconds) {
                                 warnNotification = true
                             }
 
-                            return (
-                                <PantryCard
-                                    image={imageArray[i]}
-                                    key={i}
-                                    title={ingredient.name}
-                                    expr={ingredient.expiration_date}
-                                    quantity={ingredient.quantity}
-                                    view={true}
-                                    selectIngredient={setIngredientSelections}
-                                    ingredientSelections={ingredientSelections}
-                                    warnNotification={warnNotification}
+                            //search through cards
+                            if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
+
+                                return (
+                                    <PantryCard
+                                        image={imageArray[i]}
+                                        key={i}
+                                        title={ingredient.name}
+                                        expr={ingredient.expiration_date}
+                                        quantity={ingredient.quantity}
+                                        view={true}
+                                        selectIngredient={setIngredientSelections}
+                                        ingredientSelections={ingredientSelections}
+                                        warnNotification={warnNotification}
                                     >
-                                </PantryCard>
-                            );
+                                    </PantryCard>
+                                );
+                            } else {
+                                // console.log("no match");
+                                return;
+                            }
                         })
                     }
                 </View>
             </ScrollView>
-            <Animatable.View animation={ingredientSelections.length > 0? 'slideInUp': 'lightSpeedIn'}>
+            {/* <Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
                 {actionButton}
-            </Animatable.View>
+            </Animatable.View> */}
+            {button}
         </SafeAreaView>
     );
 }

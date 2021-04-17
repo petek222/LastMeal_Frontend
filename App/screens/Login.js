@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#f2c572",
         marginBottom: 30,
     },
+    
     signupButt: {
         height: 30,
         marginBottom: 30,
@@ -154,9 +155,9 @@ export default ({ navigation }) => {
                 <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
             </TouchableOpacity>
 
-            {/* <TouchableOpacity>
+            <TouchableOpacity>
                 <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>Click Me</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
         </View>
     );
 }
