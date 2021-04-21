@@ -162,7 +162,7 @@ export default ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
 
-            <Text style={{ fontSize: 40 }}>Hi, {first}</Text>
+            <Text style={{ fontSize: 40, marginBottom: screen.height * 0.05 }}>Hi, {first}</Text>
             {/* <Image style={styles.image} source={require("../assets/profilepic.jpg")} /> */}
             {/* <Avatar
                 avatarStyle={{

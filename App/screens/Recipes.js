@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: cardWidth,
         height: cardHeight,
-        margin: '2%',
+        marginTop: window.height * 0.01,
+        marginBottom: window.height * 0.01,
         borderRadius: 10,
         borderColor: '#E2E2E2',
         borderWidth: 2,
@@ -123,7 +124,7 @@ export default ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
+            <StatusBar barStyle="dark-content" ></StatusBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <RecipeCard title="Chicken Souvlaki" nav={navigation}/>
             </ScrollView>

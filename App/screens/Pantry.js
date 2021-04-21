@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: cardWidth,
         height: cardHeight,
-        // margin: '2%',
-        marginBottom: '2%',
+        marginTop: window.height * 0.01,
+        marginBottom: window.height * 0.01,
         borderRadius: 10,
         borderColor: '#E2E2E2',
         borderWidth: 1,
@@ -211,7 +211,7 @@ const DeletionModal = (props) => {
                 </View>
             </Modal>
             <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
-                <Ionicons name="trash-outline" style={{ fontSize: 25, marginTop: 20 }} />
+                <Ionicons name="trash-outline" style={{ fontSize: 25 }} />
             </TouchableOpacity>
         </View>
     );
@@ -431,11 +431,6 @@ export default ({ navigation }) => {
 
     updateSearch = (str) => {
         setSearch(str);
-        // console.log(search);
-        console.log("heres ingredint");
-        // console.log(ingredients[0]);
-        // console.log(search);
-
     };
 
     let button;
@@ -455,9 +450,10 @@ export default ({ navigation }) => {
             <SearchBar
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"
-                onChangeText={this.updateSearch}></SearchBar>
-
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
+                onChangeText={updateSearch}
+                value={search}
+                containerStyle={{backgroundColor: '#f1f2f2', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: window.height * 0.01}}>
                 <Text>Sort: </Text>
                 <TouchableOpacity
                     style={styles.sortButt}

@@ -113,7 +113,7 @@ export default ({ navigation }) => {
             await AsyncStorage.setItem("email", userResponse.data.email);
             await AsyncStorage.setItem("username", userResponse.data.username);
 
-            notifyMessage("Success!");
+            //notifyMessage("Success!");
             navigation.navigate('Profile', { screen: 'Profile' });
             // return json;
         } catch (error) {
