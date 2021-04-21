@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         margin: 20,
         right: 0,
-        bottom: 30,
+        bottom: 35,
     },
     centeredView: {
         flex: 1,
@@ -388,6 +388,29 @@ export default ({ navigation }) => {
             let response = await api.get(`/pantry/${username}`);
             if (response.data.ingredients) {
                 await setIngredients(response.data.ingredients);
+
+                // Setting async storage for use in Recipe Screen (Band-Aid Solution)
+                // await AsyncStorage.setItem("ingredients", JSON.stringify(response.data.ingredients));
+
+                let ingredientNames = [];
+
+                // loop to grab ingredient names for recipe gen
+                for (let i = 0; i < response.data.ingredients.length; i++) {
+                    let entry = response.data.ingredients[i]
+
+                    console.log("ENTRY")
+                    console.log(entry)
+
+                    let ingredientName = entry["name"]
+
+                    console.log("CHECKING INGREDIENT NAMES")
+                    console.log(ingredientName)
+
+                    ingredientNames.push(ingredientName)
+                }
+
+                await AsyncStorage.setItem("ingredients", JSON.stringify(ingredientNames));
+
                 return response.data.ingredients
             }
         } catch (err) {

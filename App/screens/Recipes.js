@@ -1,10 +1,11 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
+import { useIsFocused } from "@react-navigation/native";
 import Constants from 'expo-constants';
 import api from '../api/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const statusBarHeight = Constants.statusBarHeight;
 
@@ -78,6 +79,48 @@ const RecipeCard = (props) => {
 }
 
 export default ({navigation}) => {
+
+    let [ingredients, setIngredients] = useState([]);
+    // let [imageArray, setImageArray] = useState([]);
+    // let [ingredientSelections, setIngredientSelections] = useState([]);
+    // let [search, setSearch] = useState('');
+
+    const isFocused = useIsFocused()
+
+    useEffect(() => {
+        async function generateRecipes() {
+            // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
+            // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
+            const currentPantry = await AsyncStorage.getItem('ingredients');
+
+            // console.log("TESTING PANTRY STORAGE")
+            // console.log(currentPantry)
+
+            let recipeList = await getRecipes(currentPantry);
+
+            // Here is where we want to work on the recipe data sent from the API to build our cards
+            console.log("RECIPES")
+            console.log(recipeList)
+        }
+        generateRecipes()
+    }, [isFocused]);
+
+
+    const getRecipes = async (currentPantry) => {
+
+        try {
+            let response = await api.get('/recipes', {
+                ingredients: currentPantry
+            });
+
+            return response
+        }
+        catch (error) {
+            return "Error in grabbing recipe data";
+        }
+    }
+
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
