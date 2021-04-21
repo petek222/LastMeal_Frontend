@@ -14,7 +14,7 @@ import {
 } from "react-native";
 
 import DatePicker from 'react-native-datepicker'
-import moment from 'moment';
+import moment, { min } from 'moment';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 var stringSimilarity = require("string-similarity");
@@ -212,6 +212,23 @@ export default ({navigation}) => {
         return resultList;
     }
 
+    const expirationSearch = async (item) => {
+
+        try {
+            let response = await api.get(`/exp?ingredient=${item}`);
+
+            let ingredientData = response.data;
+            // console.log(ingredientData)
+            let expResult = minExpDate(ingredientData)
+            // setExpiration(expResult)
+
+        }
+        catch (error) {
+            console.log("Error in Expiration Fetapich")
+            console.log(error)
+        }
+    }
+
     const DropdownMenuSelection = () => {
 
         // We can render this default option if we want
@@ -228,6 +245,10 @@ export default ({navigation}) => {
                 onSelect={(value) => {
                     setIngredientName(suggestionList[value])
                     setRenderDropdown(false)
+
+                    // Here is where we make a call to the expiration-suggestion database
+                    let expSuggestion = expirationSearch(suggestionList[value])
+
                 }}
             />
         )
@@ -340,4 +361,29 @@ async function schedulePushNotification(ingredientName, timer) {
       },
       trigger: { seconds: timer },
     });
-  }
+}
+
+// Return both the date string (?)
+// Implementation Detail: Ignoring the min value if it is the same as current day
+const minExpDate = (object) => {
+
+    // Grab Objects
+    let freezer = object["freezer_expiration"]
+    let fridge = object["fridge_expiration"]
+    let pantry = object["pantry_expiration"]
+
+    let freezer_date = new Date(freezer).getTime()
+    let fridge_date = new Date(fridge).getTime()
+    let pantry_date = new Date(pantry).getTime()
+
+    let stringArray = [freezer, fridge, pantry_date]
+    let dateArray = [freezer_date, fridge_date, pantry_date];
+
+    let minIndex = dateArray.indexOf(Math.min(...dateArray));
+
+    console.log("Min Index / Date:")
+    console.log(minIndex)
+    console.log(stringArray[minIndex])
+
+    return stringArray[minIndex]
+}

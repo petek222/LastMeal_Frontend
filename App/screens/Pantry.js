@@ -349,7 +349,6 @@ export default ({ navigation }) => {
         const promises = [];
 
         ingredientList.map((ingredient, i) => {
-            console.log("UPMYSLEEVES")
             ingredient_name = ingredient.name
 
             let response = api.get(`/photos?ingredient=${ingredient_name}`)
@@ -471,6 +470,12 @@ export default ({ navigation }) => {
 
                             //search through cards
                             if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
+
+
+                                // This code reformats the date object (stored as UTC) to current timezone
+                                let expDateConversion = new Date(ingredient.expiration_date.$date);
+                                var timezoneAdjustedDate = expDateConversion.getTime()+ (expDateConversion.getTimezoneOffset() * 60000);
+                                ingredient.expiration_date.$date = timezoneAdjustedDate
 
                                 return (
                                     <PantryCard
