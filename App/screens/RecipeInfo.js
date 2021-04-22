@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, SafeAreaView, StatusBar, ScrollView, Text, View, Image, TextInput, Button, TouchableOpacity } from "react-native";
+import React from 'react';
+import { Dimensions, StyleSheet, SafeAreaView, ScrollView, Text, View } from "react-native";
 import Constants from 'expo-constants';
 import { Thumbnail } from 'native-base';
 
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     scrollViewContent: {
         paddingLeft: windowWidth * 0.05,
         paddingRight: windowWidth * 0.05,
+        
     },
     headerContainer: {
         flex: 1,
@@ -29,62 +30,89 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         maxWidth: windowWidth * 0.9,
-        paddingTop: 10
+        paddingTop: windowHeight * 0.01
     },
     nameContainer: {
-        maxWidth: windowWidth * 0.55
+        maxWidth: windowWidth * 0.50
     },
     recipeNameText: {
-        fontSize: 36,
+        fontSize: 32,
         fontWeight: 'bold',
     },
     thumbnail: {
-        height: 125,
-        width: 125
+        height: windowWidth * 0.35,
+        width: windowWidth * 0.35
     },
     bodyContainer: {
-        padding: 10,
+        padding: windowHeight * 0.015,
     },
     infoHeader: {
         fontSize: 24,
         fontWeight: 'bold',
     },
     infoContent: {
-        fontSize: 16,
-        paddingTop: 5,
-        paddingBottom: 20
+        flex: 1,
+        flexDirection: "column",
+        fontSize: 18,
+        lineHeight: 25,
+        paddingTop: windowHeight * 0.01,
+        paddingBottom: windowHeight * 0.02
     },
+    contentList: {
+        paddingBottom: windowHeight * 0.015,
+        fontSize: 18,
+        lineHeight: 25
+    }
 });
 
 export default ({navigation}) => {
+
+    // replace require with prop json data passed into this component
+    const recipeData = require('../assets/recipeData.json');
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.headerContainer}>
                     <View style={styles.nameContainer}>
-                        <Text style={styles.recipeNameText}>Chicken Souvlaki</Text>
+                        <Text style={styles.recipeNameText}>{recipeData.title}</Text>
                     </View>
                     <View>
-                        <Thumbnail style={styles.thumbnail} source={require('../assets/chicken.jpg')}/>
+                        <Thumbnail style={styles.thumbnail} source={{uri: recipeData.image}}/>
                     </View>
                 </View>
                 <View style={styles.bodyContainer}>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Description</Text>
-                        <Text style={styles.infoContent}>Delicious greek chicken best served with pita bread, tzatziki sauce and rice.</Text>
+                        <Text style={styles.infoContent}>{recipeData.summary.replace(/(<([^>]+)>)/gi, "")}</Text>
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Cook Time</Text>
-                        <Text style={styles.infoContent}>30 mins</Text>
+                        <Text style={styles.infoContent}>{recipeData.cookingMinutes} mins</Text>
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Ingredients</Text>
-                        <Text style={styles.infoContent}>Recipe ingredients go here.</Text>
+                        <View style={styles.infoContent}>
+                            {
+                                recipeData.extendedIngredients.map((ingredient) => {
+                                    return (
+                                        <Text key={ingredient.id} style={styles.contentList}>- {ingredient.originalString}</Text>
+                                    );
+                                })
+                            }
+                        </View>
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Instructions</Text>
-                        <Text style={styles.infoContent}>Recipe steps go here.</Text>
+                        <View style={styles.infoContent}>
+                            {
+                                recipeData.analyzedInstructions[0].steps.map((step) => {
+                                    return (
+                                        <Text key={step.number} style={styles.contentList}>{step.number}. {step.step}</Text>
+                                    );
+                                })
+                            }
+                        </View>
                     </View>
                 </View>
             </ScrollView>
