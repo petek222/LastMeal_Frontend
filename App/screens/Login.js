@@ -149,8 +149,8 @@ export default ({ navigation }) => {
     }
 
     return (
-        // <View style={styles.container}>
-        <SafeAreaView style={[styles.container, {marginTop: statusBarHeight}]}>
+        <View style={styles.container}>
+        {/* <SafeAreaView style={[styles.container, {marginTop: statusBarHeight}]}> */}
 
             {/* <StatusBar style="light-content" barStyle="light-content" backgroundColor="white" /> */}
             {/* <StatusBar style={colors.background === 'white' ? 'dark-content' : 'light-content'}  backgroundColor={colors.background}/> */}
@@ -196,7 +196,7 @@ export default ({ navigation }) => {
             {/* <TouchableOpacity>
                 <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>[]</Text>
             </TouchableOpacity> */}
-            </SafeAreaView>
-        // </View>
+            {/* </SafeAreaView> */}
+        </View>
     );
 }

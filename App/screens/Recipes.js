@@ -63,7 +63,7 @@ const makeStyles = (colors) => StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
         justifyContent: 'space-between',
-        padding: 5   
+        padding: 5
     },
 });
 
@@ -80,13 +80,13 @@ const RecipeCard = (props) => {
                 </View>
             </View>
             <View style={styles.cardButtons}>
-                <Ionicons name="heart-outline" style={{fontSize: 25}} />
+                <Ionicons name="heart-outline" style={{ fontSize: 25 }} />
             </View>
         </TouchableOpacity>
     )
 }
 
-export default ({navigation}) => {
+export default ({ navigation }) => {
 
     let [ingredients, setIngredients] = useState([]);
     // let [imageArray, setImageArray] = useState([]);
@@ -132,12 +132,15 @@ export default ({navigation}) => {
 
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
-            {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
-            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                <RecipeCard title="Chicken Souvlaki" nav={navigation}/>
-            </ScrollView>
-        </SafeAreaView>
+        <View style={styles.container}>
+            {/* <SafeAreaView style={styles.safeAreaView}> */}
+
+                {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
+                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <RecipeCard title="Chicken Souvlaki" nav={navigation} />
+                </ScrollView>
+                {/* </SafeAreaView> */}
+        </View>
     )
 }
