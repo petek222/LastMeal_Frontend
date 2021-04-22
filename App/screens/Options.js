@@ -101,19 +101,23 @@ export default ({ navigation }) => {
                 <SettingsList borderColor='#fff' defaultItemSize={50}>
                     <SettingsList.Header headerStyle={{ marginTop: 15 }} />
                     <SettingsList.Item
+                        backgroundColor={colors.background}
                         icon={
-                            <Ionicons name="fast-food-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center' }} />
+                            <Ionicons name="fast-food-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text }} />
                         }
                         hasSwitch={true}
                         switchState={passiveRecipes}
                         switchOnValueChange={onRecipeChange}
                         hasNavArrow={false}
                         title='Passively Generate Recipes'
+                        titleStyle={{color: colors.text}}
                     />
                     <SettingsList.Item
                         // icon={<Image style={styles.imageStyle} source={require('./images/wifi.png')}/>}
-                        icon={<Ionicons name="moon-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center' }} />}
+                        backgroundColor={colors.background}
+                        icon={<Ionicons name="moon-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text  }} />}
                         title='Dark Theme'
+                        titleStyle={{color: colors.text}}
                         hasSwitch={true}
                         switchState={themeButton}
                         hasNavArrow={false}
@@ -121,8 +125,10 @@ export default ({ navigation }) => {
                     />
                     <SettingsList.Item
                         // icon={<Image style={styles.imageStyle} source={require('./images/blutooth.png')}/>}
-                        icon={<Ionicons name="code-working-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center' }} />}
+                        backgroundColor={colors.background}
+                        icon={<Ionicons name="code-working-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text  }} />}
                         title='Recipe Generation Settings'
+                        titleStyle={{color: colors.text}}
                         titleInfoStyle={styles.titleInfoStyle}
                         onPress={() => Alert.alert('Route to Algorithm Settings Page')}
                     />
@@ -130,22 +136,28 @@ export default ({ navigation }) => {
                     <SettingsList.Header headerStyle={{ marginTop: 15 }} />
                     <SettingsList.Item
                         // icon={<Image style={styles.imageStyle} source={require('./images/notifications.png')}/>}
-                        icon={<Ionicons name="notifications-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center' }} />}
+                        backgroundColor={colors.background}
+                        icon={<Ionicons name="notifications-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text  }} />}
                         title='Notifications'
+                        titleStyle={{color: colors.text}}
                         onPress={() => Alert.alert('Route To Notifications Page')}
                     />
                     <SettingsList.Item
                         // icon={<Image style={styles.imageStyle} source={require('./images/control.png')}/>}
-                        icon={<Ionicons name="people-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center' }} />}
+                        backgroundColor={colors.background}
+                        icon={<Ionicons name="people-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text  }} />}
                         title='Account Management'
+                        titleStyle={{color: colors.text}}
                         onPress={() => Alert.alert('Route To Account Management Page')}
                     />
 
                     <SettingsList.Header headerStyle={{ marginTop: 15 }} />
                     <SettingsList.Item
                         // icon={<Image style={styles.imageStyle} source={require('./images/general.png')}/>}
-                        icon={<Ionicons name="help-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center' }} />}
+                        backgroundColor={colors.background}
+                        icon={<Ionicons name="help-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text  }} />}
                         title='About the Developers'
+                        titleStyle={{color: colors.text}}
                         onPress={() => Alert.alert('Route To About Page')}
                     />
                 </SettingsList>

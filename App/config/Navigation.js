@@ -91,6 +91,7 @@ const MyDark = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
+        primary: 'black',
         background: '#222',
         text: 'white',
     },
