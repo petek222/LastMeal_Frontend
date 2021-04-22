@@ -7,6 +7,8 @@ import Constants from 'expo-constants';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useTheme } from '@react-navigation/native';
+
 const statusBarHeight = Constants.statusBarHeight;
 
 const window = Dimensions.get('window');
@@ -87,6 +89,7 @@ export default ({navigation}) => {
     // let [search, setSearch] = useState('');
 
     const isFocused = useIsFocused()
+    const { colors } = useTheme();
 
     useEffect(() => {
         async function generateRecipes() {
@@ -124,7 +127,8 @@ export default ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <StatusBar barStyle="dark-content" ></StatusBar>
+            {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <RecipeCard title="Chicken Souvlaki" nav={navigation}/>
             </ScrollView>

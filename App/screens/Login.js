@@ -1,4 +1,4 @@
-import { StatusBar } from "expo-status-bar";
+// import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
     StyleSheet,
@@ -11,11 +11,15 @@ import {
     ToastAndroid,
     Platform,
     Alert,
+    StatusBar
 } from "react-native";
 import api from "../api/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useTheme } from '@react-navigation/native';
+
+const logo = require("../assets/lastmeal2.png");
+const darkLogo = require("../assets/lastmealdark2.png");
 
 const makeStyles = (colors) => StyleSheet.create({
     container: {
@@ -77,7 +81,7 @@ const makeStyles = (colors) => StyleSheet.create({
         backgroundColor: "#f2c572",
         marginBottom: 30,
     },
-    
+
     signupButt: {
         height: 30,
         marginBottom: 30,
@@ -96,15 +100,15 @@ export default ({ navigation }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const {colors} = useTheme();
+    const { colors } = useTheme();
     const styles = makeStyles(colors);
 
     const login = async () => {
         try {
             let response = await api.post('/user/login', {
-                    username: username,
-                    password: password
-                });
+                username: username,
+                password: password
+            });
             await AsyncStorage.setItem("token", response.data.token);
 
             // console.log('Response');
@@ -143,9 +147,12 @@ export default ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require("../assets/lastmealdark2.png")} />
+            {/* <StatusBar style="light-content" barStyle="light-content" backgroundColor="white" /> */}
+            {/* <StatusBar style={colors.background === 'white' ? 'dark-content' : 'light-content'}  backgroundColor={colors.background}/> */}
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
 
-            <StatusBar style="auto" />
+            <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
+
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.TextInput}

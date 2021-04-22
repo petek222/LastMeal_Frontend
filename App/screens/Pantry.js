@@ -449,7 +449,7 @@ export default ({ navigation }) => {
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
-            <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
             <SearchBar
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"

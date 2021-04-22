@@ -158,7 +158,8 @@ export default ({ navigation }) => {
         // <SafeAreaView style={{backgroundColor: 'white', flex: 1 }}>
         // <SafeAreaView >
         <View style={styles.container}>
-            <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
+            {/* <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar> */}
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
 
             <Text style={{ fontSize: 40, marginBottom: screen.height * 0.05, color: colors.text }}>Hi, {first}</Text>
 
