@@ -32,6 +32,11 @@ import SwitchWithIcons from "react-native-switch-with-icons";
 
 import SettingsList from 'react-native-settings-list';
 
+import {
+    useRecoilState
+} from 'recoil';
+import { darkState } from '../config/Navigation';
+
 const styles = StyleSheet.create({
     imageStyle:{
       marginLeft:15,
@@ -52,20 +57,29 @@ export default ({navigation}) => {
     const [themeButton, setThemeButton] = useState(false)
     const [theme, setTheme] = useState("light")
 
+    const [dark, setDark] = useRecoilState(darkState);
+
     const onRecipeChange = (value) => {
         setPassiveRecipes(value)
     }
+
+    const toggleSwitch = () => {
+        setDark(!dark);
+        console.log(dark)
+    };
 
     const onThemeChange = (value) => {
         if (theme === 'light') {
             console.log("SETTING DARK")
             setTheme('dark');
             setThemeButton(value)
+            toggleSwitch();
         }
         else {
             console.log("SETING LIGHT")
             setTheme('light');
             setThemeButton(value)
+            toggleSwitch();
         }
     }
 
