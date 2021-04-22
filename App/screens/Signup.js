@@ -15,8 +15,11 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import api from '../api/api';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
 import { useTheme } from '@react-navigation/native';
 
+const statusBarHeight = Constants.statusBarHeight;
 const logo = require("../assets/lastmeal2.png");
 const darkLogo = require("../assets/lastmealdark2.png");
 
@@ -136,7 +139,9 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
+        // <View style={styles.container}>
+        <SafeAreaView style={[styles.container, { marginTop: statusBarHeight }]}>
+
 
             {/* causes screen flicker */}
             {/* <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background} /> */}
@@ -215,7 +220,7 @@ export default ({ navigation }) => {
             <TouchableOpacity>
                 <Text style={[styles.smallButt, { color: colors.text }]} onPress={() => navigation.navigate('Login')}>or Log In</Text>
             </TouchableOpacity>
-
-        </View>
+        </SafeAreaView>
+        // </View>
     );
 }

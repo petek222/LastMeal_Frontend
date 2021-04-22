@@ -15,11 +15,14 @@ import {
 } from "react-native";
 import api from "../api/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
 
 import { useTheme } from '@react-navigation/native';
 
 const logo = require("../assets/lastmeal2.png");
 const darkLogo = require("../assets/lastmealdark2.png");
+const statusBarHeight = Constants.statusBarHeight;
 
 const makeStyles = (colors) => StyleSheet.create({
     container: {
@@ -146,7 +149,9 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
+        // <View style={styles.container}>
+        <SafeAreaView style={[styles.container, {marginTop: statusBarHeight}]}>
+
             {/* <StatusBar style="light-content" barStyle="light-content" backgroundColor="white" /> */}
             {/* <StatusBar style={colors.background === 'white' ? 'dark-content' : 'light-content'}  backgroundColor={colors.background}/> */}
             <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}/>
@@ -191,6 +196,7 @@ export default ({ navigation }) => {
             <TouchableOpacity>
                 <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>[]</Text>
             </TouchableOpacity>
-        </View>
+            </SafeAreaView>
+        // </View>
     );
 }

@@ -22,7 +22,6 @@
 
 // }
 
-
 import React, { useState, useEffect } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
