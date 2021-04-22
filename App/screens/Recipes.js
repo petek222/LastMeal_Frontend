@@ -7,13 +7,15 @@ import Constants from 'expo-constants';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useTheme } from '@react-navigation/native';
+
 const statusBarHeight = Constants.statusBarHeight;
 
 const window = Dimensions.get('window');
 const cardWidth = window.width * 0.9;
 const cardHeight = window.height * 0.12;
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 4,
-        backgroundColor: 'white'
+        backgroundColor: colors.black
     },
     itemCardContent: {
         flex: 6,
@@ -50,10 +52,12 @@ const styles = StyleSheet.create({
     itemCardText: {
         flex: 1,
         justifyContent: 'center',
-        paddingLeft: (cardWidth * 0.05)
+        paddingLeft: (cardWidth * 0.05),
+        color: colors.text
     },
     recipeNameText: {
-        fontSize: 16
+        fontSize: 16,
+        color: colors.text
     },
     cardButtons: {
         flex: 1,
@@ -64,26 +68,9 @@ const styles = StyleSheet.create({
 });
 
 const RecipeCard = (props) => {
-
-    // // Placeholder for Recipe Info Development
-    // return (
-    //     <TouchableOpacity style={styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
-    //         <View style={styles.itemCardContent} >
-    //             <Thumbnail source={require('../assets/chicken.jpg')} />
-    //             <View style={styles.itemCardText}>
-    //                 <Text style={styles.recipeNameText} >{props.title}</Text>
-    //             </View>
-    //         </View>
-    //         <View style={styles.cardButtons}>
-    //             <Ionicons name="heart-outline" style={{fontSize: 25}} />
-    //         </View>
-    //     </TouchableOpacity>
-    // )
-
-    console.log("Image Test")
-    console.log(props.image)
-
-    const [color, setColor] = useState('#000000');
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+    const [color, setColor] = useState("#000000")
 
     return (
         <TouchableOpacity style={styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
@@ -119,6 +106,8 @@ export default ({navigation}) => {
     let [search, setSearch] = useState('');
 
     const isFocused = useIsFocused()
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
 
     useEffect(() => {
 
@@ -183,7 +172,8 @@ export default ({navigation}) => {
     return (
         <View>
         <SafeAreaView style={styles.safeAreaView}>
-            <StatusBar barStyle="dark-content" ></StatusBar>
+            {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {

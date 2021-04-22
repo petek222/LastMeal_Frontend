@@ -14,13 +14,55 @@ import RecipeInfo from '../screens/RecipeInfo';
 import ResetPassword from '../screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { View } from 'react-native';
+
+import { DefaultTheme, DarkTheme } from '@react-navigation/native';
+import {
+    RecoilRoot,
+    atom,
+    selector,
+    useRecoilState,
+    useRecoilValue,
+} from 'recoil';
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator();
 
+// dark theme
+const MyDark = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: 'black',
+        // accent: 'red',
+        background: '#222',
+        text: 'white',
+        backdrop: 'gray',
+        black: 'black'
+    },
+};
+
+// light theme
+const MyLight = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: 'white',
+    },
+};
+
+// stores state of dark mode
+export const darkState = atom({
+    key: 'darkState', // unique ID
+    default: false, // initial value
+});
+
+
 function ProfileTabs() {
+    const theme = useRecoilValue(darkState);
     return (
         <Tab.Navigator
+
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
@@ -32,18 +74,6 @@ function ProfileTabs() {
                         iconName = focused
                             ? 'ios-cog'
                             : 'ios-cog-outline';
-                    }
-                    // to remove
-                    else if (route.name === 'Login') {
-                        iconName = focused
-                            ? 'ios-log-in'
-                            : 'ios-log-in-outline';
-                    }
-                    // to remove
-                    else if (route.name === "Signup") {
-                        iconName = focused
-                            ? 'ios-create'
-                            : 'ios-create-outline';
                     }
                     else if (route.name === 'Profile') {
                         iconName = focused
@@ -63,10 +93,34 @@ function ProfileTabs() {
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
             })}
-            tabBarOptions={{
-                activeTintColor: 'tomato',
-                inactiveTintColor: 'gray',
-            }}
+            tabBarOptions={theme
+                ? {
+                    tabStyle: { borderTopWidth: 0 },
+                    style:
+                    {
+                        elevation: 0,
+                        // borderTopColor: "transparent",
+                        borderTopWidth: 0,
+                    },
+                    activeTintColor: 'tomato',
+                    inactiveTintColor: 'white',
+                    activeBackgroundColor: '#222',
+                    inactiveBackgroundColor: '#000'
+                }
+                : {
+                    tabStyle: { borderTopWidth: 0 },
+                    style:
+                    {
+                        elevation: 0,
+                        // borderTopColor: "transparent",
+                        borderTopWidth: 0,
+                    },
+                    activeTintColor: 'tomato',
+                    inactiveTintColor: 'gray',
+                    activeBackgroundColor: '#fff',
+                    inactiveBackgroundColor: '#f6f6f6'
+                }
+            }
         >
 
             <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
@@ -77,17 +131,28 @@ function ProfileTabs() {
     );
 }
 
+
+
+const Navigation = () => {
+    const theme = useRecoilValue(darkState);
+    return (
+        <View style={{ flex: 1, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}>
+            <NavigationContainer theme={theme ? MyDark : MyLight}>
+                <Stack.Navigator initialRouteName="Login">
+                    <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
+                    <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+                    <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+                    <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
+                    <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
+                    <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </View>
+    )
+}
+
 export default () => (
-    <NavigationContainer>
-        <Stack.Navigator
-            initialRouteName="Login"
-        >
-            <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
-            <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
-            <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
-            <Stack.Screen name="ResetPassword" component={ResetPassword} options={{headerShown: false}} />
-        </Stack.Navigator>
-    </NavigationContainer>
+    <RecoilRoot>
+        <Navigation />
+    </RecoilRoot>
 )

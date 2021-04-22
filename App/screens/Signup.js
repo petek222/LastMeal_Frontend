@@ -15,19 +15,26 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import api from '../api/api';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
+import { useTheme } from '@react-navigation/native';
+
+const statusBarHeight = Constants.statusBarHeight;
+const logo = require("../assets/lastmeal2.png");
+const darkLogo = require("../assets/lastmealdark2.png");
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
 
     image: {
-        // marginBottom: 40,
-        height: "30%",
+        height: "25%",
         resizeMode: 'contain',
+        margin: "10%"
     },
 
     inputView: {
@@ -88,6 +95,8 @@ export default ({ navigation }) => {
     const [first, setFirst] = useState("");
     const [last, setLast] = useState("");
 
+    const { colors } = useTheme();
+
     // for show/hide password functionality
     const [hidePass, setHidePass] = useState(true);
 
@@ -130,10 +139,15 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <Image style={styles.image} source={require("../assets/lastmeal.png")} />
+        // <View style={styles.container}>
+        <SafeAreaView style={[styles.container, { marginTop: statusBarHeight }]}>
 
-            <StatusBar style="auto" />
+
+            {/* causes screen flicker */}
+            {/* <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background} /> */}
+            {/* <StatusBar barStyle={ "light-content"} backgroundColor={colors.background} /> */}
+
+            <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
 
             {/* Username */}
             <View style={styles.inputView}>
@@ -204,9 +218,9 @@ export default ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity>
-                <Text style={styles.smallButt} onPress={() => navigation.navigate('Login')}>or Log In</Text>
+                <Text style={[styles.smallButt, { color: colors.text }]} onPress={() => navigation.navigate('Login')}>or Log In</Text>
             </TouchableOpacity>
-
-        </View>
+        </SafeAreaView>
+        // </View>
     );
 }

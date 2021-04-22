@@ -1,4 +1,4 @@
-import { StatusBar } from "expo-status-bar";
+// import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
     StyleSheet,
@@ -11,28 +11,39 @@ import {
     ToastAndroid,
     Platform,
     Alert,
+    StatusBar
 } from "react-native";
 import api from "../api/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
 
-const styles = StyleSheet.create({
+import { useTheme } from '@react-navigation/native';
+
+const logo = require("../assets/lastmeal2.png");
+const darkLogo = require("../assets/lastmealdark2.png");
+const statusBarHeight = Constants.statusBarHeight;
+
+const makeStyles = (colors) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
     darkContainer: {
         flex: 1,
-        backgroundColor: "#282828",
+        // backgroundColor: "#282828",
         alignItems: "center",
         justifyContent: "center",
     },
     image: {
         // marginBottom: 40,
-        height: "30%",
+        height: "25%",
         resizeMode: 'contain',
-        padding: 10,
+        // padding: 10,
+        // marginBottom: 10
+        margin: "10%"
     },
 
     inputView: {
@@ -54,13 +65,14 @@ const styles = StyleSheet.create({
     forgotButt: {
         height: 30,
         marginBottom: 60,
+        color: colors.text
     },
 
-    forgotButtDark: {
-        height: 30,
-        marginBottom: 60,
-        color: '#FFFFFF'
-    },
+    // forgotButtDark: {
+    //     height: 30,
+    //     marginBottom: 60,
+    //     color: '#FFFFFF'
+    // },
 
     loginButt: {
         width: "80%",
@@ -72,30 +84,34 @@ const styles = StyleSheet.create({
         backgroundColor: "#f2c572",
         marginBottom: 30,
     },
-    
+
     signupButt: {
         height: 30,
         marginBottom: 30,
+        color: colors.text
         // position: "absolute"
     },
 
-    signupButtDark: {
-        height: 30,
-        marginBottom: 30,
-        color: '#FFFFFF',
-    }
+    // signupButtDark: {
+    //     height: 30,
+    //     marginBottom: 30,
+    //     color: '#FFFFFF',
+    // }
 });
 
 export default ({ navigation }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+
     const login = async () => {
         try {
             let response = await api.post('/user/login', {
-                    username: username,
-                    password: password
-                });
+                username: username,
+                password: password
+            });
             await AsyncStorage.setItem("token", response.data.token);
 
             // console.log('Response');
@@ -133,10 +149,15 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <Image style={styles.image} source={require("../assets/lastmeal.png")} />
+        // <View style={styles.container}>
+        <SafeAreaView style={[styles.container, {marginTop: statusBarHeight}]}>
 
-            <StatusBar style="auto" />
+            {/* <StatusBar style="light-content" barStyle="light-content" backgroundColor="white" /> */}
+            {/* <StatusBar style={colors.background === 'white' ? 'dark-content' : 'light-content'}  backgroundColor={colors.background}/> */}
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}/>
+
+            <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
+
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.TextInput}
@@ -165,12 +186,17 @@ export default ({ navigation }) => {
                 // activeOpacity={username === '' || password === '' ? 1 : 0.5}
                 disabled={!Boolean(username && password)}
                 onPress={() => login()}>
-                <Text style={styles.loginText}>Log In</Text>
+                <Text>Log In</Text>
             </TouchableOpacity>
 
             <TouchableOpacity>
                 <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
             </TouchableOpacity>
-        </View>
+
+            <TouchableOpacity>
+                <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>[]</Text>
+            </TouchableOpacity>
+            </SafeAreaView>
+        // </View>
     );
 }
