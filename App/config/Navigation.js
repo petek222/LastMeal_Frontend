@@ -131,12 +131,10 @@ function ProfileTabs() {
     );
 }
 
-
-
 const Navigation = () => {
     const theme = useRecoilValue(darkState);
     return (
-        <View style={{ flex: 1, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}>
+        // <View style={{ flex: 1, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}>
             <NavigationContainer theme={theme ? MyDark : MyLight}>
                 <Stack.Navigator initialRouteName="Login">
                     <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
@@ -147,7 +145,7 @@ const Navigation = () => {
                     <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
                 </Stack.Navigator>
             </NavigationContainer>
-        </View>
+        // </View>
     )
 }
 

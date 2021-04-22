@@ -467,6 +467,7 @@ export default ({ navigation }) => {
             {/* To make notification bar same color as background */}
             <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
             <SearchBar
+                // platform={'android'}
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"
                 placeholderTextColor={colors.text}
