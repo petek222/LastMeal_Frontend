@@ -193,9 +193,9 @@ export default ({ navigation }) => {
                 <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
                 <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>[]</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             </SafeAreaView>
         // </View>
     );
