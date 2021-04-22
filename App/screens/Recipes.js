@@ -125,35 +125,17 @@ export default ({navigation}) => {
         async function generateRecipes() {
             // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
             // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
-            let prevPantry = await AsyncStorage.getItem('currentIngredients');
             const currentPantry = await AsyncStorage.getItem('ingredients');
 
-            console.log("COMPARING PANTRIES")
-            console.log(prevPantry)
-            console.log(currentPantry)
+            console.log("Making Spoonacular API Request")
 
-            // If the current pantry is different/new from the previous pantry, make the request and update the recipe list
-            // We can remove all of this logic once caching for recipes is implemented on the server
-            if (currentPantry != prevPantry) {
-
-                console.log("MAKING SPOONACULAR REQUEST")
-
-                let prevPantryArray = []
-
-                await AsyncStorage.setItem("currentIngredients", currentPantry);
-
-                let recipeList = await getRecipes(currentPantry);
+            let recipeList = await getRecipes(currentPantry);
     
-                // Here is where we want to work on the recipe data sent from the API to build our cards
-                console.log("RECIPES")
-                console.log(recipeList)
+            // Here is where we want to work on the recipe data sent from the API to build our cards
+            console.log("Returned Recipes")
+            console.log(recipeList)
                 
-                await setRecipes(recipeList)
-            }
-
-            else {
-                console.log("USING CACHED DATA, NO REQUEST MADE")
-            }
+            await setRecipes(recipeList)
 
             // Otherwise, set the recipe list again (?)
         }
