@@ -3,7 +3,19 @@ import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
 import Navigation from './config/Navigation';
+import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 
+// const MyTheme = {
+//   dark: true,
+//   colors: {
+//     primary: 'rgb(255, 45, 85)',
+//     background: 'rgb(242, 242, 242)',
+//     card: 'rgb(255, 255, 255)',
+//     text: 'rgb(28, 28, 30)',
+//     border: 'rgb(199, 199, 204)',
+//     notification: 'rgb(255, 69, 58)',
+//   },
+// };
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -36,7 +48,7 @@ export default function App() {
     };
   }, []);
 
-  return (<Navigation />);
+  return (<Navigation theme={DarkTheme}/>);
 }
 
 async function schedulePushNotification() {

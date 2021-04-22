@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Gravatar, GravatarApi } from 'react-native-gravatar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Notifications from 'expo-notifications';
+import { useTheme } from '@react-navigation/native';
 
 import Constants from 'expo-constants';
 import { Component } from 'react';
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
         // },
         // shadowOpacity: 0.2,
         // shadowRadius: 4,
-        backgroundColor: 'white'
+        // backgroundColor: 'white'
     },
     sectionTitle: {
         color: '#6be3d9',
@@ -62,14 +63,14 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
-    safeAreaView: {
-        height: "100%",
-        width: "200%"
-    },
+    // safeAreaView: {
+    //     height: "100%",
+    //     width: "200%"
+    // },
     roundedProfileImage: {
         width: 150, height: 150, borderWidth: 3,
         borderColor: '#6be3d9', borderRadius: 75
@@ -77,12 +78,12 @@ const styles = StyleSheet.create({
 })
 
 // Component for each bit of user info
-const UserInfo = ({ title, info }) => {
+const UserInfo = ({ title, info, themeText }) => {
     return (
         <View style={styles.section}>
             <View style={{ padding: 10 }}>
                 <Text style={styles.sectionTitle}>{title}</Text>
-                <Text style={styles.sectionInfo}>{info}</Text>
+                <Text style={[styles.sectionInfo, { color: themeText }]}>{info}</Text>
             </View>
             <View style={styles.separator} />
         </View>
@@ -135,6 +136,7 @@ export default ({ navigation }) => {
     const [username, setUsername] = useState("none");
     const [avatarUrl, setAvatar] = useState("");
 
+    const { colors } = useTheme();
 
     // fetch user info on load
     useEffect(() => {
@@ -147,10 +149,6 @@ export default ({ navigation }) => {
             setName(name);
             setUsername(username);
             setEmail(email);
-
-            // let gravatar = require('gravatar');
-            // const picUrl = gravatar.url(email, {s: '200'});
-            // setAvatar(picUrl);
         }
         fetchUser();
     }, []);
@@ -160,20 +158,10 @@ export default ({ navigation }) => {
         // <SafeAreaView style={{backgroundColor: 'white', flex: 1 }}>
         // <SafeAreaView >
         <View style={styles.container}>
-            <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
+            {/* <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar> */}
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
 
-            <Text style={{ fontSize: 40, marginBottom: screen.height * 0.05 }}>Hi, {first}</Text>
-            {/* <Image style={styles.image} source={require("../assets/profilepic.jpg")} /> */}
-            {/* <Avatar
-                avatarStyle={{
-                    borderWidth: 3,
-                    borderColor: '#6be3d9'
-                }}
-                rounded
-                // source={require("../assets/profilepic.jpg")}
-                source={avatarUrl}
-                size="xlarge"
-            /> */}
+            <Text style={{ fontSize: 40, marginBottom: screen.height * 0.05, color: colors.text }}>Hi, {first}</Text>
 
             <Gravatar options={{
                 email: email,
@@ -182,9 +170,9 @@ export default ({ navigation }) => {
             }}
                 style={styles.roundedProfileImage} />
 
-            <UserInfo title={'Name'} info={name} />
-            <UserInfo title={'Username'} info={username} />
-            <UserInfo title={'Email'} info={email} />
+            <UserInfo title={'Name'} info={name} themeText={colors.text} />
+            <UserInfo title={'Username'} info={username} themeText={colors.text} />
+            <UserInfo title={'Email'} info={email} themeText={colors.text} />
 
             {/* <View style={{position: 'absolute', right: 0}}> */}
             <View style={{ position: 'absolute', bottom: 10 }}>
@@ -194,7 +182,7 @@ export default ({ navigation }) => {
                     await AsyncStorage.clear();
                     navigation.navigate('Login');
                 }}>
-                    <Text>Log Out</Text>
+                    <Text style={{color: colors.text}}>Log Out</Text>
                 </TouchableOpacity>
             </View>
 

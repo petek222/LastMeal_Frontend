@@ -1,10 +1,13 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
+import { useIsFocused } from "@react-navigation/native";
 import Constants from 'expo-constants';
 import api from '../api/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { useTheme } from '@react-navigation/native';
 
 const statusBarHeight = Constants.statusBarHeight;
 
@@ -12,7 +15,7 @@ const window = Dimensions.get('window');
 const cardWidth = window.width * 0.9;
 const cardHeight = window.height * 0.12;
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
@@ -37,7 +40,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 4,
-        backgroundColor: 'white'
+        backgroundColor: colors.black
     },
     itemCardContent: {
         flex: 6,
@@ -49,10 +52,12 @@ const styles = StyleSheet.create({
     itemCardText: {
         flex: 1,
         justifyContent: 'center',
-        paddingLeft: (cardWidth * 0.05)
+        paddingLeft: (cardWidth * 0.05),
+        color: colors.text
     },
     recipeNameText: {
-        fontSize: 16
+        fontSize: 16,
+        color: colors.text
     },
     cardButtons: {
         flex: 1,
@@ -63,6 +68,9 @@ const styles = StyleSheet.create({
 });
 
 const RecipeCard = (props) => {
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+
     return (
         <TouchableOpacity style={styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
             <View style={styles.itemCardContent} >
@@ -79,9 +87,54 @@ const RecipeCard = (props) => {
 }
 
 export default ({navigation}) => {
+
+    let [ingredients, setIngredients] = useState([]);
+    // let [imageArray, setImageArray] = useState([]);
+    // let [ingredientSelections, setIngredientSelections] = useState([]);
+    // let [search, setSearch] = useState('');
+
+    const isFocused = useIsFocused()
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+
+    useEffect(() => {
+        async function generateRecipes() {
+            // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
+            // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
+            const currentPantry = await AsyncStorage.getItem('ingredients');
+
+            // console.log("TESTING PANTRY STORAGE")
+            // console.log(currentPantry)
+
+            let recipeList = await getRecipes(currentPantry);
+
+            // Here is where we want to work on the recipe data sent from the API to build our cards
+            console.log("RECIPES")
+            console.log(recipeList)
+        }
+        generateRecipes()
+    }, [isFocused]);
+
+
+    const getRecipes = async (currentPantry) => {
+
+        try {
+            let response = await api.get('/recipes', {
+                ingredients: currentPantry
+            });
+
+            return response
+        }
+        catch (error) {
+            return "Error in grabbing recipe data";
+        }
+    }
+
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <StatusBar barStyle="dark-content" ></StatusBar>
+            {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <RecipeCard title="Chicken Souvlaki" nav={navigation}/>
             </ScrollView>

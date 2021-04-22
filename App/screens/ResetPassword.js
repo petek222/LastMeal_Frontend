@@ -15,19 +15,23 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import api from '../api/api';
+import { useTheme } from '@react-navigation/native';
+
+const logo = require("../assets/lastmeal2.png");
+const darkLogo = require("../assets/lastmealdark2.png");
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
 
     image: {
-        // marginBottom: 40,
-        height: "30%",
+        height: "25%",
         resizeMode: 'contain',
+        margin: "10%"
     },
 
     inputView: {
@@ -93,6 +97,8 @@ export default ({ navigation }) => {
     const [hideNewPass, setHideNewPass] = useState(true);
     const [hideConfirmPass, setHideConfirmPass] = useState(true)
 
+    const { colors } = useTheme();
+
     // Function for performing password reset
     const changePassword = async () => {
         try {
@@ -150,9 +156,10 @@ export default ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require("../assets/lastmeal.png")} />
+            <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
 
-            <StatusBar style="auto" />
+            {/* <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background} /> */}
+
 
             {/* Username */}
             <View style={styles.inputView}>

@@ -12,6 +12,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 
+import { useTheme } from '@react-navigation/native';
+
 var stringSimilarity = require("string-similarity");
 
 const window = Dimensions.get('window');
@@ -21,7 +23,7 @@ const statusBarHeight = Constants.statusBarHeight;
 const cardWidth = window.width * 0.9;
 const cardHeight = window.height * 0.12;
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 4,
-        backgroundColor: 'white'
+        backgroundColor: colors.black
     },
     itemCardContent: {
         flex: 6,
@@ -58,13 +60,16 @@ const styles = StyleSheet.create({
     itemCardText: {
         flex: 1,
         justifyContent: 'center',
-        paddingLeft: (cardWidth * 0.05)
+        paddingLeft: (cardWidth * 0.05),
+        color: colors.text
     },
     foodNameText: {
-        fontSize: 16
+        fontSize: 16,
+        color: colors.text
     },
     expirationText: {
-        fontSize: 12
+        fontSize: 12,
+        color: colors.text
     },
     warnExpirationText: {
         fontSize: 12,
@@ -80,7 +85,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         margin: 20,
         right: 0,
-        bottom: 30,
+        bottom: 35,
     },
     centeredView: {
         flex: 1,
@@ -140,6 +145,8 @@ const styles = StyleSheet.create({
 });
 
 const AddIngredientButton = (props) => {
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
     return (
         <FAB
             style={styles.fab}
@@ -151,6 +158,8 @@ const AddIngredientButton = (props) => {
 };
 
 const GenerateRecipesButton = (props) => {
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
     return (
         <FAB
             style={styles.fab}
@@ -171,6 +180,8 @@ const GenerateRecipesButton = (props) => {
 }
 
 const DeletionModal = (props) => {
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
 
     const [modalVisible, setModalVisible] = useState(false);
     return (
@@ -211,7 +222,7 @@ const DeletionModal = (props) => {
                 </View>
             </Modal>
             <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
-                <Ionicons name="trash-outline" style={{ fontSize: 25 }} />
+                <Ionicons name="trash-outline" style={{ fontSize: 25, color: 'gray' }} />
             </TouchableOpacity>
         </View>
     );
@@ -219,9 +230,10 @@ const DeletionModal = (props) => {
 
 // Ingredient-Recipe Generation selection feature (ie. heart icons)
 const IngredientSelect = (props) => {
+    // const { colors } = useTheme();
 
     const [select, isSelected] = useState('')
-    const [color, setColor] = useState('#000000');
+    const [color, setColor] = useState('gray');
 
     return (
         <TouchableOpacity onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
@@ -232,7 +244,7 @@ const IngredientSelect = (props) => {
             }
             else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
                 console.log("BLACK")
-                setColor('#000000')
+                setColor('gray')
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
         }}>
@@ -251,6 +263,9 @@ const PantryCard = (props) => {
     const [viewDeletion, setViewDeletion] = useState(false);
     const [deletionChoice, setDeletionChoice] = useState(false)
     const [deletedItem, setDeletedItem] = useState('')
+
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
 
     const formatDate = (obj) => {
         let epochDate = obj.$date
@@ -301,9 +316,13 @@ const PantryCard = (props) => {
                 <View style={styles.itemCardContent}>
                     <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
                     <View style={styles.itemCardText}>
-                        <Text style={styles.foodNameText}>{props.title}</Text>
+                        <Text style={[styles.foodNameText, { color: colors.text }]}>{props.title}</Text>
 
-                        {props.warnNotification ? <Text style={styles.warnExpirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text> : <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text>}
+                        {props.warnNotification
+                            ? <Text style={styles.warnExpirationText}>Expiration: {props.expr
+                                ? formatDate(props.expr) : "Not specified"}</Text>
+                            : <Text style={[styles.expirationText, { color: colors.text }]}>Expiration: {props.expr
+                                ? formatDate(props.expr) : "Not specified"}</Text>}
                         {/* <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text> */}
 
                         <Text style={styles.expirationText}>Quantity: {props.quantity ? props.quantity : "Not specified"}</Text>
@@ -331,8 +350,10 @@ export default ({ navigation }) => {
     let [ingredientSelections, setIngredientSelections] = useState([]);
     let [search, setSearch] = useState('');
 
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
 
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         async function generatePantry() {
@@ -342,14 +363,11 @@ export default ({ navigation }) => {
         generatePantry()
     }, [isFocused]);
 
-
-
     const generateThumbnail = async (ingredientList) => {
 
         const promises = [];
 
         ingredientList.map((ingredient, i) => {
-            console.log("UPMYSLEEVES")
             ingredient_name = ingredient.name
 
             let response = api.get(`/photos?ingredient=${ingredient_name}`)
@@ -389,6 +407,29 @@ export default ({ navigation }) => {
             let response = await api.get(`/pantry/${username}`);
             if (response.data.ingredients) {
                 await setIngredients(response.data.ingredients);
+
+                // Setting async storage for use in Recipe Screen (Band-Aid Solution)
+                // await AsyncStorage.setItem("ingredients", JSON.stringify(response.data.ingredients));
+
+                let ingredientNames = [];
+
+                // loop to grab ingredient names for recipe gen
+                for (let i = 0; i < response.data.ingredients.length; i++) {
+                    let entry = response.data.ingredients[i]
+
+                    console.log("ENTRY")
+                    console.log(entry)
+
+                    let ingredientName = entry["name"]
+
+                    console.log("CHECKING INGREDIENT NAMES")
+                    console.log(ingredientName)
+
+                    ingredientNames.push(ingredientName)
+                }
+
+                await AsyncStorage.setItem("ingredients", JSON.stringify(ingredientNames));
+
                 return response.data.ingredients
             }
         } catch (err) {
@@ -424,15 +465,20 @@ export default ({ navigation }) => {
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
-            <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar>
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
             <SearchBar
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"
+                placeholderTextColor={colors.text}
+                searchIcon={{ color: colors.text }}
+                cancelIcon={{ color: colors.text }}
+                clearIcon={{ color: colors.text }}
                 onChangeText={updateSearch}
                 value={search}
-                containerStyle={{backgroundColor: '#f1f2f2', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: window.height * 0.01}}>
-                <Text>Sort: </Text>
+                inputStyle={{ color: colors.text }}
+                containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: window.height * 0.01 }}>
+                <Text style={{ color: colors.text }}>Sort: </Text>
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
@@ -459,7 +505,7 @@ export default ({ navigation }) => {
                             let currentDateSeconds = new Date().getTime() / 1000
                             let expirationDateSeconds = ingredient.expiration_date.$date / 1000
                             let warnNotification = false
-                            
+
                             // If item is within 2 days (ie. 259200 seconds) of expiring, set styling
                             if (expirationDateSeconds - 259200 < currentDateSeconds) {
                                 warnNotification = true
@@ -467,6 +513,12 @@ export default ({ navigation }) => {
 
                             //search through cards
                             if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
+
+
+                                // This code reformats the date object (stored as UTC) to current timezone
+                                let expDateConversion = new Date(ingredient.expiration_date.$date);
+                                var timezoneAdjustedDate = expDateConversion.getTime() + (expDateConversion.getTimezoneOffset() * 60000);
+                                ingredient.expiration_date.$date = timezoneAdjustedDate
 
                                 return (
                                     <PantryCard

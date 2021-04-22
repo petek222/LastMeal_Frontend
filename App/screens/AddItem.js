@@ -14,12 +14,13 @@ import {
 } from "react-native";
 
 import DatePicker from 'react-native-datepicker'
-import moment from 'moment';
+import moment, { min } from 'moment';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 var stringSimilarity = require("string-similarity");
 import ModalDropdown from 'react-native-modal-dropdown';
 import * as Notifications from 'expo-notifications';
+import { useTheme } from '@react-navigation/native';
 
 // Code below surpresses warning log boxes at bottom of app
 import {LogBox, YellowBox} from 'react-native';
@@ -33,7 +34,7 @@ const ingredientData = require('../assets/ingredientList.json')
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
@@ -42,7 +43,8 @@ const styles = StyleSheet.create({
         marginBottom: 40,
         marginTop: -20,
         height: "20%",
-        resizeMode: 'contain'
+        resizeMode: 'contain',
+        tintColor: 'white'
     },
 
     inputView: {
@@ -129,6 +131,8 @@ export default ({navigation}) => {
     const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
     const toggleSwitch = () => setIsNotificationEnabled(previousState => !previousState);
 
+    const {colors} = useTheme();
+
     function notifyMessage(msg) {
         if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT)
@@ -212,22 +216,44 @@ export default ({navigation}) => {
         return resultList;
     }
 
+    const expirationSearch = async (item) => {
+
+        try {
+            let response = await api.get(`/exp?ingredient=${item}`);
+
+            let ingredientData = response.data;
+            // console.log(ingredientData)
+            let expResult = minExpDate(ingredientData)
+            // setExpiration(expResult)
+
+        }
+        catch (error) {
+            console.log("Error in Expiration Fetapich")
+            console.log(error)
+        }
+    }
+
     const DropdownMenuSelection = () => {
 
         // We can render this default option if we want
         const defaultOption = suggestionList[0];
+        const {colors} = useTheme();
 
         return (
             <ModalDropdown 
                 style={styles.inputView}
                 defaultValue={'Ingredient Options (Click Me):'}
-                dropdownTextStyle={{ backgroundColor: '#fff', fontSize: 18, color: '#000000' }}/*Style here*/
+                dropdownTextStyle={{ backgroundColor: colors.background, fontSize: 18, color: colors.text }}/*Style here*/
                 textStyle={{ fontSize: 14, color: '#2a3439', alignSelf: 'flex-start', marginLeft: 30, height: 50, marginTop: 15}}
                 dropdownStyle={{ flex: 1, width: '70%', marginVertical: 10, borderWidth: 1, borderColor: '#D3D3D3' }}
                 options={suggestionList}
                 onSelect={(value) => {
                     setIngredientName(suggestionList[value])
                     setRenderDropdown(false)
+
+                    // Here is where we make a call to the expiration-suggestion database
+                    let expSuggestion = expirationSearch(suggestionList[value])
+
                 }}
             />
         )
@@ -235,7 +261,7 @@ export default ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require("../assets/add_ingredient.png")} />
+            <Image style={[styles.image, {tintColor: colors.text}]} source={require("../assets/add_ingredient.png")} />
 
             {/* Ingredient Name */}
             <View style={styles.inputView}>
@@ -340,4 +366,29 @@ async function schedulePushNotification(ingredientName, timer) {
       },
       trigger: { seconds: timer },
     });
-  }
+}
+
+// Return both the date string (?)
+// Implementation Detail: Ignoring the min value if it is the same as current day
+const minExpDate = (object) => {
+
+    // Grab Objects
+    let freezer = object["freezer_expiration"]
+    let fridge = object["fridge_expiration"]
+    let pantry = object["pantry_expiration"]
+
+    let freezer_date = new Date(freezer).getTime()
+    let fridge_date = new Date(fridge).getTime()
+    let pantry_date = new Date(pantry).getTime()
+
+    let stringArray = [freezer, fridge, pantry_date]
+    let dateArray = [freezer_date, fridge_date, pantry_date];
+
+    let minIndex = dateArray.indexOf(Math.min(...dateArray));
+
+    console.log("Min Index / Date:")
+    console.log(minIndex)
+    console.log(stringArray[minIndex])
+
+    return stringArray[minIndex]
+}

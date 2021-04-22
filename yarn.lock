@@ -3885,6 +3885,11 @@
     "lodash" "^4.6.1"
     "querystring" "0.2.0"
 
+"hamt_plus@1.0.2":
+  "integrity" "sha1-4hwlKWjH4zsg9qGwlM2FeHomVgE="
+  "resolved" "https://registry.npmjs.org/hamt_plus/-/hamt_plus-1.0.2.tgz"
+  "version" "1.0.2"
+
 "har-schema@^2.0.0":
   "integrity" "sha1-qUwiJOvKwEeCoNkDVSHyRzW37JI="
   "resolved" "https://registry.npmjs.org/har-schema/-/har-schema-2.0.0.tgz"
@@ -6159,6 +6164,14 @@
   "resolved" "https://registry.npmjs.org/react-native-screens/-/react-native-screens-2.18.1.tgz"
   "version" "2.18.1"
 
+"react-native-settings-list@^1.8.0":
+  "integrity" "sha1-iQiVRuhOb987nkIf6HDwwmJoaNo="
+  "resolved" "https://registry.npmjs.org/react-native-settings-list/-/react-native-settings-list-1.8.0.tgz"
+  "version" "1.8.0"
+  dependencies:
+    "create-react-class" "^15.6.2"
+    "prop-types" "^15.5.10"
+
 "react-native-size-matters@^0.3.1":
   "integrity" "sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw=="
   "resolved" "https://registry.npmjs.org/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz"
@@ -6170,6 +6183,11 @@
   "version" "0.0.24"
   dependencies:
     "prop-types" "^15.5.10"
+
+"react-native-switch-with-icons@^2.0.1":
+  "integrity" "sha512-u/Sv3yOkrrfzCVrQ4+PmFXMoYIeBGcglLueVQbRLMkpx/firlM9u/OM/cC8aUEhzqQPHWXp3ueziK6q+ouPMrw=="
+  "resolved" "https://registry.npmjs.org/react-native-switch-with-icons/-/react-native-switch-with-icons-2.0.1.tgz"
+  "version" "2.0.1"
 
 "react-native-tab-view@^2.15.2":
   "integrity" "sha512-2hxLkBnZtEKFDyfvNO5EUywhy3f/EiLOBO8SWqKj4BMBTO0QwnybaPE5MVF00Fhz+VA4+h/iI40Dkrrtq70dGg=="
@@ -6287,7 +6305,7 @@
     "raf" "^3.1.0"
     "tween-functions" "^1.0.1"
 
-"react@16.13.1":
+"react@>=16.13.1", "react@16.13.1":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
   "version" "16.13.1"
@@ -6308,6 +6326,13 @@
     "safe-buffer" "~5.1.1"
     "string_decoder" "~1.1.1"
     "util-deprecate" "~1.0.1"
+
+"recoil@^0.2.0":
+  "integrity" "sha512-VOJfYVQ3VgmfS7L5tV9QdOR+AJhvll8yGr1+3nJPCqADulImuScGZ2sJtejPps3zfTu/o98y5kO4lje8Tx6XHw=="
+  "resolved" "https://registry.npmjs.org/recoil/-/recoil-0.2.0.tgz"
+  "version" "0.2.0"
+  dependencies:
+    "hamt_plus" "1.0.2"
 
 "regenerate-unicode-properties@^8.2.0":
   "integrity" "sha512-F9DjY1vKLo/tPePDycuH3dn9H1OTPIkVD9Kz4LODu+F2C75mgjAJ7x/gwy6ZcSNRAAkhNlJSOHRe8k3p+K9WhA=="
