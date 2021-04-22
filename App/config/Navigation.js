@@ -15,6 +15,15 @@ import ResetPassword from '../screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { DefaultTheme, DarkTheme } from '@react-navigation/native';
+import {
+    RecoilRoot,
+    atom,
+    selector,
+    useRecoilState,
+    useRecoilValue,
+} from 'recoil';
+
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator();
 
@@ -77,17 +86,48 @@ function ProfileTabs() {
     );
 }
 
+// dark theme
+const MyDark = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: '#222',
+        text: 'white',
+    },
+};
+
+// light theme
+const MyLight = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: 'white'
+    },
+};
+
+// stores state of dark mode
+export const darkState = atom({
+    key: 'darkState', // unique ID
+    default: false, // initial value
+});
+
+const Navigation = () => {
+    return (
+        <NavigationContainer theme={useRecoilValue(darkState) ? MyDark : MyLight}>
+            <Stack.Navigator initialRouteName="Login">
+                <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
+                <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+                <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+                <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
+                <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
+                <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    )
+}
+
 export default () => (
-    <NavigationContainer>
-        <Stack.Navigator
-            initialRouteName="Login"
-        >
-            <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
-            <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
-            <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
-            <Stack.Screen name="ResetPassword" component={ResetPassword} options={{headerShown: false}} />
-        </Stack.Navigator>
-    </NavigationContainer>
+    <RecoilRoot>
+        <Navigation />
+    </RecoilRoot>
 )
