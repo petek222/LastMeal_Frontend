@@ -28,9 +28,38 @@ import {
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator();
 
+// dark theme
+const MyDark = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: 'black',
+        background: '#282828',
+        text: 'white',
+    },
+};
+
+// light theme
+const MyLight = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: 'white'
+    },
+};
+
+// stores state of dark mode
+export const darkState = atom({
+    key: 'darkState', // unique ID
+    default: false, // initial value
+});
+
+
 function ProfileTabs() {
+    const theme = useRecoilValue(darkState);
     return (
         <Tab.Navigator
+
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
@@ -61,10 +90,29 @@ function ProfileTabs() {
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
             })}
-            tabBarOptions={{
-                activeTintColor: 'tomato',
-                inactiveTintColor: 'gray',
-            }}
+            tabBarOptions={theme
+                ? {
+                    style:
+                    {
+                        borderTopWidth: 0,
+                    },
+                    activeTintColor: 'tomato',
+                    inactiveTintColor: 'white',
+                    activeBackgroundColor: '#222',
+                    inactiveBackgroundColor: '#000'
+                }
+                : {
+                    style:
+                    {
+                        borderTopWidth: 0,
+                    },
+                    activeTintColor: 'tomato',
+                    inactiveTintColor: 'gray',
+                    activeBackgroundColor: '#efefef',
+                    inactiveBackgroundColor: '#fff'
+                    // inactiveBackgroundColor: '#222'
+                }
+            }
         >
 
             <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
@@ -75,31 +123,7 @@ function ProfileTabs() {
     );
 }
 
-// dark theme
-const MyDark = {
-    ...DefaultTheme,
-    colors: {
-        ...DefaultTheme.colors,
-        primary: 'black',
-        background: '#282828',
-        text: 'white',
-    },
-};
 
-// light theme
-const MyLight = {
-    ...DefaultTheme,
-    colors: {
-        ...DefaultTheme.colors,
-        background: 'white'
-    },
-};
-
-// stores state of dark mode
-export const darkState = atom({
-    key: 'darkState', // unique ID
-    default: false, // initial value
-});
 
 const Navigation = () => {
     const theme = useRecoilValue(darkState);

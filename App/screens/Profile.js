@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    safeAreaView: {
-        height: "100%",
-        width: "200%"
-    },
+    // safeAreaView: {
+    //     height: "100%",
+    //     width: "200%"
+    // },
     roundedProfileImage: {
         width: 150, height: 150, borderWidth: 3,
         borderColor: '#6be3d9', borderRadius: 75
