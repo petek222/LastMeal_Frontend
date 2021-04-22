@@ -149,7 +149,7 @@ export default ({ navigation }) => {
         <View style={styles.container}>
             {/* <StatusBar style="light-content" barStyle="light-content" backgroundColor="white" /> */}
             {/* <StatusBar style={colors.background === 'white' ? 'dark-content' : 'light-content'}  backgroundColor={colors.background}/> */}
-            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}/>
 
             <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
 

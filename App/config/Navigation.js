@@ -14,6 +14,7 @@ import RecipeInfo from '../screens/RecipeInfo';
 import ResetPassword from '../screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { View } from 'react-native';
 
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import {
@@ -41,18 +42,6 @@ function ProfileTabs() {
                         iconName = focused
                             ? 'ios-cog'
                             : 'ios-cog-outline';
-                    }
-                    // to remove
-                    else if (route.name === 'Login') {
-                        iconName = focused
-                            ? 'ios-log-in'
-                            : 'ios-log-in-outline';
-                    }
-                    // to remove
-                    else if (route.name === "Signup") {
-                        iconName = focused
-                            ? 'ios-create'
-                            : 'ios-create-outline';
                     }
                     else if (route.name === 'Profile') {
                         iconName = focused
@@ -113,17 +102,20 @@ export const darkState = atom({
 });
 
 const Navigation = () => {
+    const theme = useRecoilValue(darkState);
     return (
-        <NavigationContainer theme={useRecoilValue(darkState) ? MyDark : MyLight}>
-            <Stack.Navigator initialRouteName="Login">
-                <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
-                <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-                <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
-                <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
-                <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
-                <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <View style={{ flex: 1, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}>
+            <NavigationContainer theme={theme ? MyDark : MyLight}>
+                <Stack.Navigator initialRouteName="Login">
+                    <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
+                    <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+                    <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+                    <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
+                    <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
+                    <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </View>
     )
 }
 
