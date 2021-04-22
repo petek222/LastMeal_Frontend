@@ -12,6 +12,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 
+import { useTheme } from '@react-navigation/native';
+
 var stringSimilarity = require("string-similarity");
 
 const window = Dimensions.get('window');
@@ -331,8 +333,9 @@ export default ({ navigation }) => {
     let [ingredientSelections, setIngredientSelections] = useState([]);
     let [search, setSearch] = useState('');
 
+    const { colors } = useTheme();
 
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         async function generatePantry() {
@@ -454,7 +457,7 @@ export default ({ navigation }) => {
                 value={search}
                 containerStyle={{backgroundColor: '#f1f2f2', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: window.height * 0.01}}>
-                <Text>Sort: </Text>
+                <Text style={{color: colors.text}}>Sort: </Text>
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
