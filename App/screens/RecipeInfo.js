@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         maxWidth: windowWidth * 0.9,
-        paddingTop: windowHeight * 0.01
+        paddingTop: windowHeight * 0.02
     },
     nameContainer: {
         maxWidth: windowWidth * 0.50
@@ -58,8 +58,14 @@ const styles = StyleSheet.create({
         paddingTop: windowHeight * 0.01,
         paddingBottom: windowHeight * 0.02
     },
-    contentList: {
+    contentItem: {
         paddingBottom: windowHeight * 0.015,
+        paddingLeft: windowWidth * 0.015,
+        flex: 1,
+        fontSize: 18,
+        lineHeight: 25
+    },
+    listItemIndicator: {
         fontSize: 18,
         lineHeight: 25
     }
@@ -73,6 +79,7 @@ export default ({navigation}) => {
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
+
                 <View style={styles.headerContainer}>
                     <View style={styles.nameContainer}>
                         <Text style={styles.recipeNameText}>{recipeData.title}</Text>
@@ -81,14 +88,20 @@ export default ({navigation}) => {
                         <Thumbnail style={styles.thumbnail} source={{uri: recipeData.image}}/>
                     </View>
                 </View>
+
                 <View style={styles.bodyContainer}>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Description</Text>
-                        <Text style={styles.infoContent}>{recipeData.summary.replace(/(<([^>]+)>)/gi, "")}</Text>
+                        <View style={styles.infoContent}>
+                            <Text style={styles.contentItem}>{recipeData.summary.replace(/(<([^>]+)>)/gi, "")}</Text>
+                        </View>
                     </View>
                     <View style={styles.infoContainer}>
-                        <Text style={styles.infoHeader}>Cook Time</Text>
-                        <Text style={styles.infoContent}>{recipeData.cookingMinutes} mins</Text>
+                        <Text style={styles.infoHeader}>Time</Text>
+                        <View style={styles.infoContent}>
+                            <Text style={styles.contentItem}>Preparation: {recipeData.preparationMinutes} mins</Text>
+                            <Text style={styles.contentItem}>Cooking: {recipeData.cookingMinutes} mins</Text>
+                        </View>
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Ingredients</Text>
@@ -96,7 +109,10 @@ export default ({navigation}) => {
                             {
                                 recipeData.extendedIngredients.map((ingredient) => {
                                     return (
-                                        <Text key={ingredient.id} style={styles.contentList}>- {ingredient.originalString}</Text>
+                                        <View key={ingredient.id} style={{flexDirection: 'row'}}>
+                                            <Text style={styles.listItemIndicator}>-</Text>
+                                            <Text style={styles.contentItem}>{ingredient.originalString}</Text>
+                                        </View>
                                     );
                                 })
                             }
@@ -108,7 +124,10 @@ export default ({navigation}) => {
                             {
                                 recipeData.analyzedInstructions[0].steps.map((step) => {
                                     return (
-                                        <Text key={step.number} style={styles.contentList}>{step.number}. {step.step}</Text>
+                                        <View key={step.number} style={{flexDirection: 'row'}}>
+                                            <Text style={styles.listItemIndicator}>{step.number}. </Text>
+                                            <Text style={styles.contentItem}>{step.step}</Text>
+                                        </View>
                                     );
                                 })
                             }
