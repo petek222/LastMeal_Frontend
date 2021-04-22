@@ -60,6 +60,12 @@ const styles = StyleSheet.create({
     },
     contentItem: {
         paddingBottom: windowHeight * 0.015,
+        flex: 1,
+        fontSize: 18,
+        lineHeight: 25
+    },
+    listItem: {
+        paddingBottom: windowHeight * 0.015,
         paddingLeft: windowWidth * 0.015,
         flex: 1,
         fontSize: 18,
@@ -111,7 +117,7 @@ export default ({navigation}) => {
                                     return (
                                         <View key={ingredient.id} style={{flexDirection: 'row'}}>
                                             <Text style={styles.listItemIndicator}>-</Text>
-                                            <Text style={styles.contentItem}>{ingredient.originalString}</Text>
+                                            <Text style={styles.listItem}>{ingredient.originalString}</Text>
                                         </View>
                                     );
                                 })
@@ -126,7 +132,7 @@ export default ({navigation}) => {
                                     return (
                                         <View key={step.number} style={{flexDirection: 'row'}}>
                                             <Text style={styles.listItemIndicator}>{step.number}. </Text>
-                                            <Text style={styles.contentItem}>{step.step}</Text>
+                                            <Text style={styles.listItem}>{step.step}</Text>
                                         </View>
                                     );
                                 })
