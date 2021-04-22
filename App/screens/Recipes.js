@@ -15,7 +15,7 @@ const window = Dimensions.get('window');
 const cardWidth = window.width * 0.9;
 const cardHeight = window.height * 0.12;
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 4,
-        backgroundColor: 'white'
+        backgroundColor: colors.black
     },
     itemCardContent: {
         flex: 6,
@@ -52,10 +52,12 @@ const styles = StyleSheet.create({
     itemCardText: {
         flex: 1,
         justifyContent: 'center',
-        paddingLeft: (cardWidth * 0.05)
+        paddingLeft: (cardWidth * 0.05),
+        color: colors.text
     },
     recipeNameText: {
-        fontSize: 16
+        fontSize: 16,
+        color: colors.text
     },
     cardButtons: {
         flex: 1,
@@ -66,6 +68,9 @@ const styles = StyleSheet.create({
 });
 
 const RecipeCard = (props) => {
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+
     return (
         <TouchableOpacity style={styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
             <View style={styles.itemCardContent} >
@@ -90,6 +95,7 @@ export default ({navigation}) => {
 
     const isFocused = useIsFocused()
     const { colors } = useTheme();
+    const styles = makeStyles(colors);
 
     useEffect(() => {
         async function generateRecipes() {

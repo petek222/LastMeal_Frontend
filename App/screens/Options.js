@@ -58,7 +58,7 @@ export default ({ navigation }) => {
 
     // [onValueChange, setOnValueChange] = useState("")
     const [passiveRecipes, setPassiveRecipes] = useState(false)
-    const [themeButton, setThemeButton] = useState(false)
+    // const [themeButton, setThemeButton] = useState(false)
     const [theme, setTheme] = useState("light")
 
     const [dark, setDark] = useRecoilState(darkState);
@@ -77,13 +77,13 @@ export default ({ navigation }) => {
         if (theme === 'light') {
             console.log("SETTING DARK")
             setTheme('dark');
-            setThemeButton(value)
+            // setThemeButton(value)
             toggleSwitch();
         }
         else {
             console.log("SETING LIGHT")
             setTheme('light');
-            setThemeButton(value)
+            // setThemeButton(value)
             toggleSwitch();
         }
     }
@@ -118,7 +118,7 @@ export default ({ navigation }) => {
                         title='Dark Theme'
                         titleStyle={{color: colors.text}}
                         hasSwitch={true}
-                        switchState={themeButton}
+                        switchState={dark}
                         hasNavArrow={false}
                         switchOnValueChange={onThemeChange}
                     />

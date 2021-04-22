@@ -34,8 +34,11 @@ const MyDark = {
     colors: {
         ...DefaultTheme.colors,
         primary: 'black',
-        background: '#282828',
+        // accent: 'red',
+        background: '#222',
         text: 'white',
+        backdrop: 'gray',
+        black: 'black'
     },
 };
 
@@ -44,7 +47,7 @@ const MyLight = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        background: 'white'
+        background: 'white',
     },
 };
 
@@ -92,8 +95,11 @@ function ProfileTabs() {
             })}
             tabBarOptions={theme
                 ? {
+                    tabStyle: { borderTopWidth: 0 },
                     style:
                     {
+                        elevation: 0,
+                        // borderTopColor: "transparent",
                         borderTopWidth: 0,
                     },
                     activeTintColor: 'tomato',
@@ -102,15 +108,17 @@ function ProfileTabs() {
                     inactiveBackgroundColor: '#000'
                 }
                 : {
+                    tabStyle: { borderTopWidth: 0 },
                     style:
                     {
+                        elevation: 0,
+                        // borderTopColor: "transparent",
                         borderTopWidth: 0,
                     },
                     activeTintColor: 'tomato',
                     inactiveTintColor: 'gray',
-                    activeBackgroundColor: '#efefef',
-                    inactiveBackgroundColor: '#fff'
-                    // inactiveBackgroundColor: '#222'
+                    activeBackgroundColor: '#fff',
+                    inactiveBackgroundColor: '#f6f6f6'
                 }
             }
         >
