@@ -15,24 +15,28 @@ import {
 import api from "../api/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const styles = StyleSheet.create({
+import { useTheme } from '@react-navigation/native';
+
+const makeStyles = (colors) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
     darkContainer: {
         flex: 1,
-        backgroundColor: "#282828",
+        // backgroundColor: "#282828",
         alignItems: "center",
         justifyContent: "center",
     },
     image: {
         // marginBottom: 40,
-        height: "30%",
+        height: "25%",
         resizeMode: 'contain',
-        padding: 10,
+        // padding: 10,
+        // marginBottom: 10
+        margin: "10%"
     },
 
     inputView: {
@@ -54,13 +58,14 @@ const styles = StyleSheet.create({
     forgotButt: {
         height: 30,
         marginBottom: 60,
+        color: colors.text
     },
 
-    forgotButtDark: {
-        height: 30,
-        marginBottom: 60,
-        color: '#FFFFFF'
-    },
+    // forgotButtDark: {
+    //     height: 30,
+    //     marginBottom: 60,
+    //     color: '#FFFFFF'
+    // },
 
     loginButt: {
         width: "80%",
@@ -76,19 +81,23 @@ const styles = StyleSheet.create({
     signupButt: {
         height: 30,
         marginBottom: 30,
+        color: colors.text
         // position: "absolute"
     },
 
-    signupButtDark: {
-        height: 30,
-        marginBottom: 30,
-        color: '#FFFFFF',
-    }
+    // signupButtDark: {
+    //     height: 30,
+    //     marginBottom: 30,
+    //     color: '#FFFFFF',
+    // }
 });
 
 export default ({ navigation }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const {colors} = useTheme();
+    const styles = makeStyles(colors);
 
     const login = async () => {
         try {
@@ -133,8 +142,8 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.darkContainer}>
-            <Image style={styles.image} source={require("../assets/lastmealdark.png")} />
+        <View style={styles.container}>
+            <Image style={styles.image} source={require("../assets/lastmealdark2.png")} />
 
             <StatusBar style="auto" />
             <View style={styles.inputView}>
@@ -158,18 +167,22 @@ export default ({ navigation }) => {
             </View>
 
             <TouchableOpacity>
-                <Text style={styles.forgotButtDark} onPress={() => navigation.navigate('ResetPassword')}>Forgot Password</Text>
+                <Text style={styles.forgotButt} onPress={() => navigation.navigate('ResetPassword')}>Forgot Password</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.loginButt}
                 // activeOpacity={username === '' || password === '' ? 1 : 0.5}
                 disabled={!Boolean(username && password)}
                 onPress={() => login()}>
-                <Text style={styles.loginText}>Log In</Text>
+                <Text>Log In</Text>
             </TouchableOpacity>
 
             <TouchableOpacity>
-                <Text style={styles.signupButtDark} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
+                <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+                <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>[]</Text>
             </TouchableOpacity>
         </View>
     );

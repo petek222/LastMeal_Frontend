@@ -92,7 +92,7 @@ const MyDark = {
     colors: {
         ...DefaultTheme.colors,
         primary: 'black',
-        background: '#222',
+        background: '#282828',
         text: 'white',
     },
 };
