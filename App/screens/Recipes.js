@@ -64,16 +64,48 @@ const styles = StyleSheet.create({
 });
 
 const RecipeCard = (props) => {
+
+    // // Placeholder for Recipe Info Development
+    // return (
+    //     <TouchableOpacity style={styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
+    //         <View style={styles.itemCardContent} >
+    //             <Thumbnail source={require('../assets/chicken.jpg')} />
+    //             <View style={styles.itemCardText}>
+    //                 <Text style={styles.recipeNameText} >{props.title}</Text>
+    //             </View>
+    //         </View>
+    //         <View style={styles.cardButtons}>
+    //             <Ionicons name="heart-outline" style={{fontSize: 25}} />
+    //         </View>
+    //     </TouchableOpacity>
+    // )
+
+    console.log("Image Test")
+    console.log(props.image)
+
+    const [color, setColor] = useState('#000000');
+
     return (
         <TouchableOpacity style={styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
             <View style={styles.itemCardContent} >
-                <Thumbnail source={require('../assets/chicken.jpg')} />
+                <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
                 <View style={styles.itemCardText}>
                     <Text style={styles.recipeNameText} >{props.title}</Text>
                 </View>
             </View>
             <View style={styles.cardButtons}>
-                <Ionicons name="heart-outline" style={{fontSize: 25}} />
+            <TouchableOpacity onPress={async () => {
+                    if (color !== '#FF69B4') {
+                        setColor('#FF69B4')
+                        // Here we will want to add the item to some favorites object that can be sent to the user's profile
+                    }
+                    else {
+                        setColor('#000000')
+                        // Here we will want to remove the item from the object described above
+                    }
+                }}>
+            <Ionicons name="heart-outline" color={color} style={{ fontSize: 25 }} />
+        </TouchableOpacity>
             </View>
         </TouchableOpacity>
     )
@@ -81,27 +113,49 @@ const RecipeCard = (props) => {
 
 export default ({navigation}) => {
 
-    let [ingredients, setIngredients] = useState([]);
-    // let [imageArray, setImageArray] = useState([]);
-    // let [ingredientSelections, setIngredientSelections] = useState([]);
-    // let [search, setSearch] = useState('');
+    let [recipes, setRecipes] = useState([]);
+    let [imageArray, setImageArray] = useState([]);
+    let [ingredientSelections, setIngredientSelections] = useState([]);
+    let [search, setSearch] = useState('');
 
     const isFocused = useIsFocused()
 
     useEffect(() => {
+
         async function generateRecipes() {
             // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
             // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
+            let prevPantry = await AsyncStorage.getItem('currentIngredients');
             const currentPantry = await AsyncStorage.getItem('ingredients');
 
-            // console.log("TESTING PANTRY STORAGE")
-            // console.log(currentPantry)
+            console.log("COMPARING PANTRIES")
+            console.log(prevPantry)
+            console.log(currentPantry)
 
-            let recipeList = await getRecipes(currentPantry);
+            // If the current pantry is different/new from the previous pantry, make the request and update the recipe list
+            // We can remove all of this logic once caching for recipes is implemented on the server
+            if (currentPantry != prevPantry) {
 
-            // Here is where we want to work on the recipe data sent from the API to build our cards
-            console.log("RECIPES")
-            console.log(recipeList)
+                console.log("MAKING SPOONACULAR REQUEST")
+
+                let prevPantryArray = []
+
+                await AsyncStorage.setItem("currentIngredients", currentPantry);
+
+                let recipeList = await getRecipes(currentPantry);
+    
+                // Here is where we want to work on the recipe data sent from the API to build our cards
+                console.log("RECIPES")
+                console.log(recipeList)
+                
+                await setRecipes(recipeList)
+            }
+
+            else {
+                console.log("USING CACHED DATA, NO REQUEST MADE")
+            }
+
+            // Otherwise, set the recipe list again (?)
         }
         generateRecipes()
     }, [isFocused]);
@@ -110,24 +164,65 @@ export default ({navigation}) => {
     const getRecipes = async (currentPantry) => {
 
         try {
-            let response = await api.get('/recipes', {
-                ingredients: currentPantry
-            });
+            console.log("MAKING RECIPE REQUEST")
+            console.log(currentPantry)
 
-            return response
+            let config = {
+                headers: {
+                  'Content-Type': 'application/json',
+                }
+              }
+
+            let response = await api.post('/recipes', {
+                ingredients: currentPantry
+            }, config);
+
+            let recipeInformation = response.data.recipe_data.recipe_data;
+
+            return recipeInformation
         }
         catch (error) {
-            return "Error in grabbing recipe data";
+            console.log(error)
+            return "Error in requesting recipe data";
         }
     }
 
+    // Placeholder for RecipeInfo Testing
+    // return (
+    //     <SafeAreaView style={styles.safeAreaView}>
+    //         <StatusBar barStyle="dark-content" ></StatusBar>
+    //         <ScrollView contentContainerStyle={styles.scrollViewContent}>
+    //             <RecipeCard title="Chicken Kiev" nav={navigation}/>
+    //         </ScrollView>
+    //     </SafeAreaView>
+    // )
+
 
     return (
+        <View>
         <SafeAreaView style={styles.safeAreaView}>
             <StatusBar barStyle="dark-content" ></StatusBar>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                <RecipeCard title="Chicken Souvlaki" nav={navigation}/>
+                <View>
+                    {
+                        recipes.map((recipe, i) => {
+
+                            let recipe_name = recipe.title;
+                            
+                            // This regex doesn't display any recipes with numbers in them, since hose are usually
+                            // random lists and not particular recipes (we will probably want to refine this/put
+                            // it on the backend later)
+                            if (!/\d/.test(recipe.title)) { 
+                                return (
+                                    <RecipeCard key={i} image={recipe.image} title={recipe_name} nav={navigation}></RecipeCard>
+                                )
+                            }
+
+                        })
+                    }
+                </View>
             </ScrollView>
         </SafeAreaView>
+        </View>
     )
 }

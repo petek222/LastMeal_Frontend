@@ -224,14 +224,12 @@ const IngredientSelect = (props) => {
     const [color, setColor] = useState('#000000');
 
     return (
-        <TouchableOpacity onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
-            console.log("HERE")
+        <TouchableOpacity onPress={async () => {
             if (color !== '#6be3d9') {
                 setColor('#6be3d9')
                 await props.selectIngredient(currentElements => [...currentElements, props.item])
             }
             else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
-                console.log("BLACK")
                 setColor('#000000')
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }

@@ -133,8 +133,8 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.darkContainer}>
-            <Image style={styles.image} source={require("../assets/lastmealdark.png")} />
+        <View style={styles.container}>
+            <Image style={styles.image} source={require("../assets/lastmeal.png")} />
 
             <StatusBar style="auto" />
             <View style={styles.inputView}>
@@ -158,7 +158,7 @@ export default ({ navigation }) => {
             </View>
 
             <TouchableOpacity>
-                <Text style={styles.forgotButtDark} onPress={() => navigation.navigate('ResetPassword')}>Forgot Password</Text>
+                <Text style={styles.forgotButt} onPress={() => navigation.navigate('ResetPassword')}>Forgot Password</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.loginButt}
@@ -169,7 +169,7 @@ export default ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity>
-                <Text style={styles.signupButtDark} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
+                <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
             </TouchableOpacity>
         </View>
     );
