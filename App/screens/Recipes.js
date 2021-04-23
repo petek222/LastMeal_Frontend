@@ -6,7 +6,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Constants from 'expo-constants';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Loader from '../config/Loader'
+import LoaderFuncComp from '../config/Loader'
 
 import { useTheme } from '@react-navigation/native';
 
@@ -212,6 +212,7 @@ export default ({navigation}) => {
         )
     }
     else {
+        let loadText = "Add items to your Pantry to generate Recipes!"
         return (
             <View>
             <SafeAreaView style={styles.safeAreaView}>
@@ -219,7 +220,7 @@ export default ({navigation}) => {
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
-                        <Loader></Loader>
+                        <LoaderFuncComp color={colors} text={loadText}></LoaderFuncComp>
                     </View>
                 </ScrollView>
             </SafeAreaView>

@@ -37,7 +37,6 @@ const MyDark = {
         // accent: 'red',
         background: '#222',
         text: 'white',
-        backdrop: 'gray',
         black: '#232b2b'
     },
 };
@@ -119,7 +118,6 @@ function ProfileTabs() {
                         // paddingBottom: 0
                     },
                     activeTintColor: 'tomato',
-                    inactiveTintColor: 'gray',
                     activeBackgroundColor: '#fff',
                     inactiveBackgroundColor: '#f6f6f6'
                     // safeAreaInsets: { bottom: 0, top: 0 }

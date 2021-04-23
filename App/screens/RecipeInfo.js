@@ -143,7 +143,7 @@ export default ({route, navigation}) => {
                             <Text style={styles.recipeNameText}>{recipeDataParsed.title}</Text>
                         </View>
                         <View>
-                            <Thumbnail style={styles.thumbnail} source={{uri: recipeDataParsed.image}}/>
+                            <Thumbnail style={styles.thumbnail} source={recipeDataParsed.image ? {uri: recipeDataParsed.image} : {source: require('../assets/default.png')}}/>
                         </View>
                     </View>
     
@@ -151,28 +151,28 @@ export default ({route, navigation}) => {
                         <View style={styles.infoContainer}>
                             <Text style={styles.infoHeader}>Description</Text>
                             <View style={styles.infoContent}>
-                                <Text style={styles.contentItem}>{recipeDataParsed.summary.replace(/(<([^>]+)>)/gi, "")}</Text>
+                                <Text style={styles.contentItem}>{(recipeDataParsed.summary) ? recipeDataParsed.summary.replace(/(<([^>]+)>)/gi, "") : "Recipe Summary Unavailable"}</Text>
                             </View>
                         </View>
                         <View style={styles.infoContainer}>
                             <Text style={styles.infoHeader}>Time</Text>
                             <View style={styles.infoContent}>
-                                <Text style={styles.contentItem}>Preparation: {recipeDataParsed.preparationMinutes} mins</Text>
-                                <Text style={styles.contentItem}>Cooking: {recipeDataParsed.cookingMinutes} mins</Text>
+                                <Text style={styles.contentItem}>Preparation: {(recipeDataParsed.preparationMinutes) ? recipeDataParsed.preparationMinutes : "N/A"} mins</Text>
+                                <Text style={styles.contentItem}>Cooking: {(recipeDataParsed.cookingMinutes) ? recipeDataParsed.cookingMinutes : "N/A"} mins</Text>
                             </View>
                         </View>
                         <View style={styles.infoContainer}>
                             <Text style={styles.infoHeader}>Ingredients</Text>
                             <View style={styles.infoContent}>
                                 {
-                                    recipeDataParsed.extendedIngredients.map((ingredient) => {
+                                    (recipeDataParsed.extendedIngredients ? recipeDataParsed.extendedIngredients.map((ingredient) => {
                                         return (
                                             <View key={ingredient.id} style={{flexDirection: 'row'}}>
                                                 <Text style={styles.listItemIndicator}>-</Text>
                                                 <Text style={styles.listItem}>{ingredient.originalString}</Text>
                                             </View>
                                         );
-                                    })
+                                    }) : <Text style={styles.listItem}>Ingredient Unavailable</Text>)
                                 }
                             </View>
                         </View>
@@ -180,14 +180,14 @@ export default ({route, navigation}) => {
                             <Text style={styles.infoHeader}>Instructions</Text>
                             <View style={styles.infoContent}>
                                 {
-                                    recipeDataParsed.analyzedInstructions[0].steps.map((step) => {
+                                    (recipeDataParsed.analyzedInstructions[0] ? recipeDataParsed.analyzedInstructions[0].steps.map((step) => {
                                         return (
                                             <View key={step.number} style={{flexDirection: 'row'}}>
                                                 <Text style={styles.listItemIndicator}>{step.number}. </Text>
                                                 <Text style={styles.listItem}>{step.step}</Text>
                                             </View>
                                         );
-                                    })
+                                    }) : <Text style={styles.listItem}>Instruction Unavailable</Text>)
                                 }
                             </View>
                         </View>
@@ -200,7 +200,15 @@ export default ({route, navigation}) => {
     else {
         return (
             <View>
-                <Text>Generating Recipe...</Text>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
+                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <View>
+                        <Loader></Loader>
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
             </View>
         )
     }
