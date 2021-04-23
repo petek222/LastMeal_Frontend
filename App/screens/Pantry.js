@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity, Platform } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity, TouchableWithoutFeedback, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,6 +13,13 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 
 import { useTheme } from '@react-navigation/native';
+import {
+    RecoilRoot,
+    atom,
+    selector,
+    useRecoilState,
+    useRecoilValue,
+} from 'recoil';
 
 var stringSimilarity = require("string-similarity");
 
@@ -22,6 +29,11 @@ const statusBarHeight = Constants.statusBarHeight;
 
 const cardWidth = window.width * 0.9;
 const cardHeight = window.height * 0.12;
+
+export const selected = atom({
+    key: 'selected', // unique ID
+    default: [], // initial value
+});
 
 const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
@@ -101,7 +113,7 @@ const makeStyles = (colors) => StyleSheet.create({
         position: 'absolute',
         margin: 20,
         right: 0,
-        bottom: 35,
+        bottom: '5%',
     },
     centeredView: {
         flex: 1,
@@ -110,10 +122,11 @@ const makeStyles = (colors) => StyleSheet.create({
         marginTop: 22
     },
     modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
+        margin: '10%',
+        // backgroundColor: "white",
+        backgroundColor: colors.background,
+        borderRadius: 50,
+        padding: 30,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -144,7 +157,8 @@ const makeStyles = (colors) => StyleSheet.create({
     },
     modalText: {
         marginBottom: 15,
-        textAlign: "center"
+        textAlign: "center",
+        color: colors.text,
     },
     sortButt: {
         // width: "80%", 
@@ -211,31 +225,38 @@ const DeletionModal = (props) => {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
-                        <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => {
-                                setModalVisible(!modalVisible);
-                                props.remove(false);
-                            }}
-                        >
-                            <Text style={styles.textStyle}>Yes</Text>
-                        </TouchableOpacity>
-                        <Text>  </Text>
-                        <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => {
-                                setModalVisible(!modalVisible);
-                                props.remove(true);
-                            }}
-                        >
-                            <Text style={styles.textStyle}>No</Text>
-                        </TouchableOpacity>
-
+                <TouchableOpacity
+                    style={styles.centeredView}
+                    activeOpacity={1}
+                    onPressOut={() => { setModalVisible(false) }}
+                >
+                    <View style={styles.centeredView}>
+                        <TouchableWithoutFeedback>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
+                                <TouchableOpacity
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        props.remove(false);
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>Yes</Text>
+                                </TouchableOpacity>
+                                <Text>  </Text>
+                                <TouchableOpacity
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        props.remove(true);
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>No</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableWithoutFeedback>
                     </View>
-                </View>
+                </TouchableOpacity>
             </Modal>
             <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
                 <Ionicons name="trash-outline" style={{ fontSize: 25, color: 'gray' }} />
@@ -248,20 +269,49 @@ const DeletionModal = (props) => {
 const IngredientSelect = (props) => {
     // const { colors } = useTheme();
 
-    const [select, isSelected] = useState('')
+    // const [select, isSelected] = useState('')
     const [color, setColor] = useState('gray');
+    const [select, setSelect] = useRecoilState(selected);
 
     return (
         <TouchableOpacity onPress={async () => {
             if (color !== '#6be3d9') {
                 setColor('#6be3d9')
+
+                // setSelect((old) => [
+                //     ...old,
+                //     {
+                //       id: props.ingKey,
+                //       val: true,
+                //     },
+                //   ]);
+
                 await props.selectIngredient(currentElements => [...currentElements, props.item])
             }
             else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
                 console.log("BLACK")
                 setColor('gray')
+
+                // setSelect((old) => [
+                //     ...old,
+                //     {
+                //       id: props.ingKey,
+                //       val: false,
+                //     },
+                //   ]);
+
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
+            // console.log("selections: ");
+            // for (let i = 0; i< ingredientSelections.length; ++i) {
+            //     console.log(ingredientSelections[i]);
+            // }
+            // console.log("first");
+            // console.log(ingredientSelections[0]);
+            // console.log('selected?');
+            // console.log(select[props.ingKey]);
+
+            
         }}>
             <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 25 }} />
         </TouchableOpacity>
@@ -278,6 +328,7 @@ const PantryCard = (props) => {
     const [viewDeletion, setViewDeletion] = useState(false);
     const [deletionChoice, setDeletionChoice] = useState(false)
     const [deletedItem, setDeletedItem] = useState('')
+    const [select, setSelect] = useRecoilState(selected);
 
     const { colors } = useTheme();
     const styles = makeStyles(colors);
@@ -346,7 +397,7 @@ const PantryCard = (props) => {
                 {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
                 <View style={styles.cardButtons}>
                     {/* <Ionicons name="heart-outline" style={{fontSize: 25}} /> */}
-                    <IngredientSelect item={props.title} ingredientSelections={props.ingredientSelections} selectIngredient={props.selectIngredient}></IngredientSelect>
+                    <IngredientSelect item={props.title} ingredientSelections={props.ingredientSelections} selectIngredient={props.selectIngredient} ingKey={props.val}></IngredientSelect>
                     <DeletionModal item={props.title} remove={stateCallback} ></DeletionModal>
                 </View>
             </View>
@@ -362,6 +413,9 @@ export default ({ navigation }) => {
 
     let [ingredients, setIngredients] = useState([]);
     let [imageArray, setImageArray] = useState([]);
+
+    let [selectionArray, setSelectionArray] = useState([]);
+
     let [ingredientSelections, setIngredientSelections] = useState([]);
     let [search, setSearch] = useState('');
 
@@ -432,13 +486,13 @@ export default ({ navigation }) => {
                 for (let i = 0; i < response.data.ingredients.length; i++) {
                     let entry = response.data.ingredients[i]
 
-                    console.log("ENTRY")
-                    console.log(entry)
+                    // console.log("ENTRY")
+                    // console.log(entry)
 
                     let ingredientName = entry["name"]
 
-                    console.log("CHECKING INGREDIENT NAMES")
-                    console.log(ingredientName)
+                    // console.log("CHECKING INGREDIENT NAMES")
+                    // console.log(ingredientName)
 
                     ingredientNames.push(ingredientName)
                 }
@@ -463,9 +517,55 @@ export default ({ navigation }) => {
 
     let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton> : <AddIngredientButton nav={navigation}></AddIngredientButton>
 
-    updateSearch = (str) => {
-        setSearch(str);
-    };
+    // updateSearch = (str) => {
+    //     setSearch(str);
+    // };
+
+    const [nameSort, setNameSort] = useState(false);
+    const [dateSort, setDateSort] = useState(false);
+
+    const updateNameSort = () => {
+        // console.log(ingredients[0].name);
+        ingredients.sort(function (a, b) {
+            if (nameSort) {
+                return b.name.localeCompare(a.name);
+            } else {
+                return a.name.localeCompare(b.name);
+            }
+        });
+        setNameSort(!nameSort);
+
+        // try to sort the images in the same way, doesn't work
+        // imageArray.sort(function (a, b) {
+        //     return ing.indexOf(a) - ing.indexOf(b);
+        // });
+
+        // setIngredients(ingredients);
+        // setImageArray(imageArray);
+    }
+
+    const updateDateSort = () => {
+        // console.log(ingredients[0].expiration_date.$date);
+        ingredients.sort(function (a, b) {
+            if (dateSort) {
+                // return new Date(b.expiration_date.$date) - new Date(a.expiration_date.$date);
+                return b.expiration_date.$date - a.expiration_date.$date;
+
+            } else {
+                // return new Date(a.expiration_date.$date) - new Date(b.expiration_date.$date);
+                return a.expiration_date.$date - b.expiration_date.$date;
+            }
+        });
+        setDateSort(!dateSort);
+
+        // try to sort the images in the same way, doesn't work
+        // imageArray.sort(function (a, b) {
+        //     return ing.indexOf(a) - ing.indexOf(b);
+        // });
+
+        // setIngredients(ingredients);
+        // setImageArray(imageArray);
+    }
 
     let button;
 
@@ -482,13 +582,14 @@ export default ({ navigation }) => {
             {/* To make notification bar same color as background */}
             <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
             <SearchBar
+                // platform={'android'}
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"
                 placeholderTextColor={colors.text}
                 searchIcon={{ color: colors.text }}
                 cancelIcon={{ color: colors.text }}
                 clearIcon={{ color: colors.text }}
-                onChangeText={updateSearch}
+                onChangeText={setSearch}
                 value={search}
                 inputStyle={{ color: colors.text }}
                 containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
@@ -497,14 +598,14 @@ export default ({ navigation }) => {
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
-
+                        updateNameSort()
                     }}>
                     <Text>Name</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
-
+                        updateDateSort()
                     }}>
                     <Text>Date</Text>
                 </TouchableOpacity>
@@ -539,10 +640,12 @@ export default ({ navigation }) => {
                                     <PantryCard
                                         image={imageArray[i]}
                                         key={i}
+                                        val={i}
                                         title={ingredient.name}
                                         expr={ingredient.expiration_date}
                                         quantity={ingredient.quantity}
                                         view={true}
+                                        // selected={selectionArray[i]}
                                         selectIngredient={setIngredientSelections}
                                         ingredientSelections={ingredientSelections}
                                         warnNotification={warnNotification}
@@ -553,7 +656,9 @@ export default ({ navigation }) => {
                                 // console.log("no match");
                                 return;
                             }
-                        })
+                        }
+                        )
+
                     }
                 </View>
             </ScrollView>

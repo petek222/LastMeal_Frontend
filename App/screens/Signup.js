@@ -139,8 +139,8 @@ export default ({ navigation }) => {
     }
 
     return (
-        // <View style={styles.container}>
-        <SafeAreaView style={[styles.container, { marginTop: statusBarHeight }]}>
+        <View style={styles.container}>
+        {/* <SafeAreaView style={[styles.container, { marginTop: statusBarHeight }]}> */}
 
 
             {/* causes screen flicker */}
@@ -220,7 +220,7 @@ export default ({ navigation }) => {
             <TouchableOpacity>
                 <Text style={[styles.smallButt, { color: colors.text }]} onPress={() => navigation.navigate('Login')}>or Log In</Text>
             </TouchableOpacity>
-        </SafeAreaView>
-        // </View>
+        {/* </SafeAreaView> */}
+        </View>
     );
 }

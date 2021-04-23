@@ -9,9 +9,9 @@ import Profile from '../screens/Profile';
 import Pantry from '../screens/Pantry';
 import Recipes from '../screens/Recipes';
 import Options from '../screens/Options';
+import Notifications from '../screens/Notifications';
 import AddItem from '../screens/AddItem';
 import RecipeInfo from '../screens/RecipeInfo';
-import Notifications from '../screens/Notifications';
 import ResetPassword from '../screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -95,7 +95,7 @@ function ProfileTabs() {
             })}
             tabBarOptions={theme
                 ? {
-                    tabStyle: { borderTopWidth: 0 },
+                    // tabStyle: { borderTopWidth: 0 },
                     style:
                     {
                         elevation: 0,
@@ -110,7 +110,7 @@ function ProfileTabs() {
                     // safeAreaInsets: { bottom: 0, top: 0 }
                 }
                 : {
-                    tabStyle: { borderTopWidth: 0 },
+                    // tabStyle: { borderTopWidth: 0 },
                     style:
                     {
                         elevation: 0,
@@ -134,8 +134,6 @@ function ProfileTabs() {
     );
 }
 
-
-
 const Navigation = () => {
     const theme = useRecoilValue(darkState);
     return (
@@ -147,9 +145,9 @@ const Navigation = () => {
                     <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                     <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
                     <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
+                    <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
                     <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
                     <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
-                    <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
                 </Stack.Navigator>
             </NavigationContainer>
             <SafeAreaView style={{ flex:0, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}></SafeAreaView>

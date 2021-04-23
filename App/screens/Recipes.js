@@ -80,7 +80,7 @@ const makeStyles = (colors) => StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
         justifyContent: 'space-between',
-        padding: 5   
+        padding: 5
     },
 });
 
@@ -120,7 +120,7 @@ const RecipeCard = (props) => {
     )
 }
 
-export default ({navigation}) => {
+export default ({ navigation }) => {
 
     let [recipes, setRecipes] = useState([]);
     let [imageArray, setImageArray] = useState([]);

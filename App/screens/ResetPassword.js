@@ -228,7 +228,6 @@ export default ({ navigation }) => {
                 onPress={() => changePassword()}>
                 <Text style={styles.loginText}>Change Password</Text>
             </TouchableOpacity>
-
         </View>
     );
 }
