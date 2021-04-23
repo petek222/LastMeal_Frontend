@@ -8,6 +8,7 @@ import Loader from '../config/Loader'
 // import moment from 'moment';
 import api from '../api/api';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '@react-navigation/native';
 
 const window = Dimensions.get('window');
 const windowWidth = window.width;
@@ -83,6 +84,7 @@ export default ({route, navigation}) => {
 
     // replace require with prop json data passed into this component
     // const recipeData = require('../assets/recipeData.json');
+    const { colors } = useTheme();
 
     const [recipeData, setRecipeData] = useState(null)
 

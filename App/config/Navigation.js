@@ -11,6 +11,7 @@ import Recipes from '../screens/Recipes';
 import Options from '../screens/Options';
 import AddItem from '../screens/AddItem';
 import RecipeInfo from '../screens/RecipeInfo';
+import Notifications from '../screens/Notifications';
 import ResetPassword from '../screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
