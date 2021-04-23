@@ -32,15 +32,31 @@ const makeStyles = (colors) => StyleSheet.create({
         marginTop: window.height * 0.01,
         marginBottom: window.height * 0.01,
         borderRadius: 10,
-        borderColor: '#E2E2E2',
-        borderWidth: 2,
+        borderWidth: 1,
         shadowOffset: {
             width: 2,
             height: 4,
         },
         shadowOpacity: 0.2,
         shadowRadius: 4,
+        shadowColor: 'white',
         backgroundColor: colors.black
+    },
+    lightItemCard: {
+        flex: 1,
+        flexDirection: 'row',
+        width: cardWidth,
+        height: cardHeight,
+        marginTop: window.height * 0.01,
+        marginBottom: window.height * 0.01,
+        borderRadius: 10,
+        shadowOffset: {
+            width: 2,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        backgroundColor: 'white'
     },
     itemCardContent: {
         flex: 6,
@@ -73,7 +89,7 @@ const RecipeCard = (props) => {
     const [color, setColor] = useState("#000000")
 
     return (
-        <TouchableOpacity style={styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
+        <TouchableOpacity style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
             <View style={styles.itemCardContent} >
                 <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
                 <View style={styles.itemCardText}>
