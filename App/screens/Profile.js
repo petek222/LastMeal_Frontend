@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useReducer } from 'react';
+import React, { createContext, useState, useEffect, useReducer, Fragment } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Avatar } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -154,9 +154,8 @@ export default ({ navigation }) => {
     }, []);
 
     return (
-        // <SafeAreaView style={{ marginTop: statusBarHeight, backgroundColor: 'white', flex: 1 }}>
-        // <SafeAreaView style={{backgroundColor: 'white', flex: 1 }}>
-        // <SafeAreaView >
+        <Fragment>
+        <SafeAreaView style={{flex: 0}} />
         <View style={styles.container}>
             {/* <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar> */}
             <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
@@ -187,7 +186,6 @@ export default ({ navigation }) => {
             </View>
 
         </View>
-        // </SafeAreaView>
-        // </SafeAreaView>
+        </Fragment>
     )
 }

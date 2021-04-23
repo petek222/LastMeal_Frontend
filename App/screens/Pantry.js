@@ -52,7 +52,6 @@ const makeStyles = (colors) => StyleSheet.create({
         marginTop: window.height * 0.01,
         marginBottom: window.height * 0.01,
         borderRadius: 10,
-        borderColor: '#E2E2E2',
         borderWidth: 1,
         shadowOffset: {
             width: 2,
@@ -60,7 +59,24 @@ const makeStyles = (colors) => StyleSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 4,
+        shadowColor: 'white',
         backgroundColor: colors.black
+    },
+    lightItemCard: {
+        flex: 1,
+        flexDirection: 'row',
+        width: cardWidth,
+        height: cardHeight,
+        marginTop: window.height * 0.01,
+        marginBottom: window.height * 0.01,
+        borderRadius: 10,
+        shadowOffset: {
+            width: 2,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        backgroundColor: 'white'
     },
     itemCardContent: {
         flex: 6,
@@ -258,8 +274,7 @@ const IngredientSelect = (props) => {
     const [select, setSelect] = useRecoilState(selected);
 
     return (
-        <TouchableOpacity onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
-            console.log("HERE")
+        <TouchableOpacity onPress={async () => {
             if (color !== '#6be3d9') {
                 setColor('#6be3d9')
 
@@ -363,7 +378,7 @@ const PantryCard = (props) => {
 
     if (props.title != deletedItem) {
         return (
-            <View style={styles.itemCard} id={props.title}>
+            <View style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} id={props.title}>
                 <View style={styles.itemCardContent}>
                     <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
                     <View style={styles.itemCardText}>

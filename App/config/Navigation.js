@@ -15,7 +15,7 @@ import RecipeInfo from '../screens/RecipeInfo';
 import ResetPassword from '../screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { View } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import {
@@ -34,12 +34,11 @@ const MyDark = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        primary: 'black',
+        primary: 'green',
         // accent: 'red',
         background: '#222',
         text: 'white',
-        backdrop: 'gray',
-        black: 'black'
+        black: '#232b2b'
     },
 };
 
@@ -99,29 +98,30 @@ function ProfileTabs() {
                     // tabStyle: { borderTopWidth: 0 },
                     style:
                     {
-                        // elevation: 0,
-                        borderTopWidth: 0,
-                        paddingBottom: 0,
+                        elevation: 0,
+                        // borderTopColor: "transparent",
+                        borderTopWidth: 0
+                        // paddingBottom: 0
                     },
                     activeTintColor: 'tomato',
                     inactiveTintColor: 'white',
                     activeBackgroundColor: '#222',
-                    inactiveBackgroundColor: '#000',
-                    safeAreaInsets: { bottom: 0, top: 0 }
+                    inactiveBackgroundColor: '#222'
+                    // safeAreaInsets: { bottom: 0, top: 0 }
                 }
                 : {
                     // tabStyle: { borderTopWidth: 0 },
                     style:
                     {
-                        // elevation: 0,
-                        borderTopWidth: 0,
-                        paddingBottom: 0
+                        elevation: 0,
+                        // borderTopColor: "transparent",
+                        borderTopWidth: 0
+                        // paddingBottom: 0
                     },
                     activeTintColor: 'tomato',
-                    inactiveTintColor: 'gray',
                     activeBackgroundColor: '#fff',
-                    inactiveBackgroundColor: '#f6f6f6',
-                    safeAreaInsets: { bottom: 0, top: 0 }
+                    inactiveBackgroundColor: '#f6f6f6'
+                    // safeAreaInsets: { bottom: 0, top: 0 }
                 }
             }
         >
@@ -138,6 +138,7 @@ const Navigation = () => {
     const theme = useRecoilValue(darkState);
     return (
         <View style={{ flex: 1, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}>
+            <SafeAreaView style={{ flex:0}}></SafeAreaView>
             <NavigationContainer theme={theme ? MyDark : MyLight}>
                 <Stack.Navigator initialRouteName="Login">
                     <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
@@ -149,6 +150,7 @@ const Navigation = () => {
                     <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
                 </Stack.Navigator>
             </NavigationContainer>
+            <SafeAreaView style={{ flex:0, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}></SafeAreaView>
         </View>
     )
 }
@@ -158,3 +160,4 @@ export default () => (
         <Navigation />
     </RecoilRoot>
 )
+
