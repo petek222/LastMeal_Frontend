@@ -241,11 +241,11 @@ export default ({ navigation }) => {
 
         return (
             <ModalDropdown
-                style={styles.inputView}
-                defaultValue={'Ingredient Options (Click Me):'}
+                style={[styles.inputView, { backgroundColor: "#f2c572" }]}
+                defaultValue={'Ingredient Options (Click Me)'}
                 placeholderTextColor="gray"
                 dropdownTextStyle={{ backgroundColor: colors.background, fontSize: 18, color: colors.text }}/*Style here*/
-                textStyle={{ fontSize: 14, color: '#2a3439', alignSelf: 'flex-start', marginLeft: 30}}
+                textStyle={{ fontSize: 14, color: '#2a3439', alignSelf: 'flex-start', marginLeft: 30 }}
                 dropdownStyle={{ flex: 1, width: '70%', marginVertical: 10, borderWidth: 1, borderColor: '#D3D3D3' }}
                 options={suggestionList}
                 onSelect={(value) => {
