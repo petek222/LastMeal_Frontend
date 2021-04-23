@@ -95,30 +95,32 @@ function ProfileTabs() {
             })}
             tabBarOptions={theme
                 ? {
-                    tabStyle: { borderTopWidth: 0 },
+                    // tabStyle: { borderTopWidth: 0 },
                     style:
                     {
-                        elevation: 0,
-                        // borderTopColor: "transparent",
+                        // elevation: 0,
                         borderTopWidth: 0,
+                        paddingBottom: 0,
                     },
                     activeTintColor: 'tomato',
                     inactiveTintColor: 'white',
                     activeBackgroundColor: '#222',
-                    inactiveBackgroundColor: '#000'
+                    inactiveBackgroundColor: '#000',
+                    safeAreaInsets: { bottom: 0, top: 0 }
                 }
                 : {
-                    tabStyle: { borderTopWidth: 0 },
+                    // tabStyle: { borderTopWidth: 0 },
                     style:
                     {
-                        elevation: 0,
-                        // borderTopColor: "transparent",
+                        // elevation: 0,
                         borderTopWidth: 0,
+                        paddingBottom: 0
                     },
                     activeTintColor: 'tomato',
                     inactiveTintColor: 'gray',
                     activeBackgroundColor: '#fff',
-                    inactiveBackgroundColor: '#f6f6f6'
+                    inactiveBackgroundColor: '#f6f6f6',
+                    safeAreaInsets: { bottom: 0, top: 0 }
                 }
             }
         >
@@ -134,7 +136,7 @@ function ProfileTabs() {
 const Navigation = () => {
     const theme = useRecoilValue(darkState);
     return (
-        // <View style={{ flex: 1, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}>
+        <View style={{ flex: 1, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}>
             <NavigationContainer theme={theme ? MyDark : MyLight}>
                 <Stack.Navigator initialRouteName="Login">
                     <Stack.Screen name="Profile" component={ProfileTabs} options={{ headerShown: false }} />
@@ -145,7 +147,7 @@ const Navigation = () => {
                     <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
                 </Stack.Navigator>
             </NavigationContainer>
-        // </View>
+        </View>
     )
 }
 
