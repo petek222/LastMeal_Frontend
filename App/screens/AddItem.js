@@ -153,32 +153,47 @@ export default ({ navigation }) => {
         // This will currently schedule the notification for a day before the expiration date; we 
         // want this to be configurable in the options menu eventually
         if (isNotificationEnabled) {
-            // console.log("Enabling Notifications")
-            // console.log(ingredientName);
-            // console.log(quantity)
-            // console.log(expiration);
+            console.log("Enabling Notifications")
+            console.log(ingredientName);
+            console.log(quantity)
+            console.log(expiration);
+            console.log(new Date(expiration).getTime());
+            console.log(Date.now());
+            console.log('start of day');
+            let startOfDay = new Date();
+            startOfDay.setHours(0, 0, 0, 0);
+            console.log(startOfDay);
+            console.log(startOfDay.getTime());
 
-            // // Generates seconds for each
-            // let expirationDate = (new Date(expiration).getTime()) / 1000
 
-            // console.log("Testing date computation")
+            // for (let i = 0; i < days.length; ++i) {
+            //     if (days[i] === true) {
+            //         // Generates seconds for each
+            //         let expirationDate = (new Date(expiration).getTime()) / 1000
 
-            // console.log(expirationDate - 86400)
+            //         console.log("Testing date computation")
 
-            // await schedulePushNotification(ingredientName, expirationDate);
-            // await schedulePushNotification(ingredientName, 0)
-            // await schedulePushNotification(ingredientName, -10)
-            console.log(days.length);
-            console.log(days);
+            //         console.log(expirationDate - 86400)
+
+            //         await schedulePushNotification(ingredientName, expirationDate);
+
+            //     }
+            // }
 
             for (let i = 0; i < days.length; ++i) {
                 if (days[i] === true) {
-                    await schedulePushNotification(ingredientName, i);
+                    // Generates seconds for each
+                    // minus number of days in advance times 86400 seconds in a day
+                    // and then plus 36000 means remind me at 10 am
+                    let expirationDate = (new Date(expiration).getTime() / 1000 - startOfDay.getTime() / 1000 - i * 86400 + 36000);
 
+                    console.log("Testing date computation:")
+                    console.log(`remind within ${i} days`);
+                    console.log(expirationDate)
+
+                    await schedulePushNotification(ingredientName, expirationDate, i);
                 }
             }
-
-
         }
 
         navigation.navigate('Pantry');
@@ -381,11 +396,11 @@ export default ({ navigation }) => {
 }
 
 // Function that actually schedules notifications
-async function schedulePushNotification(ingredientName, timer) {
+async function schedulePushNotification(ingredientName, timer, numDays) {
     await Notifications.scheduleNotificationAsync({
         content: {
             title: "Expiration Notification",
-            body: `Your ${ingredientName} is going to expire in 1 day`, // If time is configurable, change this message
+            body: `Your ${ingredientName} is going to expire in ${numDays} day(s)`, // If time is configurable, change this message
             data: { data: 'data' }, // add any data here if desired
         },
         trigger: { seconds: timer },
