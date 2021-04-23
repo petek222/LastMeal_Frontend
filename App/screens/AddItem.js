@@ -364,7 +364,7 @@ async function schedulePushNotification(ingredientName, timer) {
         body: `Your ${ingredientName} is going to expire in 1 day`, // If time is configurable, change this message
         data: { data: 'data' }, // add any data here if desired
       },
-      trigger: { seconds: timer },
+      trigger: { seconds: 5 }, // CHANGE TO TIMER
     });
 }
 

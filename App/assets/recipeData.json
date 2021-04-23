@@ -1,0 +1,711 @@
+{
+    "vegetarian": false,
+    "vegan": false,
+    "glutenFree": false,
+    "dairyFree": false,
+    "veryHealthy": false,
+    "cheap": false,
+    "veryPopular": false,
+    "sustainable": false,
+    "weightWatcherSmartPoints": 25,
+    "gaps": "no",
+    "lowFodmap": false,
+    "preparationMinutes": 15,
+    "cookingMinutes": 15,
+    "aggregateLikes": 4,
+    "spoonacularScore": 83.0,
+    "healthScore": 40.0,
+    "creditsText": "Foodnetwork",
+    "sourceName": "Foodnetwork",
+    "pricePerServing": 289.13,
+    "extendedIngredients": [
+        {
+            "id": 18079,
+            "aisle": "Pasta and Rice",
+            "image": "breadcrumbs.jpg",
+            "consistency": "solid",
+            "name": "bread crumbs",
+            "nameClean": "breadcrumbs",
+            "original": "1 cup plain bread crumbs",
+            "originalString": "1 cup plain bread crumbs",
+            "originalName": "plain bread crumbs",
+            "amount": 1.0,
+            "unit": "cup",
+            "meta": [
+                "plain"
+            ],
+            "metaInformation": [
+                "plain"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 1.0,
+                    "unitShort": "cup",
+                    "unitLong": "cup"
+                },
+                "metric": {
+                    "amount": 236.588,
+                    "unitShort": "ml",
+                    "unitLong": "milliliters"
+                }
+            }
+        },
+        {
+            "id": 1001,
+            "aisle": "Milk, Eggs, Other Dairy",
+            "image": "butter-sliced.jpg",
+            "consistency": "solid",
+            "name": "butter",
+            "nameClean": "butter",
+            "original": "6 tablespoons chilled butter",
+            "originalString": "6 tablespoons chilled butter",
+            "originalName": "chilled butter",
+            "amount": 6.0,
+            "unit": "tablespoons",
+            "meta": [
+                "chilled"
+            ],
+            "metaInformation": [
+                "chilled"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 6.0,
+                    "unitShort": "Tbsps",
+                    "unitLong": "Tbsps"
+                },
+                "metric": {
+                    "amount": 6.0,
+                    "unitShort": "Tbsps",
+                    "unitLong": "Tbsps"
+                }
+            }
+        },
+        {
+            "id": 5006,
+            "aisle": "Meat",
+            "image": "whole-chicken.jpg",
+            "consistency": "solid",
+            "name": "chicken",
+            "nameClean": "whole chicken",
+            "original": "4 (6 to 8-ounce) pieces boneless, skinless chicken or 4 (6-ounce) thin cut chicken cutlets",
+            "originalString": "4 (6 to 8-ounce) pieces boneless, skinless chicken or 4 (6-ounce) thin cut chicken cutlets",
+            "originalName": "boneless, skinless chicken or 4 (6-ounce) thin cut chicken cutlets",
+            "amount": 24.0,
+            "unit": "ounce",
+            "meta": [
+                "thin cut",
+                "boneless",
+                "skinless",
+                "(6-ounce)"
+            ],
+            "metaInformation": [
+                "thin cut",
+                "boneless",
+                "skinless",
+                "(6-ounce)"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 24.0,
+                    "unitShort": "oz",
+                    "unitLong": "ounces"
+                },
+                "metric": {
+                    "amount": 680.389,
+                    "unitShort": "g",
+                    "unitLong": "grams"
+                }
+            }
+        },
+        {
+            "id": 11156,
+            "aisle": "Produce",
+            "image": "fresh-chives.jpg",
+            "consistency": "solid",
+            "name": "chives",
+            "nameClean": "chives",
+            "original": "10 blades fresh chives, chopped to about 2 tablespoons",
+            "originalString": "10 blades fresh chives, chopped to about 2 tablespoons",
+            "originalName": "blades fresh chives, chopped to about 2 tablespoons",
+            "amount": 10.0,
+            "unit": "",
+            "meta": [
+                "fresh",
+                "chopped"
+            ],
+            "metaInformation": [
+                "fresh",
+                "chopped"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 10.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                },
+                "metric": {
+                    "amount": 10.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                }
+            }
+        },
+        {
+            "id": 2045,
+            "aisle": "Produce",
+            "image": "dill.jpg",
+            "consistency": "solid",
+            "name": "dill",
+            "nameClean": "dill",
+            "original": "A palmful fresh dill, finely chopped, about 2 tablespoons",
+            "originalString": "A palmful fresh dill, finely chopped, about 2 tablespoons",
+            "originalName": "A palmful fresh dill, finely chopped, about",
+            "amount": 2.0,
+            "unit": "tablespoons",
+            "meta": [
+                "fresh",
+                "finely chopped"
+            ],
+            "metaInformation": [
+                "fresh",
+                "finely chopped"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 2.0,
+                    "unitShort": "Tbsps",
+                    "unitLong": "Tbsps"
+                },
+                "metric": {
+                    "amount": 2.0,
+                    "unitShort": "Tbsps",
+                    "unitLong": "Tbsps"
+                }
+            }
+        },
+        {
+            "id": 1123,
+            "aisle": "Milk, Eggs, Other Dairy",
+            "image": "egg.png",
+            "consistency": "solid",
+            "name": "eggs",
+            "nameClean": "egg",
+            "original": "2 eggs",
+            "originalString": "2 eggs",
+            "originalName": "eggs",
+            "amount": 2.0,
+            "unit": "",
+            "meta": [],
+            "metaInformation": [],
+            "measures": {
+                "us": {
+                    "amount": 2.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                },
+                "metric": {
+                    "amount": 2.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                }
+            }
+        },
+        {
+            "id": 20081,
+            "aisle": "Baking",
+            "image": "flour.png",
+            "consistency": "solid",
+            "name": "flour",
+            "nameClean": "wheat flour",
+            "original": "1 cup flour",
+            "originalString": "1 cup flour",
+            "originalName": "flour",
+            "amount": 1.0,
+            "unit": "cup",
+            "meta": [],
+            "metaInformation": [],
+            "measures": {
+                "us": {
+                    "amount": 1.0,
+                    "unitShort": "cup",
+                    "unitLong": "cup"
+                },
+                "metric": {
+                    "amount": 236.588,
+                    "unitShort": "ml",
+                    "unitLong": "milliliters"
+                }
+            }
+        },
+        {
+            "id": 11215,
+            "aisle": "Produce",
+            "image": "garlic.png",
+            "consistency": "solid",
+            "name": "garlic",
+            "nameClean": "garlic",
+            "original": "1 clove garlic, finely chopped",
+            "originalString": "1 clove garlic, finely chopped",
+            "originalName": "garlic, finely chopped",
+            "amount": 1.0,
+            "unit": "clove",
+            "meta": [
+                "finely chopped"
+            ],
+            "metaInformation": [
+                "finely chopped"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 1.0,
+                    "unitShort": "clove",
+                    "unitLong": "clove"
+                },
+                "metric": {
+                    "amount": 1.0,
+                    "unitShort": "clove",
+                    "unitLong": "clove"
+                }
+            }
+        },
+        {
+            "id": 1029150,
+            "aisle": "Produce",
+            "image": "lemon-wedge.png",
+            "consistency": "solid",
+            "name": "lemon wedge",
+            "nameClean": "lemon wedge",
+            "original": "A wedge lemon",
+            "originalString": "A wedge lemon",
+            "originalName": "A wedge lemon",
+            "amount": 4.0,
+            "unit": "servings",
+            "meta": [],
+            "metaInformation": [],
+            "measures": {
+                "us": {
+                    "amount": 4.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                },
+                "metric": {
+                    "amount": 4.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                }
+            }
+        },
+        {
+            "id": 11297,
+            "aisle": "Produce;Spices and Seasonings",
+            "image": "parsley.jpg",
+            "consistency": "solid",
+            "name": "parsley",
+            "nameClean": "parsley",
+            "original": "A palmful fresh parsley, finely chopped to about 2 tablespoons",
+            "originalString": "A palmful fresh parsley, finely chopped to about 2 tablespoons",
+            "originalName": "A palmful fresh parsley, finely chopped to about 2 tablespoons",
+            "amount": 1.0,
+            "unit": "tablespoons",
+            "meta": [
+                "fresh",
+                "finely chopped"
+            ],
+            "metaInformation": [
+                "fresh",
+                "finely chopped"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 1.0,
+                    "unitShort": "Tbsp",
+                    "unitLong": "Tbsp"
+                },
+                "metric": {
+                    "amount": 1.0,
+                    "unitShort": "Tbsp",
+                    "unitLong": "Tbsp"
+                }
+            }
+        },
+        {
+            "id": 23617,
+            "aisle": "Meat",
+            "image": "round-steak.jpg",
+            "consistency": "solid",
+            "name": "round steak",
+            "nameClean": "round steak",
+            "original": "Plain, round toothpicks",
+            "originalString": "Plain, round toothpicks",
+            "originalName": "Plain, round toothpicks",
+            "amount": 4.0,
+            "unit": "servings",
+            "meta": [
+                "plain"
+            ],
+            "metaInformation": [
+                "plain"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 4.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                },
+                "metric": {
+                    "amount": 4.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                }
+            }
+        },
+        {
+            "id": 1102047,
+            "aisle": "Spices and Seasonings",
+            "image": "salt-and-pepper.jpg",
+            "consistency": "solid",
+            "name": "salt and pepper",
+            "nameClean": "salt and pepper",
+            "original": "Salt and pepper",
+            "originalString": "Salt and pepper",
+            "originalName": "Salt and pepper",
+            "amount": 4.0,
+            "unit": "servings",
+            "meta": [],
+            "metaInformation": [],
+            "measures": {
+                "us": {
+                    "amount": 4.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                },
+                "metric": {
+                    "amount": 4.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                }
+            }
+        },
+        {
+            "id": 4513,
+            "aisle": "Oil, Vinegar, Salad Dressing",
+            "image": "vegetable-oil.jpg",
+            "consistency": "liquid",
+            "name": "vegetable oil",
+            "nameClean": "vegetable oil",
+            "original": "Vegetable oil, for frying",
+            "originalString": "Vegetable oil, for frying",
+            "originalName": "Vegetable oil, for frying",
+            "amount": 4.0,
+            "unit": "servings",
+            "meta": [
+                "for frying"
+            ],
+            "metaInformation": [
+                "for frying"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 4.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                },
+                "metric": {
+                    "amount": 4.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                }
+            }
+        }
+    ],
+    "id": 296280,
+    "title": "Chicken Kiev",
+    "readyInMinutes": 30,
+    "servings": 4,
+    "sourceUrl": "http://www.foodnetwork.com/recipes/rachael-ray/chicken-kiev-recipe.html",
+    "image": "https://spoonacular.com/recipeImages/296280-556x370.jpeg",
+    "imageType": "jpeg",
+    "summary": "Chicken Kiev might be just the main course you are searching for. One serving contains <b>1101 calories</b>, <b>93g of protein</b>, and <b>59g of fat</b>. This recipe serves 4 and costs $3.51 per serving. 4 people were impressed by this recipe. A mixture of blades chives, vegetable oil, chicken, and a handful of other ingredients are all it takes to make this recipe so tasty. To use up the flour you could follow this main course with the <a href=\"https://spoonacular.com/recipes/apple-tart-with-caramel-sauce-47961\">Apple Tart with Caramel Sauce</a> as a dessert. All things considered, we decided this recipe <b>deserves a spoonacular score of 66%</b>. This score is solid. Try <a href=\"https://spoonacular.com/recipes/hamburguesa-estilo-kiev-mexican-hamburger-kiev-410198\">Hamburguesan Estilo Kiev (Mexican Hamburger Kiev)</a>, <a href=\"https://spoonacular.com/recipes/chicken-kiev-629080\">Chicken Kiev</a>, and <a href=\"https://spoonacular.com/recipes/chicken-kiev-291923\">Chicken Kiev</a> for similar recipes.",
+    "cuisines": [],
+    "dishTypes": [
+        "lunch",
+        "main course",
+        "main dish",
+        "dinner"
+    ],
+    "diets": [],
+    "occasions": [],
+    "winePairing": {},
+    "instructions": "In a large, deep skillet, heat 1 1/2 inches vegetable oil over medium high heat. The oil needs to be 360 degrees F for frying. If you do not have a frying thermometer, add a cube of white bread to hot oil. If the bread browns in a 40 count, the oil is ready.                          Cover work surface with waxed paper. Arrange breasts on paper. Butterfly small chicken breasts, cut into flesh and across, but not through the breast, and open them up. The 6-ounce thin cut breasts may just be removed from package and arranged on waxed paper. Cover breast meat with a second sheet of waxed paper. Pound out cutlets to 1/4-inch thick with a small heavy skillet or a rubber mallet. Be careful not to tear meat. Roll up waxed paper and breasts and set aside.                          Combine chopped herbs on cutting board with chopped garlic. Cut 4 (1 1/2 tablespoons) pieces of cold butter and coat each piece liberally with the herb garlic mixture.                          In 3 disposable pie tins, set out flour, eggs beaten with a splash of cold water and bread crumbs. Uncover chicken and squeeze a wedge of lemon over breasts. Season chicken with salt and pepper. Place an herb-covered piece of butter on each piece of chicken. Wrap and roll cutlets tightly up and over the butter cubes. Discard pie tins used for breading. Secure stuffed chicken with toothpicks. Roll stuffed breasts in flour, then egg, then bread crumbs.                          Fry the Kiev bundles 7 to 8 minutes on each side until deep golden brown all over.",
+    "analyzedInstructions": [
+        {
+            "name": "",
+            "steps": [
+                {
+                    "number": 1,
+                    "step": "In a large, deep skillet, heat 1 1/2 inches vegetable oil over medium high heat. The oil needs to be 360 degrees F for frying. If you do not have a frying thermometer, add a cube of white bread to hot oil. If the bread browns in a 40 count, the oil is ready.",
+                    "ingredients": [
+                        {
+                            "id": 4513,
+                            "name": "vegetable oil",
+                            "localizedName": "vegetable oil",
+                            "image": "vegetable-oil.jpg"
+                        },
+                        {
+                            "id": 18069,
+                            "name": "white bread",
+                            "localizedName": "white bread",
+                            "image": "white-bread.jpg"
+                        },
+                        {
+                            "id": 18064,
+                            "name": "bread",
+                            "localizedName": "bread",
+                            "image": "white-bread.jpg"
+                        },
+                        {
+                            "id": 4582,
+                            "name": "cooking oil",
+                            "localizedName": "cooking oil",
+                            "image": "vegetable-oil.jpg"
+                        }
+                    ],
+                    "equipment": [
+                        {
+                            "id": 404789,
+                            "name": "kitchen thermometer",
+                            "localizedName": "kitchen thermometer",
+                            "image": "food-thermometer.jpg"
+                        },
+                        {
+                            "id": 404645,
+                            "name": "frying pan",
+                            "localizedName": "frying pan",
+                            "image": "pan.png"
+                        }
+                    ]
+                },
+                {
+                    "number": 2,
+                    "step": "Cover work surface with waxed paper. Arrange breasts on paper. Butterfly small chicken breasts, cut into flesh and across, but not through the breast, and open them up. The 6-ounce thin cut breasts may just be removed from package and arranged on waxed paper. Cover breast meat with a second sheet of waxed paper. Pound out cutlets to 1/4-inch thick with a small heavy skillet or a rubber mallet. Be careful not to tear meat.",
+                    "ingredients": [
+                        {
+                            "id": 5062,
+                            "name": "chicken breast",
+                            "localizedName": "chicken breast",
+                            "image": "chicken-breasts.png"
+                        },
+                        {
+                            "id": 1065062,
+                            "name": "meat",
+                            "localizedName": "meat",
+                            "image": "whole-chicken.jpg"
+                        }
+                    ],
+                    "equipment": [
+                        {
+                            "id": 404645,
+                            "name": "frying pan",
+                            "localizedName": "frying pan",
+                            "image": "pan.png"
+                        }
+                    ]
+                },
+                {
+                    "number": 3,
+                    "step": "Roll up waxed paper and breasts and set aside.",
+                    "ingredients": [
+                        {
+                            "id": 0,
+                            "name": "roll",
+                            "localizedName": "roll",
+                            "image": "dinner-yeast-rolls.jpg"
+                        }
+                    ],
+                    "equipment": []
+                },
+                {
+                    "number": 4,
+                    "step": "Combine chopped herbs on cutting board with chopped garlic.",
+                    "ingredients": [
+                        {
+                            "id": 11215,
+                            "name": "garlic",
+                            "localizedName": "garlic",
+                            "image": "garlic.png"
+                        },
+                        {
+                            "id": 1002044,
+                            "name": "herbs",
+                            "localizedName": "herbs",
+                            "image": "mixed-fresh-herbs.jpg"
+                        }
+                    ],
+                    "equipment": [
+                        {
+                            "id": 404716,
+                            "name": "cutting board",
+                            "localizedName": "cutting board",
+                            "image": "cutting-board.jpg"
+                        }
+                    ]
+                },
+                {
+                    "number": 5,
+                    "step": "Cut 4 (1 1/2 tablespoons) pieces of cold butter and coat each piece liberally with the herb garlic mixture.",
+                    "ingredients": [
+                        {
+                            "id": 1001,
+                            "name": "butter",
+                            "localizedName": "butter",
+                            "image": "butter-sliced.jpg"
+                        },
+                        {
+                            "id": 11215,
+                            "name": "garlic",
+                            "localizedName": "garlic",
+                            "image": "garlic.png"
+                        }
+                    ],
+                    "equipment": []
+                },
+                {
+                    "number": 6,
+                    "step": "In 3 disposable pie tins, set out flour, eggs beaten with a splash of cold water and bread crumbs. Uncover chicken and squeeze a wedge of lemon over breasts. Season chicken with salt and pepper.",
+                    "ingredients": [
+                        {
+                            "id": 1102047,
+                            "name": "salt and pepper",
+                            "localizedName": "salt and pepper",
+                            "image": "salt-and-pepper.jpg"
+                        },
+                        {
+                            "id": 18079,
+                            "name": "breadcrumbs",
+                            "localizedName": "breadcrumbs",
+                            "image": "breadcrumbs.jpg"
+                        },
+                        {
+                            "id": 5006,
+                            "name": "whole chicken",
+                            "localizedName": "whole chicken",
+                            "image": "whole-chicken.jpg"
+                        },
+                        {
+                            "id": 20081,
+                            "name": "all purpose flour",
+                            "localizedName": "all purpose flour",
+                            "image": "flour.png"
+                        },
+                        {
+                            "id": 9150,
+                            "name": "lemon",
+                            "localizedName": "lemon",
+                            "image": "lemon.png"
+                        },
+                        {
+                            "id": 14412,
+                            "name": "water",
+                            "localizedName": "water",
+                            "image": "water.png"
+                        },
+                        {
+                            "id": 1123,
+                            "name": "egg",
+                            "localizedName": "egg",
+                            "image": "egg.png"
+                        }
+                    ],
+                    "equipment": []
+                },
+                {
+                    "number": 7,
+                    "step": "Place an herb-covered piece of butter on each piece of chicken. Wrap and roll cutlets tightly up and over the butter cubes. Discard pie tins used for breading. Secure stuffed chicken with toothpicks.",
+                    "ingredients": [
+                        {
+                            "id": 0,
+                            "name": "stuffed chicken",
+                            "localizedName": "stuffed chicken",
+                            "image": "whole-chicken.jpg"
+                        },
+                        {
+                            "id": 5006,
+                            "name": "whole chicken",
+                            "localizedName": "whole chicken",
+                            "image": "whole-chicken.jpg"
+                        },
+                        {
+                            "id": 1001,
+                            "name": "butter",
+                            "localizedName": "butter",
+                            "image": "butter-sliced.jpg"
+                        },
+                        {
+                            "id": 0,
+                            "name": "roll",
+                            "localizedName": "roll",
+                            "image": "dinner-yeast-rolls.jpg"
+                        },
+                        {
+                            "id": 10018364,
+                            "name": "wrap",
+                            "localizedName": "wrap",
+                            "image": "flour-tortilla.jpg"
+                        }
+                    ],
+                    "equipment": [
+                        {
+                            "id": 404644,
+                            "name": "toothpicks",
+                            "localizedName": "toothpicks",
+                            "image": "toothpicks.jpg"
+                        }
+                    ]
+                },
+                {
+                    "number": 8,
+                    "step": "Roll stuffed breasts in flour, then egg, then bread crumbs.",
+                    "ingredients": [
+                        {
+                            "id": 18079,
+                            "name": "breadcrumbs",
+                            "localizedName": "breadcrumbs",
+                            "image": "breadcrumbs.jpg"
+                        },
+                        {
+                            "id": 20081,
+                            "name": "all purpose flour",
+                            "localizedName": "all purpose flour",
+                            "image": "flour.png"
+                        },
+                        {
+                            "id": 0,
+                            "name": "roll",
+                            "localizedName": "roll",
+                            "image": "dinner-yeast-rolls.jpg"
+                        },
+                        {
+                            "id": 1123,
+                            "name": "egg",
+                            "localizedName": "egg",
+                            "image": "egg.png"
+                        }
+                    ],
+                    "equipment": []
+                },
+                {
+                    "number": 9,
+                    "step": "Fry the Kiev bundles 7 to 8 minutes on each side until deep golden brown all over.",
+                    "ingredients": [],
+                    "equipment": [],
+                    "length": {
+                        "number": 7,
+                        "unit": "minutes"
+                    }
+                }
+            ]
+        }
+    ],
+    "originalId": null
+}

@@ -1,11 +1,14 @@
-import React from 'react';
-import { Dimensions, StyleSheet, SafeAreaView, ScrollView, Text, View } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { Dimensions, StyleSheet, SafeAreaView, ScrollView, Text, View, StatusBar } from "react-native";
 import Constants from 'expo-constants';
 import { Thumbnail } from 'native-base';
+import { useIsFocused } from "@react-navigation/native";
+import Loader from '../config/Loader'
 
 // import moment from 'moment';
-// import api from '../api/api';
+import api from '../api/api';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '@react-navigation/native';
 
 const window = Dimensions.get('window');
 const windowWidth = window.width;
@@ -77,71 +80,139 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ({navigation}) => {
+export default ({route, navigation}) => {
 
     // replace require with prop json data passed into this component
-    const recipeData = require('../assets/recipeData.json');
+    // const recipeData = require('../assets/recipeData.json');
+    const { colors } = useTheme();
 
-    return (
-        <SafeAreaView style={styles.safeAreaView}>
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+    const [recipeData, setRecipeData] = useState(null)
 
-                <View style={styles.headerContainer}>
-                    <View style={styles.nameContainer}>
-                        <Text style={styles.recipeNameText}>{recipeData.title}</Text>
+    console.log("CARD GEN ID TEST");
+    console.log(route.params)
+
+    const isFocused = useIsFocused()
+
+    useEffect(() => {
+
+        async function generateRecipe() {
+            // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
+            // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
+
+            console.log("Making Spoonacular API Request for Recipe Info")
+
+            let recipeData = await getRecipeInfo(route.params.recipeID);
+    
+            // Here is where we want to work on the recipe data sent from the API to build our cards
+            console.log("Returned Recipe")
+            console.log(recipeData)
+                
+            await setRecipeData(recipeData)
+
+            // Otherwise, set the recipe list again (?)
+        }
+        generateRecipe()
+    }, [isFocused]);
+
+    const getRecipeInfo = async (recipe_id) => {
+
+        try {
+            // console.log("MAKING RECIPE REQUEST")
+            // console.log(currentPantry)
+
+            let response = await api.get(`/recipes/${recipe_id}`);
+
+            console.log("API Response")
+            console.log(response)
+
+            return response
+        }
+        catch (error) {
+            console.log(error)
+            return "Error in requesting recipe data";
+        }
+    }
+
+    if (recipeData != null) {
+        console.log("Generation")
+        let recipeDataParsed = recipeData.data.recipe_data.recipe_info
+        return (
+            <SafeAreaView style={styles.safeAreaView}>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+    
+                    <View style={styles.headerContainer}>
+                        <View style={styles.nameContainer}>
+                            <Text style={styles.recipeNameText}>{recipeDataParsed.title}</Text>
+                        </View>
+                        <View>
+                            <Thumbnail style={styles.thumbnail} source={recipeDataParsed.image ? {uri: recipeDataParsed.image} : {source: require('../assets/default.png')}}/>
+                        </View>
                     </View>
+    
+                    <View style={styles.bodyContainer}>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.infoHeader}>Description</Text>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.contentItem}>{(recipeDataParsed.summary) ? recipeDataParsed.summary.replace(/(<([^>]+)>)/gi, "") : "Recipe Summary Unavailable"}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.infoHeader}>Time</Text>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.contentItem}>Preparation: {(recipeDataParsed.preparationMinutes) ? recipeDataParsed.preparationMinutes : "N/A"} mins</Text>
+                                <Text style={styles.contentItem}>Cooking: {(recipeDataParsed.cookingMinutes) ? recipeDataParsed.cookingMinutes : "N/A"} mins</Text>
+                            </View>
+                        </View>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.infoHeader}>Ingredients</Text>
+                            <View style={styles.infoContent}>
+                                {
+                                    (recipeDataParsed.extendedIngredients ? recipeDataParsed.extendedIngredients.map((ingredient) => {
+                                        return (
+                                            <View key={ingredient.id} style={{flexDirection: 'row'}}>
+                                                <Text style={styles.listItemIndicator}>-</Text>
+                                                <Text style={styles.listItem}>{ingredient.originalString}</Text>
+                                            </View>
+                                        );
+                                    }) : <Text style={styles.listItem}>Ingredient Unavailable</Text>)
+                                }
+                            </View>
+                        </View>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.infoHeader}>Instructions</Text>
+                            <View style={styles.infoContent}>
+                                {
+                                    (recipeDataParsed.analyzedInstructions[0] ? recipeDataParsed.analyzedInstructions[0].steps.map((step) => {
+                                        return (
+                                            <View key={step.number} style={{flexDirection: 'row'}}>
+                                                <Text style={styles.listItemIndicator}>{step.number}. </Text>
+                                                <Text style={styles.listItem}>{step.step}</Text>
+                                            </View>
+                                        );
+                                    }) : <Text style={styles.listItem}>Instruction Unavailable</Text>)
+                                }
+                            </View>
+                        </View>
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
+        );
+    }
+
+    else {
+        return (
+            <View>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
+                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
-                        <Thumbnail style={styles.thumbnail} source={{uri: recipeData.image}}/>
+                        <Loader></Loader>
                     </View>
-                </View>
-
-                <View style={styles.bodyContainer}>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.infoHeader}>Description</Text>
-                        <View style={styles.infoContent}>
-                            <Text style={styles.contentItem}>{recipeData.summary.replace(/(<([^>]+)>)/gi, "")}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.infoHeader}>Time</Text>
-                        <View style={styles.infoContent}>
-                            <Text style={styles.contentItem}>Preparation: {recipeData.preparationMinutes} mins</Text>
-                            <Text style={styles.contentItem}>Cooking: {recipeData.cookingMinutes} mins</Text>
-                        </View>
-                    </View>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.infoHeader}>Ingredients</Text>
-                        <View style={styles.infoContent}>
-                            {
-                                recipeData.extendedIngredients.map((ingredient) => {
-                                    return (
-                                        <View key={ingredient.id} style={{flexDirection: 'row'}}>
-                                            <Text style={styles.listItemIndicator}>-</Text>
-                                            <Text style={styles.listItem}>{ingredient.originalString}</Text>
-                                        </View>
-                                    );
-                                })
-                            }
-                        </View>
-                    </View>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.infoHeader}>Instructions</Text>
-                        <View style={styles.infoContent}>
-                            {
-                                recipeData.analyzedInstructions[0].steps.map((step) => {
-                                    return (
-                                        <View key={step.number} style={{flexDirection: 'row'}}>
-                                            <Text style={styles.listItemIndicator}>{step.number}. </Text>
-                                            <Text style={styles.listItem}>{step.step}</Text>
-                                        </View>
-                                    );
-                                })
-                            }
-                        </View>
-                    </View>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    );
+                </ScrollView>
+            </SafeAreaView>
+            </View>
+        )
+    }
 
 }
