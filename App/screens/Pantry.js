@@ -85,7 +85,7 @@ const makeStyles = (colors) => StyleSheet.create({
         position: 'absolute',
         margin: 20,
         right: 0,
-        bottom: 35,
+        bottom: '5%',
     },
     centeredView: {
         flex: 1,
@@ -585,8 +585,19 @@ export default ({ navigation }) => {
                                 // console.log("no match");
                                 return;
                             }
-                        })
+                        }
+                        )
+                        
                     }
+                </View>
+                <View>
+                    {/* <Text>asdfaasdfasdf</Text>
+                    <Text>asdfaasdfasdf</Text>
+                    <Text>asdfaasdfasdf</Text>
+                    <Text>asdfaasdfasdf</Text>
+                    <Text>asdfaasdfasdf</Text>
+                    <Text>asdfaasdfasdf</Text>
+                    <Text>asdfaasdfasdf</Text> */}
                 </View>
             </ScrollView>
             {/* <Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>

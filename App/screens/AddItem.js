@@ -23,7 +23,7 @@ import * as Notifications from 'expo-notifications';
 import { useTheme } from '@react-navigation/native';
 
 // Code below surpresses warning log boxes at bottom of app
-import {LogBox, YellowBox} from 'react-native';
+import { LogBox, YellowBox } from 'react-native';
 LogBox.ignoreAllLogs();
 
 
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         width: "70%",
         height: 45,
         marginBottom: 20,
-        // alignItems: "center",
+        alignItems: "center",
         flexDirection: 'row',
         // justifyContent: 'center'
     },
@@ -93,13 +93,13 @@ const styles = StyleSheet.create({
     },
     smallButt: {
         height: 45,
-        marginBottom: 30,
+        // marginBottom: 30,
         // position: "absolute"
         alignItems: "center",
         justifyContent: "center",
         // marginTop: 40,
         backgroundColor: "#f2c572",
-        width: "50%",
+        width: "30%",
         borderRadius: 25
     },
     hidePassButt: {
@@ -112,17 +112,17 @@ const styles = StyleSheet.create({
         // marginLeft: 20,
     },
     notificationSwitch: { // add/tweak styling more as needed
-        marginTop: 8,
-        marginRight: 20
+        // marginTop: 8,
+        marginRight: 5
     }
 });
 
-export default ({navigation}) => {
+export default ({ navigation }) => {
 
     const [date, setDate] = useState(moment().format('MM-DD-YYYY'));
 
     const [ingredientName, setIngredientName] = useState("");
-    const [quantity, setQuantity] = useState(0); 
+    const [quantity, setQuantity] = useState(0);
     const [expiration, setExpiration] = useState(new Date()); // Set a value for the expiration date
 
     const [renderDropdown, setRenderDropdown] = useState(false);
@@ -131,7 +131,7 @@ export default ({navigation}) => {
     const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
     const toggleSwitch = () => setIsNotificationEnabled(previousState => !previousState);
 
-    const {colors} = useTheme();
+    const { colors } = useTheme();
 
     function notifyMessage(msg) {
         if (Platform.OS === 'android') {
@@ -171,7 +171,7 @@ export default ({navigation}) => {
         console.log(quantity)
         console.log(expiration)
 
-        try {            
+        try {
 
             let response = await api.post(`/pantry/create/${username}`, {
                 name: ingredientName,
@@ -197,7 +197,7 @@ export default ({navigation}) => {
         let comparisonList = match.ratings;
         let resultList = [];
 
-        comparisonList.sort(function(a, b) {
+        comparisonList.sort(function (a, b) {
             return a.rating - b.rating
         })
 
@@ -237,14 +237,15 @@ export default ({navigation}) => {
 
         // We can render this default option if we want
         const defaultOption = suggestionList[0];
-        const {colors} = useTheme();
+        const { colors } = useTheme();
 
         return (
-            <ModalDropdown 
+            <ModalDropdown
                 style={styles.inputView}
                 defaultValue={'Ingredient Options (Click Me):'}
+                placeholderTextColor="gray"
                 dropdownTextStyle={{ backgroundColor: colors.background, fontSize: 18, color: colors.text }}/*Style here*/
-                textStyle={{ fontSize: 14, color: '#2a3439', alignSelf: 'flex-start', marginLeft: 30, height: 50, marginTop: 15}}
+                textStyle={{ fontSize: 14, color: '#2a3439', alignSelf: 'flex-start', marginLeft: 30}}
                 dropdownStyle={{ flex: 1, width: '70%', marginVertical: 10, borderWidth: 1, borderColor: '#D3D3D3' }}
                 options={suggestionList}
                 onSelect={(value) => {
@@ -261,27 +262,28 @@ export default ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Image style={[styles.image, {tintColor: colors.text}]} source={require("../assets/add_ingredient.png")} />
+            <Image style={[styles.image, { tintColor: colors.text }]} source={require("../assets/add_ingredient.png")} />
 
             {/* Ingredient Name */}
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.TextInput}
                     placeholder="Ingredient Name"
-                    placeholderTextColor="#003f5c"
+                    placeholderTextColor="gray"
+                    // placeholderTextColor="#003f5c"
                     autoCapitalize="none"
                     onChangeText={(ingredient) => setIngredientName(ingredient)}
                     value={ingredientName}
                 />
 
-            <TouchableOpacity style={styles.smallButt}
-                disabled={!Boolean(ingredientName)} // Add notification here if fields not input
-                onPress={() => {
-                    setRenderDropdown(true);
-                    ingredientSearch(ingredientName)
+                <TouchableOpacity style={styles.smallButt}
+                    disabled={!Boolean(ingredientName)} // Add notification here if fields not input
+                    onPress={() => {
+                        setRenderDropdown(true);
+                        ingredientSearch(ingredientName);
                     }}>
-                <Text style={styles.loginText}>Search</Text>
-            </TouchableOpacity>
+                    <Text style={styles.loginText}>Search</Text>
+                </TouchableOpacity>
             </View>
 
             {renderDropdown ? <DropdownMenuSelection /> : null}
@@ -291,7 +293,8 @@ export default ({navigation}) => {
                 <TextInput
                     style={styles.TextInput}
                     placeholder="Quantity"
-                    placeholderTextColor="#003f5c"
+                    // placeholderTextColor="#003f5c"
+                    placeholderTextColor="gray"
                     // secureTextEntry={true}
                     onChangeText={(quantity) => setQuantity(quantity)}
                 />
@@ -299,38 +302,40 @@ export default ({navigation}) => {
 
             {/* Expiration Date: NOTE WE WANT TO ABSTRACT THIS AWAY AT SOME POINT */}
             <View style={styles.inputView}>
-            <DatePicker
-                date={expiration}
-                mode="date"
-                placeholder="select expiration date"
-                format="YYYY-MM-DD"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                dateIcon: {
-                    position: 'absolute',
-                    left: 2,
-                    top: 4,
-                    marginLeft: 20
-                },
-                dateInput: {
-                    marginLeft: 56
-                },
-                placeholderText: "Select Expiration Date",
-                dateText: "Select Expiration Date",
-                // ... You can check the source to find the other keys.
-                }}
-            onDateChange={(date) => {
-                setExpiration(date)
-            }}
-            />
+                <DatePicker
+                    date={expiration}
+                    mode="date"
+                    placeholder="select expiration date"
+                    placeholderTextColor="gray"
+                    format="YYYY-MM-DD"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                        dateIcon: {
+                            position: 'absolute',
+                            left: 2,
+                            top: 4,
+                            marginLeft: 20
+                        },
+                        dateInput: {
+                            marginLeft: 56,
+                        },
+                        placeholderText: "Select Expiration Date",
+                        dateText: "Select Expiration Date",
+                        // ... You can check the source to find the other keys.
+                    }}
+                    onDateChange={(date) => {
+                        setExpiration(date)
+                    }}
+                />
             </View>
 
             <View style={styles.inputView}>
-            <TextInput
+                <TextInput
                     style={styles.TextInput}
                     placeholder="Enable Item Notifications"
                     placeholderTextColor="#003f5c"
+                    // placeholderTextColor="gray"
                     // secureTextEntry={true}
                     editable={false}
                     selectTextOnFocus={false}
@@ -359,12 +364,12 @@ export default ({navigation}) => {
 // Function that actually schedules notifications
 async function schedulePushNotification(ingredientName, timer) {
     await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Expiration Notification",
-        body: `Your ${ingredientName} is going to expire in 1 day`, // If time is configurable, change this message
-        data: { data: 'data' }, // add any data here if desired
-      },
-      trigger: { seconds: timer },
+        content: {
+            title: "Expiration Notification",
+            body: `Your ${ingredientName} is going to expire in 1 day`, // If time is configurable, change this message
+            data: { data: 'data' }, // add any data here if desired
+        },
+        trigger: { seconds: timer },
     });
 }
 
