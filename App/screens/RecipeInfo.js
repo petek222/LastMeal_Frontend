@@ -2,6 +2,7 @@ import React from 'react';
 import { Dimensions, StyleSheet, SafeAreaView, ScrollView, Text, View } from "react-native";
 import Constants from 'expo-constants';
 import { Thumbnail } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 
 // import moment from 'moment';
 // import api from '../api/api';
@@ -13,7 +14,7 @@ const windowHeight = window.height;
 
 const statusBarHeight = Constants.statusBarHeight;
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
@@ -22,7 +23,6 @@ const styles = StyleSheet.create({
     scrollViewContent: {
         paddingLeft: windowWidth * 0.05,
         paddingRight: windowWidth * 0.05,
-        
     },
     headerContainer: {
         flex: 1,
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     recipeNameText: {
         fontSize: 32,
         fontWeight: 'bold',
+        color: colors.text,
     },
     thumbnail: {
         height: windowWidth * 0.35,
@@ -49,11 +50,13 @@ const styles = StyleSheet.create({
     infoHeader: {
         fontSize: 24,
         fontWeight: 'bold',
+        color: colors.text,
     },
     infoContent: {
         flex: 1,
         flexDirection: "column",
         fontSize: 18,
+        color: colors.text,
         lineHeight: 25,
         paddingTop: windowHeight * 0.01,
         paddingBottom: windowHeight * 0.02
@@ -62,6 +65,7 @@ const styles = StyleSheet.create({
         paddingBottom: windowHeight * 0.015,
         flex: 1,
         fontSize: 18,
+        color: colors.text,
         lineHeight: 25
     },
     listItem: {
@@ -69,15 +73,19 @@ const styles = StyleSheet.create({
         paddingLeft: windowWidth * 0.015,
         flex: 1,
         fontSize: 18,
+        color: colors.text,
         lineHeight: 25
     },
     listItemIndicator: {
         fontSize: 18,
+        color: colors.text,
         lineHeight: 25
     }
 });
 
 export default ({navigation}) => {
+    const {colors} = useTheme();
+    const styles = makeStyles(colors);
 
     // replace require with prop json data passed into this component
     const recipeData = require('../assets/recipeData.json');
