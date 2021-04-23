@@ -6,6 +6,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Constants from 'expo-constants';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from '../config/Loader'
 
 import { useTheme } from '@react-navigation/native';
 
@@ -184,33 +185,50 @@ export default ({navigation}) => {
     //     </SafeAreaView>
     // )
 
+    if (recipes.length > 0) {
+        return (
+            <View>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
+                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <View>
+                        {
+                            recipes.map((recipe, i) => {
+    
+                                let recipe_name = recipe.title;
+                                
+                                // This regex doesn't display any recipes with numbers in them, since hose are usually
+                                // random lists and not particular recipes (we will probably want to refine this/put
+                                // it on the backend later)
+                                if (!/\d/.test(recipe.title)) { 
+                                    return (
+                                        <RecipeCard key={i} image={recipe.image} title={recipe_name} nav={navigation}></RecipeCard>
+                                    )
+                                }
+    
+                            })
+                        }
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
+            </View>
+        )
+    }
+    else {
+        return (
+            <View>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
+                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <View>
+                        <Loader></Loader>
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
+            </View>
+        )
+    }
 
-    return (
-        <View>
-        <SafeAreaView style={styles.safeAreaView}>
-            {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
-            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                <View>
-                    {
-                        recipes.map((recipe, i) => {
-
-                            let recipe_name = recipe.title;
-                            
-                            // This regex doesn't display any recipes with numbers in them, since hose are usually
-                            // random lists and not particular recipes (we will probably want to refine this/put
-                            // it on the backend later)
-                            if (!/\d/.test(recipe.title)) { 
-                                return (
-                                    <RecipeCard key={i} image={recipe.image} title={recipe_name} nav={navigation}></RecipeCard>
-                                )
-                            }
-
-                        })
-                    }
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-        </View>
-    )
 }
