@@ -161,30 +161,30 @@ export default ({ navigation }) => {
             console.log(Date.now());
             console.log('start of day');
             let startOfDay = new Date();
+
+            // normalize to the start of the day
             startOfDay.setHours(0, 0, 0, 0);
+
             console.log(startOfDay);
             console.log(startOfDay.getTime());
-
 
             // for (let i = 0; i < days.length; ++i) {
             //     if (days[i] === true) {
             //         // Generates seconds for each
             //         let expirationDate = (new Date(expiration).getTime()) / 1000
-
             //         console.log("Testing date computation")
-
             //         console.log(expirationDate - 86400)
-
             //         await schedulePushNotification(ingredientName, expirationDate);
-
             //     }
             // }
 
             for (let i = 0; i < days.length; ++i) {
                 if (days[i] === true) {
+
                     // Generates seconds for each
+                    // get the distance in time
                     // minus number of days in advance times 86400 seconds in a day
-                    // and then plus 36000 means remind me at 10 am
+                    // and then plus 36000 means remind me at 10 am (could customize this as well)
                     let expirationDate = (new Date(expiration).getTime() / 1000 - startOfDay.getTime() / 1000 - i * 86400 + 36000);
 
                     console.log("Testing date computation:")
