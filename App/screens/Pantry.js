@@ -448,18 +448,16 @@ export default ({ navigation }) => {
 
     let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton> : <AddIngredientButton nav={navigation}></AddIngredientButton>
 
-    updateSearch = (str) => {
-        setSearch(str);
-    };
+    // updateSearch = (str) => {
+    //     setSearch(str);
+    // };
 
-    let [nameSort, setNameSort] = useState(false);
-    let [dateSort, setDateSort] = useState(false);
+    const [nameSort, setNameSort] = useState(false);
+    const [dateSort, setDateSort] = useState(false);
 
-
-    const updateSort = () => {
-        let ing = ingredients;
+    const updateNameSort = () => {
         console.log(ingredients[0].name);
-        ing.sort(function (a, b) {
+        ingredients.sort(function (a, b) {
             if (nameSort){
                 return b.name.localeCompare(a.name);
             } else {
@@ -469,13 +467,35 @@ export default ({ navigation }) => {
         setNameSort(!nameSort);
 
         // try to sort the images in the same way, doesn't work
-        imageArray.sort(function (a, b) {
-            return ing.indexOf(a) - ing.indexOf(b);
-        });
+        // imageArray.sort(function (a, b) {
+        //     return ing.indexOf(a) - ing.indexOf(b);
+        // });
 
-        console.log(ingredients[0].name);
-        setIngredients(ing);
-        setImageArray(imageArray);
+        // setIngredients(ingredients);
+        // setImageArray(imageArray);
+    }
+
+    const updateDateSort = () => {
+        console.log(ingredients[0].expiration_date.$date);
+        ingredients.sort(function (a, b) {
+            if (dateSort){
+                // return new Date(b.expiration_date.$date) - new Date(a.expiration_date.$date);
+                return b.expiration_date.$date - a.expiration_date.$date;
+
+            } else {
+                // return new Date(a.expiration_date.$date) - new Date(b.expiration_date.$date);
+                return a.expiration_date.$date - b.expiration_date.$date;
+            }
+        });
+        setDateSort(!dateSort);
+
+        // try to sort the images in the same way, doesn't work
+        // imageArray.sort(function (a, b) {
+        //     return ing.indexOf(a) - ing.indexOf(b);
+        // });
+
+        // setIngredients(ingredients);
+        // setImageArray(imageArray);
     }
 
     let button;
@@ -500,7 +520,7 @@ export default ({ navigation }) => {
                 searchIcon={{ color: colors.text }}
                 cancelIcon={{ color: colors.text }}
                 clearIcon={{ color: colors.text }}
-                onChangeText={updateSearch}
+                onChangeText={setSearch}
                 value={search}
                 inputStyle={{ color: colors.text }}
                 containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
@@ -509,14 +529,14 @@ export default ({ navigation }) => {
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
-                        updateSort()
+                        updateNameSort()
                     }}>
                     <Text>Name</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
-
+                        updateDateSort()
                     }}>
                     <Text>Date</Text>
                 </TouchableOpacity>
