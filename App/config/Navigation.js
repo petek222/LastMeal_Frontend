@@ -148,6 +148,7 @@ const Navigation = () => {
                     <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
                     <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
                     <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
+                    <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
                 </Stack.Navigator>
             </NavigationContainer>
             <SafeAreaView style={{ flex:0, backgroundColor: theme ? MyDark.colors.background : MyLight.colors.background }}></SafeAreaView>
@@ -160,3 +161,4 @@ export default () => (
         <Navigation />
     </RecoilRoot>
 )
+
