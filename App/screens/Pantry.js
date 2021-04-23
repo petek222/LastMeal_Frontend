@@ -452,6 +452,32 @@ export default ({ navigation }) => {
         setSearch(str);
     };
 
+    let [nameSort, setNameSort] = useState(false);
+    let [dateSort, setDateSort] = useState(false);
+
+
+    const updateSort = () => {
+        let ing = ingredients;
+        console.log(ingredients[0].name);
+        ing.sort(function (a, b) {
+            if (nameSort){
+                return b.name.localeCompare(a.name);
+            } else {
+                return a.name.localeCompare(b.name);
+            }
+        });
+        setNameSort(!nameSort);
+
+        // try to sort the images in the same way, doesn't work
+        imageArray.sort(function (a, b) {
+            return ing.indexOf(a) - ing.indexOf(b);
+        });
+
+        console.log(ingredients[0].name);
+        setIngredients(ing);
+        setImageArray(imageArray);
+    }
+
     let button;
 
     if (Platform.OS === "ios") {
@@ -483,7 +509,7 @@ export default ({ navigation }) => {
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
-
+                        updateSort()
                     }}>
                     <Text>Name</Text>
                 </TouchableOpacity>
