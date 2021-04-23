@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity, Platform } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity, TouchableWithoutFeedback, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Thumbnail } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -94,10 +94,11 @@ const makeStyles = (colors) => StyleSheet.create({
         marginTop: 22
     },
     modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
+        margin: '10%',
+        // backgroundColor: "white",
+        backgroundColor: colors.background,
+        borderRadius: 50,
+        padding: 30,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -128,7 +129,8 @@ const makeStyles = (colors) => StyleSheet.create({
     },
     modalText: {
         marginBottom: 15,
-        textAlign: "center"
+        textAlign: "center",
+        color: colors.text,
     },
     sortButt: {
         // width: "80%", 
@@ -195,31 +197,38 @@ const DeletionModal = (props) => {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
-                        <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => {
-                                setModalVisible(!modalVisible);
-                                props.remove(false);
-                            }}
-                        >
-                            <Text style={styles.textStyle}>Yes</Text>
-                        </TouchableOpacity>
-                        <Text>  </Text>
-                        <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => {
-                                setModalVisible(!modalVisible);
-                                props.remove(true);
-                            }}
-                        >
-                            <Text style={styles.textStyle}>No</Text>
-                        </TouchableOpacity>
-
+                <TouchableOpacity
+                    style={styles.centeredView}
+                    activeOpacity={1}
+                    onPressOut={() => { setModalVisible(false) }}
+                >
+                    <View style={styles.centeredView}>
+                        <TouchableWithoutFeedback>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
+                                <TouchableOpacity
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        props.remove(false);
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>Yes</Text>
+                                </TouchableOpacity>
+                                <Text>  </Text>
+                                <TouchableOpacity
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        props.remove(true);
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>No</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableWithoutFeedback>
                     </View>
-                </View>
+                </TouchableOpacity>
             </Modal>
             <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
                 <Ionicons name="trash-outline" style={{ fontSize: 25, color: 'gray' }} />
@@ -458,7 +467,7 @@ export default ({ navigation }) => {
     const updateNameSort = () => {
         console.log(ingredients[0].name);
         ingredients.sort(function (a, b) {
-            if (nameSort){
+            if (nameSort) {
                 return b.name.localeCompare(a.name);
             } else {
                 return a.name.localeCompare(b.name);
@@ -478,7 +487,7 @@ export default ({ navigation }) => {
     const updateDateSort = () => {
         console.log(ingredients[0].expiration_date.$date);
         ingredients.sort(function (a, b) {
-            if (dateSort){
+            if (dateSort) {
                 // return new Date(b.expiration_date.$date) - new Date(a.expiration_date.$date);
                 return b.expiration_date.$date - a.expiration_date.$date;
 
@@ -587,7 +596,7 @@ export default ({ navigation }) => {
                             }
                         }
                         )
-                        
+
                     }
                 </View>
                 <View>
