@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, SafeAreaView, ScrollView, Text, View } from "react-native";
 import Constants from 'expo-constants';
 import { Thumbnail } from 'native-base';
+import { useIsFocused } from "@react-navigation/native";
 
 // import moment from 'moment';
-// import api from '../api/api';
+import api from '../api/api';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const window = Dimensions.get('window');
@@ -77,10 +78,56 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ({navigation}) => {
+export default ({route, navigation}) => {
 
     // replace require with prop json data passed into this component
     const recipeData = require('../assets/recipeData.json');
+
+    console.log("CARD GEN ID TEST");
+    console.log(route.params)
+
+    const isFocused = useIsFocused()
+
+    useEffect(() => {
+
+        async function generateRecipe() {
+            // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
+            // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
+
+            console.log("Making Spoonacular API Request for Recipe Info")
+
+            let recipeData = await getRecipeInfo(route.params);
+    
+            // Here is where we want to work on the recipe data sent from the API to build our cards
+            console.log("Returned Recipe")
+            console.log(recipeData)
+                
+            // await setRecipes(recipeList)
+
+            // Otherwise, set the recipe list again (?)
+        }
+        generateRecipe()
+    }, [isFocused]);
+
+    const getRecipeInfo = async (recipe_id) => {
+
+        try {
+            // console.log("MAKING RECIPE REQUEST")
+            // console.log(currentPantry)
+
+            let response = await api.get(`/recipes/${recipe_id}`);
+
+            console.log("API Response")
+            console.log(response)
+
+            return response
+        }
+        catch (error) {
+            console.log(error)
+            return "Error in requesting recipe data";
+        }
+    }
+
 
     return (
         <SafeAreaView style={styles.safeAreaView}>

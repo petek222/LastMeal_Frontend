@@ -90,7 +90,12 @@ const RecipeCard = (props) => {
     const [color, setColor] = useState("#000000")
 
     return (
-        <TouchableOpacity style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} onPress={() => props.nav.navigate('RecipeInfo')}>
+        <TouchableOpacity style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} onPress={() => {
+            
+            props.nav.navigate('RecipeInfo', {
+                recipeID: props.id
+            })
+        }}>
             <View style={styles.itemCardContent} >
                 <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
                 <View style={styles.itemCardText}>
@@ -138,8 +143,8 @@ export default ({navigation}) => {
             let recipeList = await getRecipes(currentPantry);
     
             // Here is where we want to work on the recipe data sent from the API to build our cards
-            console.log("Returned Recipes")
-            console.log(recipeList)
+            // console.log("Returned Recipes")
+            // console.log(recipeList)
                 
             await setRecipes(recipeList)
 
@@ -152,8 +157,8 @@ export default ({navigation}) => {
     const getRecipes = async (currentPantry) => {
 
         try {
-            console.log("MAKING RECIPE REQUEST")
-            console.log(currentPantry)
+            // console.log("MAKING RECIPE REQUEST")
+            // console.log(currentPantry)
 
             let config = {
                 headers: {
@@ -175,16 +180,6 @@ export default ({navigation}) => {
         }
     }
 
-    // Placeholder for RecipeInfo Testing
-    // return (
-    //     <SafeAreaView style={styles.safeAreaView}>
-    //         <StatusBar barStyle="dark-content" ></StatusBar>
-    //         <ScrollView contentContainerStyle={styles.scrollViewContent}>
-    //             <RecipeCard title="Chicken Kiev" nav={navigation}/>
-    //         </ScrollView>
-    //     </SafeAreaView>
-    // )
-
     if (recipes.length > 0) {
         return (
             <View>
@@ -197,13 +192,14 @@ export default ({navigation}) => {
                             recipes.map((recipe, i) => {
     
                                 let recipe_name = recipe.title;
+                                let recipe_id = recipe.id;
                                 
                                 // This regex doesn't display any recipes with numbers in them, since hose are usually
                                 // random lists and not particular recipes (we will probably want to refine this/put
                                 // it on the backend later)
                                 if (!/\d/.test(recipe.title)) { 
                                     return (
-                                        <RecipeCard key={i} image={recipe.image} title={recipe_name} nav={navigation}></RecipeCard>
+                                        <RecipeCard key={i} image={recipe.image} title={recipe_name} nav={navigation} id={recipe_id}></RecipeCard>
                                     )
                                 }
     
