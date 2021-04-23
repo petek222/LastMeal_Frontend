@@ -21,6 +21,10 @@ var stringSimilarity = require("string-similarity");
 import ModalDropdown from 'react-native-modal-dropdown';
 import * as Notifications from 'expo-notifications';
 import { useTheme } from '@react-navigation/native';
+import { notifyDays } from './Notifications';
+import {
+    useRecoilState
+} from 'recoil';
 
 // Code below surpresses warning log boxes at bottom of app
 import { LogBox, YellowBox } from 'react-native';
@@ -131,6 +135,7 @@ export default ({ navigation }) => {
     const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
     const toggleSwitch = () => setIsNotificationEnabled(previousState => !previousState);
 
+    const [days, setDays] = useRecoilState(notifyDays);
     const { colors } = useTheme();
 
     function notifyMessage(msg) {
@@ -143,23 +148,37 @@ export default ({ navigation }) => {
 
     const addPantryItem = async () => {
 
+
         // Upon adding the item to the pantry, check if they want to schedule a push notification
         // This will currently schedule the notification for a day before the expiration date; we 
         // want this to be configurable in the options menu eventually
         if (isNotificationEnabled) {
-            console.log("Enabling Notifications")
-            console.log(ingredientName);
-            console.log(quantity)
-            console.log(expiration);
+            // console.log("Enabling Notifications")
+            // console.log(ingredientName);
+            // console.log(quantity)
+            // console.log(expiration);
 
-            // Generates seconds for each
-            let expirationDate = (new Date(expiration).getTime()) / 1000
+            // // Generates seconds for each
+            // let expirationDate = (new Date(expiration).getTime()) / 1000
 
-            console.log("Testing date computation")
+            // console.log("Testing date computation")
 
-            console.log(expirationDate - 86400)
+            // console.log(expirationDate - 86400)
 
-            await schedulePushNotification(ingredientName, expirationDate)
+            // await schedulePushNotification(ingredientName, expirationDate);
+            // await schedulePushNotification(ingredientName, 0)
+            // await schedulePushNotification(ingredientName, -10)
+            console.log(days.length);
+            console.log(days);
+
+            for (let i = 0; i < days.length; ++i) {
+                if (days[i] === true) {
+                    await schedulePushNotification(ingredientName, i);
+
+                }
+            }
+
+
         }
 
         navigation.navigate('Pantry');
@@ -179,8 +198,8 @@ export default ({ navigation }) => {
                 expiration_date: expiration
             });
 
-            console.log("Ingredient Addition Response")
-            console.log(response)
+            // console.log("Ingredient Addition Response")
+            // console.log(response)
             notifyMessage("Ingredient Added to Pantry");
             navigation.navigate('Pantry'); // navigate to pantry upon ingredient submission
             // return json;

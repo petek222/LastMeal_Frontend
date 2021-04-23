@@ -9,6 +9,7 @@ import Profile from '../screens/Profile';
 import Pantry from '../screens/Pantry';
 import Recipes from '../screens/Recipes';
 import Options from '../screens/Options';
+import Notifications from '../screens/Notifications';
 import AddItem from '../screens/AddItem';
 import RecipeInfo from '../screens/RecipeInfo';
 import ResetPassword from '../screens/ResetPassword';
@@ -143,6 +144,7 @@ const Navigation = () => {
                     <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                     <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
                     <Stack.Screen name="AddItem" component={AddItem} options={{ headerShown: false }} />
+                    <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
                     <Stack.Screen name="RecipeInfo" component={RecipeInfo} options={{ headerShown: false }} />
                     <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
                 </Stack.Navigator>

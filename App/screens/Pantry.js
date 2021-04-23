@@ -13,6 +13,13 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 
 import { useTheme } from '@react-navigation/native';
+import {
+    RecoilRoot,
+    atom,
+    selector,
+    useRecoilState,
+    useRecoilValue,
+} from 'recoil';
 
 var stringSimilarity = require("string-similarity");
 
@@ -22,6 +29,11 @@ const statusBarHeight = Constants.statusBarHeight;
 
 const cardWidth = window.width * 0.9;
 const cardHeight = window.height * 0.12;
+
+export const selected = atom({
+    key: 'selected', // unique ID
+    default: [], // initial value
+});
 
 const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
@@ -241,21 +253,50 @@ const DeletionModal = (props) => {
 const IngredientSelect = (props) => {
     // const { colors } = useTheme();
 
-    const [select, isSelected] = useState('')
+    // const [select, isSelected] = useState('')
     const [color, setColor] = useState('gray');
+    const [select, setSelect] = useRecoilState(selected);
 
     return (
         <TouchableOpacity onPress={async () => { // CHECK STATE-SETTING; A LITTLE DELAYED ON CLICK?
             console.log("HERE")
             if (color !== '#6be3d9') {
                 setColor('#6be3d9')
+
+                // setSelect((old) => [
+                //     ...old,
+                //     {
+                //       id: props.ingKey,
+                //       val: true,
+                //     },
+                //   ]);
+
                 await props.selectIngredient(currentElements => [...currentElements, props.item])
             }
             else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
                 console.log("BLACK")
                 setColor('gray')
+
+                // setSelect((old) => [
+                //     ...old,
+                //     {
+                //       id: props.ingKey,
+                //       val: false,
+                //     },
+                //   ]);
+
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
+            // console.log("selections: ");
+            // for (let i = 0; i< ingredientSelections.length; ++i) {
+            //     console.log(ingredientSelections[i]);
+            // }
+            // console.log("first");
+            // console.log(ingredientSelections[0]);
+            // console.log('selected?');
+            // console.log(select[props.ingKey]);
+
+            
         }}>
             <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 25 }} />
         </TouchableOpacity>
@@ -272,6 +313,7 @@ const PantryCard = (props) => {
     const [viewDeletion, setViewDeletion] = useState(false);
     const [deletionChoice, setDeletionChoice] = useState(false)
     const [deletedItem, setDeletedItem] = useState('')
+    const [select, setSelect] = useRecoilState(selected);
 
     const { colors } = useTheme();
     const styles = makeStyles(colors);
@@ -340,7 +382,7 @@ const PantryCard = (props) => {
                 {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
                 <View style={styles.cardButtons}>
                     {/* <Ionicons name="heart-outline" style={{fontSize: 25}} /> */}
-                    <IngredientSelect item={props.title} ingredientSelections={props.ingredientSelections} selectIngredient={props.selectIngredient}></IngredientSelect>
+                    <IngredientSelect item={props.title} ingredientSelections={props.ingredientSelections} selectIngredient={props.selectIngredient} ingKey={props.val}></IngredientSelect>
                     <DeletionModal item={props.title} remove={stateCallback} ></DeletionModal>
                 </View>
             </View>
@@ -356,6 +398,9 @@ export default ({ navigation }) => {
 
     let [ingredients, setIngredients] = useState([]);
     let [imageArray, setImageArray] = useState([]);
+
+    let [selectionArray, setSelectionArray] = useState([]);
+
     let [ingredientSelections, setIngredientSelections] = useState([]);
     let [search, setSearch] = useState('');
 
@@ -426,13 +471,13 @@ export default ({ navigation }) => {
                 for (let i = 0; i < response.data.ingredients.length; i++) {
                     let entry = response.data.ingredients[i]
 
-                    console.log("ENTRY")
-                    console.log(entry)
+                    // console.log("ENTRY")
+                    // console.log(entry)
 
                     let ingredientName = entry["name"]
 
-                    console.log("CHECKING INGREDIENT NAMES")
-                    console.log(ingredientName)
+                    // console.log("CHECKING INGREDIENT NAMES")
+                    // console.log(ingredientName)
 
                     ingredientNames.push(ingredientName)
                 }
@@ -465,7 +510,7 @@ export default ({ navigation }) => {
     const [dateSort, setDateSort] = useState(false);
 
     const updateNameSort = () => {
-        console.log(ingredients[0].name);
+        // console.log(ingredients[0].name);
         ingredients.sort(function (a, b) {
             if (nameSort) {
                 return b.name.localeCompare(a.name);
@@ -485,7 +530,7 @@ export default ({ navigation }) => {
     }
 
     const updateDateSort = () => {
-        console.log(ingredients[0].expiration_date.$date);
+        // console.log(ingredients[0].expiration_date.$date);
         ingredients.sort(function (a, b) {
             if (dateSort) {
                 // return new Date(b.expiration_date.$date) - new Date(a.expiration_date.$date);
@@ -580,10 +625,12 @@ export default ({ navigation }) => {
                                     <PantryCard
                                         image={imageArray[i]}
                                         key={i}
+                                        val={i}
                                         title={ingredient.name}
                                         expr={ingredient.expiration_date}
                                         quantity={ingredient.quantity}
                                         view={true}
+                                        // selected={selectionArray[i]}
                                         selectIngredient={setIngredientSelections}
                                         ingredientSelections={ingredientSelections}
                                         warnNotification={warnNotification}
@@ -598,15 +645,6 @@ export default ({ navigation }) => {
                         )
 
                     }
-                </View>
-                <View>
-                    {/* <Text>asdfaasdfasdf</Text>
-                    <Text>asdfaasdfasdf</Text>
-                    <Text>asdfaasdfasdf</Text>
-                    <Text>asdfaasdfasdf</Text>
-                    <Text>asdfaasdfasdf</Text>
-                    <Text>asdfaasdfasdf</Text>
-                    <Text>asdfaasdfasdf</Text> */}
                 </View>
             </ScrollView>
             {/* <Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
