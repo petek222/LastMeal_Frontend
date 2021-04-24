@@ -410,7 +410,7 @@ export default ({ navigation }) => {
     const BackArrow = () => {
         return (
             <TouchableOpacity onPress={() => navigation.goBack()} >
-            <Ionicons name="chevron-back" size={35} color="black" style={{marginRight: 370}}/>
+            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/>
         </TouchableOpacity>
         )
     }

@@ -96,9 +96,6 @@ export default ({route, navigation}) => {
 
     const [recipeData, setRecipeData] = useState(null)
 
-    console.log("CARD GEN ID TEST");
-    console.log(route.params)
-
     const isFocused = useIsFocused()
 
     useEffect(() => {
@@ -123,13 +120,8 @@ export default ({route, navigation}) => {
     const getRecipeInfo = async (recipe_id) => {
 
         try {
-            // console.log("MAKING RECIPE REQUEST")
-            // console.log(currentPantry)
-
+            console.log("Making RecipeInfoRequest")
             let response = await api.get(`/recipes/${recipe_id}`);
-
-            console.log("API Response")
-            console.log(response)
 
             return response
         }
@@ -142,7 +134,7 @@ export default ({route, navigation}) => {
     const BackArrow = () => {
         return (
             <TouchableOpacity onPress={() => navigation.goBack()} >
-            <Ionicons name="chevron-back" size={35} color="black" style={{marginRight: 370}}/>
+            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/>
         </TouchableOpacity>
         )
     }
