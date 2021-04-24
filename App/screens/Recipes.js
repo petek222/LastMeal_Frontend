@@ -20,7 +20,7 @@ const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
-        marginTop: statusBarHeight
+       // marginTop: statusBarHeight
     },
     scrollViewContent: {
         alignItems: 'center'
@@ -87,7 +87,7 @@ const makeStyles = (colors) => StyleSheet.create({
 const RecipeCard = (props) => {
     const { colors } = useTheme();
     const styles = makeStyles(colors);
-    const [color, setColor] = useState("#000000")
+    const [color, setColor] = useState("#808080")
 
     return (
         <TouchableOpacity style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} onPress={() => {
@@ -109,7 +109,7 @@ const RecipeCard = (props) => {
                         // Here we will want to add the item to some favorites object that can be sent to the user's profile
                     }
                     else {
-                        setColor('#000000')
+                        setColor('#808080')
                         // Here we will want to remove the item from the object described above
                     }
                 }}>
