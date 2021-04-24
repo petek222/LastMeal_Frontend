@@ -25,6 +25,7 @@ import { notifyDays } from './Notifications';
 import {
     useRecoilState
 } from 'recoil';
+import DismissKeyboard from "../config/DismissKeyboard.js";
 
 // Code below surpresses warning log boxes at bottom of app
 import { LogBox, YellowBox } from 'react-native';
@@ -215,7 +216,7 @@ export default ({ navigation }) => {
 
             // console.log("Ingredient Addition Response")
             // console.log(response)
-            notifyMessage("Ingredient Added to Pantry");
+            // notifyMessage("Ingredient Added to Pantry");
             navigation.navigate('Pantry'); // navigate to pantry upon ingredient submission
             // return json;
         } catch (error) {
@@ -295,103 +296,105 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <Image style={[styles.image, { tintColor: colors.text }]} source={require("../assets/add_ingredient.png")} />
+        <DismissKeyboard>
+            <View style={styles.container}>
+                <Image style={[styles.image, { tintColor: colors.text }]} source={require("../assets/add_ingredient.png")} />
 
-            {/* Ingredient Name */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Ingredient Name"
-                    placeholderTextColor="gray"
-                    // placeholderTextColor="#003f5c"
-                    autoCapitalize="none"
-                    onChangeText={(ingredient) => setIngredientName(ingredient)}
-                    value={ingredientName}
-                />
+                {/* Ingredient Name */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Ingredient Name"
+                        placeholderTextColor="gray"
+                        // placeholderTextColor="#003f5c"
+                        autoCapitalize="none"
+                        onChangeText={(ingredient) => setIngredientName(ingredient)}
+                        value={ingredientName}
+                    />
 
-                <TouchableOpacity style={styles.smallButt}
-                    disabled={!Boolean(ingredientName)} // Add notification here if fields not input
-                    onPress={() => {
-                        setRenderDropdown(true);
-                        ingredientSearch(ingredientName);
-                    }}>
-                    <Text style={styles.loginText}>Search</Text>
+                    <TouchableOpacity style={styles.smallButt}
+                        disabled={!Boolean(ingredientName)} // Add notification here if fields not input
+                        onPress={() => {
+                            setRenderDropdown(true);
+                            ingredientSearch(ingredientName);
+                        }}>
+                        <Text style={styles.loginText}>Search</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {renderDropdown ? <DropdownMenuSelection /> : null}
+
+                {/* Quantity */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Quantity"
+                        // placeholderTextColor="#003f5c"
+                        placeholderTextColor="gray"
+                        // secureTextEntry={true}
+                        onChangeText={(quantity) => setQuantity(quantity)}
+                    />
+                </View>
+
+                {/* Expiration Date: NOTE WE WANT TO ABSTRACT THIS AWAY AT SOME POINT */}
+                <View style={styles.inputView}>
+                    <DatePicker
+                        date={expiration}
+                        mode="date"
+                        placeholder="select expiration date"
+                        placeholderTextColor="gray"
+                        format="YYYY-MM-DD"
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 2,
+                                top: 4,
+                                marginLeft: 20
+                            },
+                            dateInput: {
+                                marginLeft: 56,
+                            },
+                            placeholderText: "Select Expiration Date",
+                            dateText: "Select Expiration Date",
+                            // ... You can check the source to find the other keys.
+                        }}
+                        onDateChange={(date) => {
+                            setExpiration(date)
+                        }}
+                    />
+                </View>
+
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Enable Item Notifications"
+                        placeholderTextColor="#003f5c"
+                        // placeholderTextColor="gray"
+                        // secureTextEntry={true}
+                        editable={false}
+                        selectTextOnFocus={false}
+                    />
+                    <Switch
+                        style={styles.notificationSwitch}
+                        trackColor={{ false: "#767577", true: "#eb6fbb" }}
+                        thumbColor={isNotificationEnabled ? "#f2c572" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isNotificationEnabled}
+                    />
+
+                </View>
+
+                <TouchableOpacity style={styles.bigButt}
+                    disabled={!Boolean(ingredientName && quantity && expiration)} // Add notification here if fields not input
+                    onPress={() => addPantryItem()}>
+                    <Text style={styles.loginText}>Add Item to Pantry</Text>
                 </TouchableOpacity>
-            </View>
-
-            {renderDropdown ? <DropdownMenuSelection /> : null}
-
-            {/* Quantity */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Quantity"
-                    // placeholderTextColor="#003f5c"
-                    placeholderTextColor="gray"
-                    // secureTextEntry={true}
-                    onChangeText={(quantity) => setQuantity(quantity)}
-                />
-            </View>
-
-            {/* Expiration Date: NOTE WE WANT TO ABSTRACT THIS AWAY AT SOME POINT */}
-            <View style={styles.inputView}>
-                <DatePicker
-                    date={expiration}
-                    mode="date"
-                    placeholder="select expiration date"
-                    placeholderTextColor="gray"
-                    format="YYYY-MM-DD"
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    customStyles={{
-                        dateIcon: {
-                            position: 'absolute',
-                            left: 2,
-                            top: 4,
-                            marginLeft: 20
-                        },
-                        dateInput: {
-                            marginLeft: 56,
-                        },
-                        placeholderText: "Select Expiration Date",
-                        dateText: "Select Expiration Date",
-                        // ... You can check the source to find the other keys.
-                    }}
-                    onDateChange={(date) => {
-                        setExpiration(date)
-                    }}
-                />
-            </View>
-
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Enable Item Notifications"
-                    placeholderTextColor="#003f5c"
-                    // placeholderTextColor="gray"
-                    // secureTextEntry={true}
-                    editable={false}
-                    selectTextOnFocus={false}
-                />
-                <Switch
-                    style={styles.notificationSwitch}
-                    trackColor={{ false: "#767577", true: "#eb6fbb" }}
-                    thumbColor={isNotificationEnabled ? "#f2c572" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={toggleSwitch}
-                    value={isNotificationEnabled}
-                />
 
             </View>
-
-            <TouchableOpacity style={styles.bigButt}
-                disabled={!Boolean(ingredientName && quantity && expiration)} // Add notification here if fields not input
-                onPress={() => addPantryItem()}>
-                <Text style={styles.loginText}>Add Item to Pantry</Text>
-            </TouchableOpacity>
-
-        </View>
+        </DismissKeyboard>
     );
 }
 

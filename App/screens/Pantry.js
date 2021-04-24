@@ -11,6 +11,7 @@ import Autocomplete from 'react-native-autocomplete-input'
 import { useIsFocused } from "@react-navigation/native";
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
+import DismissKeyboard from "../config/DismissKeyboard.js";
 
 import { useTheme } from '@react-navigation/native';
 import {
@@ -39,7 +40,7 @@ const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
-        marginTop: statusBarHeight,
+        // marginTop: statusBarHeight,
     },
     scrollViewContent: {
         alignItems: 'center'
@@ -574,7 +575,7 @@ export default ({ navigation }) => {
             {actionButton}
         </Animatable.View>)
     } else {
-        button = actionButton;
+        button = actionButton; 
     }
 
     return (
@@ -585,13 +586,13 @@ export default ({ navigation }) => {
                 // platform={'android'}
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"
-                placeholderTextColor={colors.text}
-                searchIcon={{ color: colors.text }}
-                cancelIcon={{ color: colors.text }}
-                clearIcon={{ color: colors.text }}
+                // placeholderTextColor="black"
+                // searchIcon={{ color: "black" }}
+                // cancelIcon={{ color: "black" }}
+                // clearIcon={{ color: "black" }}
                 onChangeText={setSearch}
                 value={search}
-                inputStyle={{ color: colors.text }}
+                // inputStyle={{ color: colors.text }}
                 containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: window.height * 0.01 }}>
                 <Text style={{ color: colors.text }}>Sort: </Text>
