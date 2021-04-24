@@ -25,6 +25,7 @@ import { notifyDays } from './Notifications';
 import {
     useRecoilState
 } from 'recoil';
+import { Ionicons } from '@expo/vector-icons';
 
 // Code below surpresses warning log boxes at bottom of app
 import { LogBox, YellowBox } from 'react-native';
@@ -127,7 +128,7 @@ export default ({ navigation }) => {
 
     const [ingredientName, setIngredientName] = useState("");
     const [quantity, setQuantity] = useState(0);
-    const [expiration, setExpiration] = useState(new Date()); // Set a value for the expiration date
+    const [expiration, setExpiration] = useState(new Date().toISOString().slice(0, 10)); // Set a value for the expiration date
 
     const [renderDropdown, setRenderDropdown] = useState(false);
     const [suggestionList, setSuggestionList] = useState([]);
@@ -294,8 +295,19 @@ export default ({ navigation }) => {
         )
     }
 
+    const BackArrow = () => {
+        return (
+            <TouchableOpacity onPress={() => navigation.goBack()} >
+            <Ionicons name="chevron-back" size={35} color="black" style={{marginRight: 370}}/>
+        </TouchableOpacity>
+        )
+    }
+
     return (
         <View style={styles.container}>
+            
+            <BackArrow></BackArrow>
+
             <Image style={[styles.image, { tintColor: colors.text }]} source={require("../assets/add_ingredient.png")} />
 
             {/* Ingredient Name */}
