@@ -1,29 +1,5 @@
-
-// import React from 'react';
-// import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity } from 'react-native';
-
-// import { SafeAreaView } from 'react-native-safe-area-context';
-
-// const screen = Dimensions.get('window');
-
-// const styles = StyleSheet.create({
-//     safeAreaView: {
-//         height: "100%",
-//         width: "200%"
-//     }
-// })
-
-// export default ({navigation}) => {
-//     return (
-//         <SafeAreaView style={{styles}}>
-//             <Text>Option Screen</Text>
-//         </SafeAreaView>
-//     )
-
-// }
-
 import React, { useState, useEffect } from 'react';
-import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image, Alert, Button } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -38,6 +14,7 @@ import {
 } from 'recoil';
 import { darkState } from '../config/Navigation';
 import { useTheme } from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const statusBarHeight = Constants.statusBarHeight;
 
@@ -57,19 +34,24 @@ const styles = StyleSheet.create({
 
 export const notifyDays = atom({
     key: 'notifyDays', // unique ID
-    default: [false,false,false,false], // initial value
+    default: [false, false, false, false], // initial value
+});
+
+export const notifyTime = atom({
+    key: 'notifyTime', // unique ID
+    default: 10, // initial value, 10am
 });
 
 export default ({ navigation }) => {
 
-    // const [zeroDay, setZeroDay] = useState(false)
-    // const [oneDay, setOneDay] = useState(false)
-    // const [twoDay, setTwoDay] = useState(false)
-    // const [threeDay, setThreeDay] = useState(false)
-
     // use an array to keep track of which settings are checked, and can iterate over it when creating notifications, in theory
     // const [days, setDays] = useState([false,false,false,false]);
     const [days, setDays] = useRecoilState(notifyDays);
+    const [time, setTime] = useRecoilState(notifyTime);
+
+    const [date, setDate] = useState(new Date(1598051730000));
+    const [mode, setMode] = useState('time');
+    const [show, setShow] = useState(false);
 
     const { colors } = useTheme();
 
@@ -118,16 +100,42 @@ export default ({ navigation }) => {
         }
     }
 
+    const onChange = (event, selectedDate) => {
+        let startOfDay = new Date();
+
+        // normalize to the start of the day
+        startOfDay.setHours(0, 0, 0, 0);
+        const currentDate = selectedDate;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+
+        console.log(date);
+        console.log(startOfDay);
+        
+        // number of hrs from beginning of day
+        setTime((date - startOfDay) /1000 / 3600);
+        console.log((date - startOfDay) /1000 / 3600);
+    };
+
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    };
+
+    const showTimepicker = () => {
+        showMode('time');
+    };
+
     return (
         <SafeAreaView style={{ marginTop: statusBarHeight, backgroundColor: colors.background, flex: 1 }}>
             <View style={{ backgroundColor: colors.background, flex: 1 }}>
                 <SettingsList borderColor='#fff' defaultItemSize={50}>
-                    <SettingsList.Header headerText='Remind Me:' headerStyle={{color: colors.text, fontSize:20}}/>
+                    <SettingsList.Header headerText='Remind Me:' headerStyle={{ color: colors.text, fontSize: 20 }} />
                     <SettingsList.Item
                         backgroundColor={colors.background}
                         hasSwitch={true}
                         switchState={days[0]}
-                        switchOnValueChange={()=>onDayChange(0)}
+                        switchOnValueChange={() => onDayChange(0)}
                         hasNavArrow={false}
                         title='The Day of Expiry'
                         titleStyle={{ color: colors.text }}
@@ -136,7 +144,7 @@ export default ({ navigation }) => {
                         backgroundColor={colors.background}
                         hasSwitch={true}
                         switchState={days[1]}
-                        switchOnValueChange={()=>onDayChange(1)}
+                        switchOnValueChange={() => onDayChange(1)}
                         hasNavArrow={false}
                         title='One Day Before Expiry'
                         titleStyle={{ color: colors.text }}
@@ -145,7 +153,7 @@ export default ({ navigation }) => {
                         backgroundColor={colors.background}
                         hasSwitch={true}
                         switchState={days[2]}
-                        switchOnValueChange={()=>onDayChange(2)}
+                        switchOnValueChange={() => onDayChange(2)}
                         hasNavArrow={false}
                         title='Two Days Before Expiry'
                         titleStyle={{ color: colors.text }}
@@ -154,12 +162,26 @@ export default ({ navigation }) => {
                         backgroundColor={colors.background}
                         hasSwitch={true}
                         switchState={days[3]}
-                        switchOnValueChange={()=>onDayChange(3)}
+                        switchOnValueChange={() => onDayChange(3)}
                         hasNavArrow={false}
                         title='Three Days Before Expiry'
                         titleStyle={{ color: colors.text }}
                     />
+                    <SettingsList.Header headerText='Remind Me At:' headerStyle={{ color: colors.text, fontSize: 20 }} />
                 </SettingsList>
+                <View>
+                    <Button onPress={showTimepicker} title="Show time picker!" />
+                </View>
+                {show && (
+                    <DateTimePicker
+                        testID="timePicker"
+                        value={date}
+                        mode={"time"}
+                        is12Hour={true}
+                        display="default"
+                        onChange={onChange}
+                    />
+                )}
             </View>
         </SafeAreaView>
 

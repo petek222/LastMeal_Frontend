@@ -21,7 +21,7 @@ var stringSimilarity = require("string-similarity");
 import ModalDropdown from 'react-native-modal-dropdown';
 import * as Notifications from 'expo-notifications';
 import { useTheme } from '@react-navigation/native';
-import { notifyDays } from './Notifications';
+import { notifyDays, notifyTime } from './Notifications';
 import {
     useRecoilState
 } from 'recoil';
@@ -136,6 +136,8 @@ export default ({ navigation }) => {
     const toggleSwitch = () => setIsNotificationEnabled(previousState => !previousState);
 
     const [days, setDays] = useRecoilState(notifyDays);
+    const [time, setTime] = useRecoilState(notifyTime);
+
     const { colors } = useTheme();
 
     function notifyMessage(msg) {
@@ -159,14 +161,14 @@ export default ({ navigation }) => {
             console.log(expiration);
             console.log(new Date(expiration).getTime());
             console.log(Date.now());
-            console.log('start of day');
-            let startOfDay = new Date();
+            // console.log('start of day');
+            // let startOfDay = new Date();
 
             // normalize to the start of the day
-            startOfDay.setHours(0, 0, 0, 0);
+            // startOfDay.setHours(0, 0, 0, 0);
 
-            console.log(startOfDay);
-            console.log(startOfDay.getTime());
+            // console.log(startOfDay);
+            // console.log(startOfDay.getTime());
 
             // for (let i = 0; i < days.length; ++i) {
             //     if (days[i] === true) {
@@ -184,8 +186,10 @@ export default ({ navigation }) => {
                     // Generates seconds for each
                     // get the distance in time
                     // minus number of days in advance times 86400 seconds in a day
-                    // and then plus 36000 means remind me at 10 am (could customize this as well)
-                    let expirationDate = (new Date(expiration).getTime() / 1000 - startOfDay.getTime() / 1000 - i * 86400 + 36000);
+                    // and then plus 18000 + (3600 * 10) means remind me at 10 am? (could customize this as well) // hold up, let me check this first
+                    // (startOfDay.getTime() / 1000) -
+                    // expiration is at 7 pm?
+                    let expirationDate = ((new Date(expiration).getTime() / 1000) - (Date.now() / 1000) - i * 86400 + 18000 + (3600 * time));
 
                     console.log("Testing date computation:")
                     console.log(`remind within ${i} days`);
