@@ -45,7 +45,6 @@ export const notifyTime = atom({
 export default ({ navigation }) => {
 
     // use an array to keep track of which settings are checked, and can iterate over it when creating notifications, in theory
-    // const [days, setDays] = useState([false,false,false,false]);
     const [days, setDays] = useRecoilState(notifyDays);
     const [time, setTime] = useRecoilState(notifyTime);
 
@@ -60,38 +59,30 @@ export default ({ navigation }) => {
         if (value === 0) {
             let newarr = [...days];
             newarr[0] = !newarr[0];
-            // setZeroDay(!zeroDay);
             console.log('0');
             console.log(days[0]);
             setDays(newarr);
             console.log(days[0]);
         }
         else if (value === 1) {
-            // setOneDay(!oneDay);
-            // console.log('1');
             let newarr = [...days];
             newarr[1] = !newarr[1];
-            // setZeroDay(!zeroDay);
             console.log('1');
             console.log(days[1]);
             setDays(newarr);
             console.log(days[1]);
         }
         else if (value === 2) {
-            // setTwoDay(!twoDay);
             let newarr = [...days];
             newarr[2] = !newarr[2];
-            // setZeroDay(!zeroDay);
             console.log('2');
             console.log(days[2]);
             setDays(newarr);
             console.log(days[2]);
         }
         else if (value === 3) {
-            // setThreeDay(!threeDay);
             let newarr = [...days];
             newarr[3] = !newarr[3];
-            // setZeroDay(!zeroDay);
             console.log('3');
             console.log(days[3]);
             setDays(newarr);
@@ -135,7 +126,6 @@ export default ({ navigation }) => {
     const showTimepicker = () => {
         showMode('time');
     };
-
 
     function formatAMPM(date) {
         var hours = date.getHours();
@@ -189,11 +179,17 @@ export default ({ navigation }) => {
                         title='Three Days Before Expiry'
                         titleStyle={{ color: colors.text }}
                     />
-                    <SettingsList.Header headerText={`Remind Me At: ${formatAMPM(date)}`} headerStyle={{ color: colors.text, fontSize: 20 }} />
+                    <SettingsList.Header headerText={'Remind Me At:'} headerStyle={{ color: colors.text, fontSize: 20 }} />
+                    <SettingsList.Item
+                        // icon={<Image style={styles.imageStyle} source={require('./images/blutooth.png')}/>}
+                        backgroundColor={colors.background}
+                        icon={<Ionicons name="alarm-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text }} />}
+                        title={formatAMPM(date)}
+                        titleStyle={{ color: colors.text }}
+                        titleInfoStyle={styles.titleInfoStyle}
+                        onPress={showTimepicker}
+                    />
                 </SettingsList>
-                <View>
-                    <Button onPress={showTimepicker} title="Show time picker!" />
-                </View>
                 {show && (
                     <DateTimePicker
                         testID="timePicker"
@@ -206,7 +202,6 @@ export default ({ navigation }) => {
                 )}
             </View>
         </SafeAreaView>
-
         // </View>
     );
 }
