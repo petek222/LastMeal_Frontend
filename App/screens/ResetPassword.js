@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import api from '../api/api';
 import { useTheme } from '@react-navigation/native';
+import DismissKeyboard from "../config/DismissKeyboard.js";
 
 const logo = require("../assets/lastmeal2.png");
 const darkLogo = require("../assets/lastmealdark2.png");
@@ -155,79 +156,81 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
+        <DismissKeyboard>
+            <View style={styles.container}>
+                <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
 
-            {/* <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background} /> */}
+                {/* <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background} /> */}
 
 
-            {/* Username */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Username"
-                    placeholderTextColor="#003f5c"
-                    autoCapitalize="none"
-                    onChangeText={(username) => setUsername(username)}
-                />
+                {/* Username */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Username"
+                        placeholderTextColor="#003f5c"
+                        autoCapitalize="none"
+                        onChangeText={(username) => setUsername(username)}
+                    />
+                </View>
+
+                {/* Email */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Email"
+                        placeholderTextColor="#003f5c"
+                        autoCapitalize="none"
+                        // secureTextEntry={true}
+                        onChangeText={(userEmail) => setEmail(userEmail)}
+                    />
+                </View>
+
+                {/* New Password */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="New Password"
+                        placeholderTextColor="#003f5c"
+                        // secureTextEntry={true}
+                        secureTextEntry={hideNewPass ? true : false}
+                        onChangeText={(password) => setNewPassword(password)}
+                    />
+
+                    <Icon style={styles.hidePassButt}
+                        name={hideNewPass ? 'eye-slash' : 'eye'}
+                        size={18}
+                        color="grey"
+                        onPress={() => setHideNewPass(!hideNewPass)}
+                    />
+                </View>
+
+                {/* Confirm New Password */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Confirm New Password"
+                        placeholderTextColor="#003f5c"
+                        // secureTextEntry={true}
+                        secureTextEntry={hideConfirmPass ? true : false}
+                        onChangeText={(password) => setConfirmNewPassword(password)}
+                    />
+
+                    <Icon style={styles.hidePassButt}
+                        name={hideConfirmPass ? 'eye-slash' : 'eye'}
+                        size={18}
+                        color="grey"
+                        onPress={() => setHideConfirmPass(!hideConfirmPass)}
+                    />
+                </View>
+
+
+                <TouchableOpacity style={styles.bigButt}
+                    disabled={!Boolean(username && userEmail && newPassword && confirmNewPassword)}
+                    onPress={() => changePassword()}>
+                    <Text style={styles.loginText}>Change Password</Text>
+                </TouchableOpacity>
             </View>
-
-            {/* Email */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Email"
-                    placeholderTextColor="#003f5c"
-                    autoCapitalize="none"
-                    // secureTextEntry={true}
-                    onChangeText={(userEmail) => setEmail(userEmail)}
-                />
-            </View>
-
-            {/* New Password */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="New Password"
-                    placeholderTextColor="#003f5c"
-                    // secureTextEntry={true}
-                    secureTextEntry={hideNewPass ? true : false}
-                    onChangeText={(password) => setNewPassword(password)}
-                />
-
-                <Icon style={styles.hidePassButt}
-                    name={hideNewPass ? 'eye-slash' : 'eye'}
-                    size={18}
-                    color="grey"
-                    onPress={() => setHideNewPass(!hideNewPass)}
-                />
-            </View>
-
-            {/* Confirm New Password */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Confirm New Password"
-                    placeholderTextColor="#003f5c"
-                    // secureTextEntry={true}
-                    secureTextEntry={hideConfirmPass ? true : false}
-                    onChangeText={(password) => setConfirmNewPassword(password)}
-                />
-
-                <Icon style={styles.hidePassButt}
-                    name={hideConfirmPass ? 'eye-slash' : 'eye'}
-                    size={18}
-                    color="grey"
-                    onPress={() => setHideConfirmPass(!hideConfirmPass)}
-                />
-            </View>
-
-
-            <TouchableOpacity style={styles.bigButt}
-                disabled={!Boolean(username && userEmail && newPassword && confirmNewPassword)}
-                onPress={() => changePassword()}>
-                <Text style={styles.loginText}>Change Password</Text>
-            </TouchableOpacity>
-        </View>
+        </DismissKeyboard>
     );
 }

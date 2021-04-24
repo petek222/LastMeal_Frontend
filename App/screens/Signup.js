@@ -18,6 +18,7 @@ import api from '../api/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
 import { useTheme } from '@react-navigation/native';
+import DismissKeyboard from "../config/DismissKeyboard.js";
 
 const statusBarHeight = Constants.statusBarHeight;
 const logo = require("../assets/lastmeal2.png");
@@ -139,88 +140,90 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-        {/* <SafeAreaView style={[styles.container, { marginTop: statusBarHeight }]}> */}
+        <DismissKeyboard>
+            <View style={styles.container}>
+            {/* <SafeAreaView style={[styles.container, { marginTop: statusBarHeight }]}> */}
 
 
-            {/* causes screen flicker */}
-            {/* <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background} /> */}
-            {/* <StatusBar barStyle={ "light-content"} backgroundColor={colors.background} /> */}
+                {/* causes screen flicker */}
+                {/* <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background} /> */}
+                {/* <StatusBar barStyle={ "light-content"} backgroundColor={colors.background} /> */}
 
-            <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
+                <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
 
-            {/* Username */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Username"
-                    placeholderTextColor="#003f5c"
-                    autoCapitalize="none"
-                    onChangeText={(username) => setUsername(username)}
-                />
+                {/* Username */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Username"
+                        placeholderTextColor="#003f5c"
+                        autoCapitalize="none"
+                        onChangeText={(username) => setUsername(username)}
+                    />
+                </View>
+
+                {/* Password */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Password"
+                        placeholderTextColor="#003f5c"
+                        // secureTextEntry={true}
+                        secureTextEntry={hidePass ? true : false}
+                        onChangeText={(password) => setPassword(password)}
+                    />
+
+                    <Icon style={styles.hidePassButt}
+                        name={hidePass ? 'eye-slash' : 'eye'}
+                        size={18}
+                        color="grey"
+                        onPress={() => setHidePass(!hidePass)}
+                    />
+                </View>
+
+                {/* Email */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Email"
+                        placeholderTextColor="#003f5c"
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        onChangeText={(email) => setEmail(email)}
+                    />
+                </View>
+
+                {/* First Name */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="First Name"
+                        placeholderTextColor="#003f5c"
+                        onChangeText={(first) => setFirst(first)}
+                    />
+                </View>
+
+                {/* Last Name */}
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Last Name"
+                        placeholderTextColor="#003f5c"
+                        onChangeText={(last) => setLast(last)}
+                    />
+                </View>
+
+                <TouchableOpacity style={styles.bigButt}
+                    disabled={!Boolean(username && password && email && first && last)}
+                    onPress={() => register()}>
+                    <Text style={styles.loginText}>Sign Up</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                    <Text style={[styles.smallButt, { color: colors.text }]} onPress={() => navigation.navigate('Login')}>or Log In</Text>
+                </TouchableOpacity>
+            {/* </SafeAreaView> */}
             </View>
-
-            {/* Password */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Password"
-                    placeholderTextColor="#003f5c"
-                    // secureTextEntry={true}
-                    secureTextEntry={hidePass ? true : false}
-                    onChangeText={(password) => setPassword(password)}
-                />
-
-                <Icon style={styles.hidePassButt}
-                    name={hidePass ? 'eye-slash' : 'eye'}
-                    size={18}
-                    color="grey"
-                    onPress={() => setHidePass(!hidePass)}
-                />
-            </View>
-
-            {/* Email */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Email"
-                    placeholderTextColor="#003f5c"
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    onChangeText={(email) => setEmail(email)}
-                />
-            </View>
-
-            {/* First Name */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="First Name"
-                    placeholderTextColor="#003f5c"
-                    onChangeText={(first) => setFirst(first)}
-                />
-            </View>
-
-            {/* Last Name */}
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Last Name"
-                    placeholderTextColor="#003f5c"
-                    onChangeText={(last) => setLast(last)}
-                />
-            </View>
-
-            <TouchableOpacity style={styles.bigButt}
-                disabled={!Boolean(username && password && email && first && last)}
-                onPress={() => register()}>
-                <Text style={styles.loginText}>Sign Up</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-                <Text style={[styles.smallButt, { color: colors.text }]} onPress={() => navigation.navigate('Login')}>or Log In</Text>
-            </TouchableOpacity>
-        {/* </SafeAreaView> */}
-        </View>
+        </DismissKeyboard>
     );
 }

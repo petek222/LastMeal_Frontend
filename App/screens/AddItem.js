@@ -28,6 +28,7 @@ import {
     useRecoilState
 } from 'recoil';
 import { Ionicons } from '@expo/vector-icons';
+import DismissKeyboard from "../config/DismissKeyboard.js";
 
 // Code below surpresses warning log boxes at bottom of app
 import { LogBox, YellowBox } from 'react-native';
@@ -260,7 +261,7 @@ export default ({ navigation }) => {
 
             // console.log("Ingredient Addition Response")
             // console.log(response)
-            notifyMessage("Ingredient Added to Pantry");
+            // notifyMessage("Ingredient Added to Pantry");
             navigation.navigate('Pantry'); // navigate to pantry upon ingredient submission
             // return json;
         } catch (error) {
@@ -416,6 +417,8 @@ export default ({ navigation }) => {
     }
 
     return (
+       <DismissKeyboard>
+      
         <View style={styles.container}>
             
             <BackArrow></BackArrow>
@@ -517,6 +520,9 @@ export default ({ navigation }) => {
             </TouchableOpacity>
 
         </View>
+
+        </DismissKeyboard>
+
     );
 }
 
