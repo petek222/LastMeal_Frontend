@@ -10,7 +10,9 @@ import {
     ToastAndroid,
     Platform,
     Alert,
-    Switch
+    Switch,
+    Modal,
+    TouchableWithoutFeedback
 } from "react-native";
 
 import DatePicker from 'react-native-datepicker'
@@ -31,9 +33,46 @@ import { Ionicons } from '@expo/vector-icons';
 import { LogBox, YellowBox } from 'react-native';
 LogBox.ignoreAllLogs();
 
-
 // JSON data for use in autocomplete
 const ingredientData = require('../assets/ingredientList.json')
+
+const makeStyles = (colors) => StyleSheet.create({
+    modalView: {
+        margin: '10%',
+        // backgroundColor: "white",
+        backgroundColor: colors.background,
+        borderRadius: 50,
+        padding: 30,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        color: colors.text,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        // elevation: 2
+    },
+    buttonClose: {
+        backgroundColor: "#6be3d9",
+        width: 200
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+})
 
 // Styles to match profile
 const styles = StyleSheet.create({
@@ -41,9 +80,8 @@ const styles = StyleSheet.create({
         flex: 1,
         // backgroundColor: "#fff",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "center"
     },
-
     image: {
         marginBottom: 40,
         marginTop: -20,
@@ -51,7 +89,11 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         tintColor: 'white'
     },
-
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
     inputView: {
         backgroundColor: "#6be3d9",
         borderRadius: 30,
@@ -129,9 +171,11 @@ export default ({ navigation }) => {
     const [ingredientName, setIngredientName] = useState("");
     const [quantity, setQuantity] = useState(0);
     const [expiration, setExpiration] = useState(new Date().toISOString().slice(0, 10)); // Set a value for the expiration date
+    const [expirationSuggestion, setExpirationSuggestion] = useState(new Date().toISOString().slice(0, 10)); // Set a value for the expiration date
 
     const [renderDropdown, setRenderDropdown] = useState(false);
     const [suggestionList, setSuggestionList] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
     const toggleSwitch = () => setIsNotificationEnabled(previousState => !previousState);
@@ -251,6 +295,71 @@ export default ({ navigation }) => {
         return resultList;
     }
 
+
+
+    const ExpirationModal = (props) => {
+        const { colors } = useTheme();
+        const styles = makeStyles(colors);
+    
+        // const [modalVisible, setModalVisible] = useState(false);
+        if (modalVisible == true) {
+            return (
+                <View style={styles.centeredView}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={styles.centeredView}
+                            activeOpacity={1}
+                            onPressOut={() => { setModalVisible(false) }}
+                        >
+                            <View style={styles.centeredView}>
+                                <TouchableWithoutFeedback>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>Suggested Expiration Date For {props.item}: {props.expiration}</Text>
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.buttonClose]}
+                                            onPress={() => {
+                                                setModalVisible(!modalVisible);
+                                                setExpiration(props.expiration)
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Accept</Text>
+                                        </TouchableOpacity>
+                                        <Text>  </Text>
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.buttonClose]}
+                                            onPress={() => {
+                                                setModalVisible(!modalVisible);
+                                                // if they select no, nothing else to do
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Enter Manually</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
+                </View>
+            );
+        }
+        else {
+            return (
+                <View></View>
+            )
+        }
+    }
+
+
+
+
     const expirationSearch = async (item) => {
 
         try {
@@ -259,7 +368,10 @@ export default ({ navigation }) => {
             let ingredientData = response.data;
             // console.log(ingredientData)
             let expResult = minExpDate(ingredientData)
-            // setExpiration(expResult)
+            console.log("Checking Exp Result")
+            console.log(expResult)
+            setModalVisible(true)
+            setExpirationSuggestion(expResult)
 
         }
         catch (error) {
@@ -394,9 +506,10 @@ export default ({ navigation }) => {
                     onValueChange={toggleSwitch}
                     value={isNotificationEnabled}
                 />
+                <ExpirationModal item={ingredientName} expiration={expirationSuggestion}></ExpirationModal>
 
             </View>
-
+            
             <TouchableOpacity style={styles.bigButt}
                 disabled={!Boolean(ingredientName && quantity && expiration)} // Add notification here if fields not input
                 onPress={() => addPantryItem()}>
