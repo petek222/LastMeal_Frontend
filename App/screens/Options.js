@@ -37,6 +37,7 @@ import {
 } from 'recoil';
 import { darkState } from '../config/Navigation';
 import { useTheme } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const statusBarHeight = Constants.statusBarHeight;
 
@@ -73,14 +74,16 @@ export default ({ navigation }) => {
         console.log(dark)
     };
 
-    const onThemeChange = (value) => {
+    const onThemeChange = async (value) => {
         if (theme === 'light') {
             console.log("SETTING DARK")
             setTheme('dark');
+            await AsyncStorage.setItem("animation-theme", 'dark') // Adding extra value for animation-state-management
             // setThemeButton(value)
             toggleSwitch();
         }
         else {
+            await AsyncStorage.setItem("animation-theme", 'white') // Adding extra value for animation-state-management
             console.log("SETING LIGHT")
             setTheme('light');
             // setThemeButton(value)

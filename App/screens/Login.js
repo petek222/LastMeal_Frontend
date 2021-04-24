@@ -131,6 +131,8 @@ export default ({ navigation }) => {
             await AsyncStorage.setItem("last", userResponse.data.last_name);
             await AsyncStorage.setItem("email", userResponse.data.email);
             await AsyncStorage.setItem("username", userResponse.data.username);
+            
+            await AsyncStorage.setItem("animation-theme", 'white') // Adding extra value for animation-state-management
 
             //notifyMessage("Success!");
             navigation.navigate('Profile', { screen: 'Profile' });

@@ -6,7 +6,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Constants from 'expo-constants';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoaderFuncComp from '../config/Loader'
+import Loader from '../config/Loader'
 
 import { useTheme } from '@react-navigation/native';
 
@@ -138,7 +138,7 @@ export default ({ navigation }) => {
             // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
             const currentPantry = await AsyncStorage.getItem('ingredients');
 
-            console.log("Making Spoonacular API Request")
+            console.log("Making Spoonacular API Recipe Request")
 
             let recipeList = await getRecipes(currentPantry);
     
@@ -220,7 +220,7 @@ export default ({ navigation }) => {
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
-                        <LoaderFuncComp color={colors} text={loadText}></LoaderFuncComp>
+                        <Loader color={colors} text={loadText}></Loader>
                     </View>
                 </ScrollView>
             </SafeAreaView>
