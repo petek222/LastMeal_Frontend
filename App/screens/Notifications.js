@@ -49,12 +49,12 @@ export default ({ navigation }) => {
     const [days, setDays] = useRecoilState(notifyDays);
     const [time, setTime] = useRecoilState(notifyTime);
 
-    const [date, setDate] = useState(new Date(1598051730000));
+    // default in 5 mins for demo purposes
+    const [date, setDate] = useState(new Date(new Date().getTime() + 5*60000));
     const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
 
     const { colors } = useTheme();
-
 
     const onDayChange = (value) => {
         if (value === 0) {
@@ -101,20 +101,30 @@ export default ({ navigation }) => {
     }
 
     const onChange = (event, selectedDate) => {
-        let startOfDay = new Date();
+        // let startOfDay = new Date();
 
         // normalize to the start of the day
-        startOfDay.setHours(0, 0, 0, 0);
-        const currentDate = selectedDate;
+        // startOfDay.setHours(0, 0, 0, 0);
+        // const currentDate = selectedDate;
         setShow(Platform.OS === 'ios');
-        setDate(currentDate);
+        // setDate(currentDate);
 
-        console.log(date);
-        console.log(startOfDay);
-        
+        // console.log(event);
+        // console.log(selectedDate.toLocaleTimeString());
+        // console.log(startOfDay.toLocaleTimeString());
+
         // number of hrs from beginning of day
-        setTime((date - startOfDay) /1000 / 3600);
-        console.log((date - startOfDay) /1000 / 3600);
+        // setTime((selectedDate.toLocaleTimeString() - startOfDay.toLocaleTimeString()) );
+        // console.log((date - startOfDay) /1000 / 3600);
+        console.log(selectedDate.getHours());
+        console.log(selectedDate.getMinutes() / 60);
+
+        // number of hrs from beginning of day
+        setTime(selectedDate.getHours() + selectedDate.getMinutes() / 60);
+        setDate(selectedDate);
+        console.log(date);
+        console.log(selectedDate);
+
     };
 
     const showMode = (currentMode) => {
@@ -125,6 +135,18 @@ export default ({ navigation }) => {
     const showTimepicker = () => {
         showMode('time');
     };
+
+
+    function formatAMPM(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+    }
 
     return (
         <SafeAreaView style={{ marginTop: statusBarHeight, backgroundColor: colors.background, flex: 1 }}>
@@ -167,7 +189,7 @@ export default ({ navigation }) => {
                         title='Three Days Before Expiry'
                         titleStyle={{ color: colors.text }}
                     />
-                    <SettingsList.Header headerText='Remind Me At:' headerStyle={{ color: colors.text, fontSize: 20 }} />
+                    <SettingsList.Header headerText={`Remind Me At: ${formatAMPM(date)}`} headerStyle={{ color: colors.text, fontSize: 20 }} />
                 </SettingsList>
                 <View>
                     <Button onPress={showTimepicker} title="Show time picker!" />
