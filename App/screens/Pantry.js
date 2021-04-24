@@ -111,9 +111,8 @@ const makeStyles = (colors) => StyleSheet.create({
     },
     fab: { // Check this styling absolutism
         position: 'absolute',
-        margin: 5,
-        right: 10,
-        bottom: 50,
+        bottom: window.width * 0.08,
+        right: window.width * 0.08
     },
     centeredView: {
         flex: 1,
@@ -573,7 +572,7 @@ export default ({ navigation }) => {
                 // clearIcon={{ color: "black" }}
                 onChangeText={setSearch}
                 value={search}
-                inputStyle={{ color: colors.background }}
+                inputStyle={{ color: colors.text }}
                 containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: window.height * 0.01 }}>
                 <Text style={{ color: colors.text }}>Sort: </Text>
