@@ -202,7 +202,9 @@ const GenerateRecipesButton = (props) => {
                 // Make some API call here to actually generate the recipes
 
                 // navigate to recipe page
-                props.nav.navigate('Recipes')
+                props.nav.navigate('Recipes', {
+                    recipeList: recipeIngredients
+                })
             }}
         />
     )

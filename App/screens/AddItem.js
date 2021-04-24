@@ -10,7 +10,9 @@ import {
     ToastAndroid,
     Platform,
     Alert,
-    Switch
+    Switch,
+    Modal,
+    TouchableWithoutFeedback
 } from "react-native";
 
 import DatePicker from 'react-native-datepicker'
@@ -25,15 +27,53 @@ import { notifyDays } from './Notifications';
 import {
     useRecoilState
 } from 'recoil';
+import { Ionicons } from '@expo/vector-icons';
 import DismissKeyboard from "../config/DismissKeyboard.js";
 
 // Code below surpresses warning log boxes at bottom of app
 import { LogBox, YellowBox } from 'react-native';
 LogBox.ignoreAllLogs();
 
-
 // JSON data for use in autocomplete
 const ingredientData = require('../assets/ingredientList.json')
+
+const makeStyles = (colors) => StyleSheet.create({
+    modalView: {
+        margin: '10%',
+        // backgroundColor: "white",
+        backgroundColor: colors.background,
+        borderRadius: 50,
+        padding: 30,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        color: colors.text,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        // elevation: 2
+    },
+    buttonClose: {
+        backgroundColor: "#6be3d9",
+        width: 200
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+})
 
 // Styles to match profile
 const styles = StyleSheet.create({
@@ -41,9 +81,8 @@ const styles = StyleSheet.create({
         flex: 1,
         // backgroundColor: "#fff",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "center"
     },
-
     image: {
         marginBottom: 40,
         marginTop: -20,
@@ -51,7 +90,11 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         tintColor: 'white'
     },
-
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
     inputView: {
         backgroundColor: "#6be3d9",
         borderRadius: 30,
@@ -128,10 +171,12 @@ export default ({ navigation }) => {
 
     const [ingredientName, setIngredientName] = useState("");
     const [quantity, setQuantity] = useState(0);
-    const [expiration, setExpiration] = useState(new Date()); // Set a value for the expiration date
+    const [expiration, setExpiration] = useState(new Date().toISOString().slice(0, 10)); // Set a value for the expiration date
+    const [expirationSuggestion, setExpirationSuggestion] = useState(new Date().toISOString().slice(0, 10)); // Set a value for the expiration date
 
     const [renderDropdown, setRenderDropdown] = useState(false);
     const [suggestionList, setSuggestionList] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
     const toggleSwitch = () => setIsNotificationEnabled(previousState => !previousState);
@@ -251,6 +296,71 @@ export default ({ navigation }) => {
         return resultList;
     }
 
+
+
+    const ExpirationModal = (props) => {
+        const { colors } = useTheme();
+        const styles = makeStyles(colors);
+    
+        // const [modalVisible, setModalVisible] = useState(false);
+        if (modalVisible == true) {
+            return (
+                <View style={styles.centeredView}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={styles.centeredView}
+                            activeOpacity={1}
+                            onPressOut={() => { setModalVisible(false) }}
+                        >
+                            <View style={styles.centeredView}>
+                                <TouchableWithoutFeedback>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>Suggested Expiration Date For {props.item}: {props.expiration}</Text>
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.buttonClose]}
+                                            onPress={() => {
+                                                setModalVisible(!modalVisible);
+                                                setExpiration(props.expiration)
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Accept</Text>
+                                        </TouchableOpacity>
+                                        <Text>  </Text>
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.buttonClose]}
+                                            onPress={() => {
+                                                setModalVisible(!modalVisible);
+                                                // if they select no, nothing else to do
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Enter Manually</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
+                </View>
+            );
+        }
+        else {
+            return (
+                <View></View>
+            )
+        }
+    }
+
+
+
+
     const expirationSearch = async (item) => {
 
         try {
@@ -259,7 +369,10 @@ export default ({ navigation }) => {
             let ingredientData = response.data;
             // console.log(ingredientData)
             let expResult = minExpDate(ingredientData)
-            // setExpiration(expResult)
+            console.log("Checking Exp Result")
+            console.log(expResult)
+            setModalVisible(true)
+            setExpirationSuggestion(expResult)
 
         }
         catch (error) {
@@ -295,106 +408,121 @@ export default ({ navigation }) => {
         )
     }
 
+    const BackArrow = () => {
+        return (
+            <TouchableOpacity onPress={() => navigation.goBack()} >
+            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/>
+        </TouchableOpacity>
+        )
+    }
+
     return (
-        <DismissKeyboard>
-            <View style={styles.container}>
-                <Image style={[styles.image, { tintColor: colors.text }]} source={require("../assets/add_ingredient.png")} />
+       <DismissKeyboard>
+      
+        <View style={styles.container}>
+            
+            <BackArrow></BackArrow>
 
-                {/* Ingredient Name */}
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="Ingredient Name"
-                        placeholderTextColor="gray"
-                        // placeholderTextColor="#003f5c"
-                        autoCapitalize="none"
-                        onChangeText={(ingredient) => setIngredientName(ingredient)}
-                        value={ingredientName}
-                    />
+            <Image style={[styles.image, { tintColor: colors.text }]} source={require("../assets/add_ingredient.png")} />
 
-                    <TouchableOpacity style={styles.smallButt}
-                        disabled={!Boolean(ingredientName)} // Add notification here if fields not input
-                        onPress={() => {
-                            setRenderDropdown(true);
-                            ingredientSearch(ingredientName);
-                        }}>
-                        <Text style={styles.loginText}>Search</Text>
-                    </TouchableOpacity>
-                </View>
+            {/* Ingredient Name */}
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.TextInput}
+                    placeholder="Ingredient Name"
+                    placeholderTextColor="gray"
+                    // placeholderTextColor="#003f5c"
+                    autoCapitalize="none"
+                    onChangeText={(ingredient) => setIngredientName(ingredient)}
+                    value={ingredientName}
+                />
 
-                {renderDropdown ? <DropdownMenuSelection /> : null}
-
-                {/* Quantity */}
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="Quantity"
-                        // placeholderTextColor="#003f5c"
-                        placeholderTextColor="gray"
-                        // secureTextEntry={true}
-                        onChangeText={(quantity) => setQuantity(quantity)}
-                    />
-                </View>
-
-                {/* Expiration Date: NOTE WE WANT TO ABSTRACT THIS AWAY AT SOME POINT */}
-                <View style={styles.inputView}>
-                    <DatePicker
-                        date={expiration}
-                        mode="date"
-                        placeholder="select expiration date"
-                        placeholderTextColor="gray"
-                        format="YYYY-MM-DD"
-                        confirmBtnText="Confirm"
-                        cancelBtnText="Cancel"
-                        customStyles={{
-                            dateIcon: {
-                                position: 'absolute',
-                                left: 2,
-                                top: 4,
-                                marginLeft: 20
-                            },
-                            dateInput: {
-                                marginLeft: 56,
-                            },
-                            placeholderText: "Select Expiration Date",
-                            dateText: "Select Expiration Date",
-                            // ... You can check the source to find the other keys.
-                        }}
-                        onDateChange={(date) => {
-                            setExpiration(date)
-                        }}
-                    />
-                </View>
-
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="Enable Item Notifications"
-                        placeholderTextColor="#003f5c"
-                        // placeholderTextColor="gray"
-                        // secureTextEntry={true}
-                        editable={false}
-                        selectTextOnFocus={false}
-                    />
-                    <Switch
-                        style={styles.notificationSwitch}
-                        trackColor={{ false: "#767577", true: "#eb6fbb" }}
-                        thumbColor={isNotificationEnabled ? "#f2c572" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={toggleSwitch}
-                        value={isNotificationEnabled}
-                    />
-
-                </View>
-
-                <TouchableOpacity style={styles.bigButt}
-                    disabled={!Boolean(ingredientName && quantity && expiration)} // Add notification here if fields not input
-                    onPress={() => addPantryItem()}>
-                    <Text style={styles.loginText}>Add Item to Pantry</Text>
+                <TouchableOpacity style={styles.smallButt}
+                    disabled={!Boolean(ingredientName)} // Add notification here if fields not input
+                    onPress={() => {
+                        setRenderDropdown(true);
+                        ingredientSearch(ingredientName);
+                    }}>
+                    <Text style={styles.loginText}>Search</Text>
                 </TouchableOpacity>
+            </View>
+
+            {renderDropdown ? <DropdownMenuSelection /> : null}
+
+            {/* Quantity */}
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.TextInput}
+                    placeholder="Quantity"
+                    // placeholderTextColor="#003f5c"
+                    placeholderTextColor="gray"
+                    // secureTextEntry={true}
+                    onChangeText={(quantity) => setQuantity(quantity)}
+                />
+            </View>
+
+            {/* Expiration Date: NOTE WE WANT TO ABSTRACT THIS AWAY AT SOME POINT */}
+            <View style={styles.inputView}>
+                <DatePicker
+                    date={expiration}
+                    mode="date"
+                    placeholder="select expiration date"
+                    placeholderTextColor="gray"
+                    format="YYYY-MM-DD"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                        dateIcon: {
+                            position: 'absolute',
+                            left: 2,
+                            top: 4,
+                            marginLeft: 20
+                        },
+                        dateInput: {
+                            marginLeft: 56,
+                        },
+                        placeholderText: "Select Expiration Date",
+                        dateText: "Select Expiration Date",
+                        // ... You can check the source to find the other keys.
+                    }}
+                    onDateChange={(date) => {
+                        setExpiration(date)
+                    }}
+                />
+            </View>
+
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.TextInput}
+                    placeholder="Enable Item Notifications"
+                    placeholderTextColor="#003f5c"
+                    // placeholderTextColor="gray"
+                    // secureTextEntry={true}
+                    editable={false}
+                    selectTextOnFocus={false}
+                />
+                <Switch
+                    style={styles.notificationSwitch}
+                    trackColor={{ false: "#767577", true: "#eb6fbb" }}
+                    thumbColor={isNotificationEnabled ? "#f2c572" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isNotificationEnabled}
+                />
+                <ExpirationModal item={ingredientName} expiration={expirationSuggestion}></ExpirationModal>
 
             </View>
+            
+            <TouchableOpacity style={styles.bigButt}
+                disabled={!Boolean(ingredientName && quantity && expiration)} // Add notification here if fields not input
+                onPress={() => addPantryItem()}>
+                <Text style={styles.loginText}>Add Item to Pantry</Text>
+            </TouchableOpacity>
+
+        </View>
+
         </DismissKeyboard>
+
     );
 }
 

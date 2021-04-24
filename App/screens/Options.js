@@ -111,7 +111,7 @@ export default ({ navigation }) => {
                         switchState={passiveRecipes}
                         switchOnValueChange={onRecipeChange}
                         hasNavArrow={false}
-                        title='Passively Generate Recipes'
+                        title='Stop Passive Recipe Generation'
                         titleStyle={{ color: colors.text }}
                     />
                     <SettingsList.Item

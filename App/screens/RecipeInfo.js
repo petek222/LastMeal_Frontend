@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, SafeAreaView, ScrollView, Text, View, StatusBar } from "react-native";
+import { Dimensions, StyleSheet, SafeAreaView, ScrollView, Text, View, StatusBar, TouchableOpacity } from "react-native";
 import Constants from 'expo-constants';
 import { Thumbnail } from 'native-base';
 import { useIsFocused } from "@react-navigation/native";
 import Loader from '../config/Loader'
+import { Ionicons } from '@expo/vector-icons';
 
 // import moment from 'moment';
 import api from '../api/api';
@@ -95,9 +96,6 @@ export default ({route, navigation}) => {
 
     const [recipeData, setRecipeData] = useState(null)
 
-    console.log("CARD GEN ID TEST");
-    console.log(route.params)
-
     const isFocused = useIsFocused()
 
     useEffect(() => {
@@ -122,13 +120,8 @@ export default ({route, navigation}) => {
     const getRecipeInfo = async (recipe_id) => {
 
         try {
-            // console.log("MAKING RECIPE REQUEST")
-            // console.log(currentPantry)
-
+            console.log("Making RecipeInfoRequest")
             let response = await api.get(`/recipes/${recipe_id}`);
-
-            console.log("API Response")
-            console.log(response)
 
             return response
         }
@@ -138,11 +131,20 @@ export default ({route, navigation}) => {
         }
     }
 
+    const BackArrow = () => {
+        return (
+            <TouchableOpacity onPress={() => navigation.goBack()} >
+            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/>
+        </TouchableOpacity>
+        )
+    }
+
     if (recipeData != null) {
         console.log("Generation")
         let recipeDataParsed = recipeData.data.recipe_data.recipe_info
         return (
             <SafeAreaView style={styles.safeAreaView}>
+                <BackArrow></BackArrow>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
     
                     <View style={styles.headerContainer}>

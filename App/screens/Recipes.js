@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Thumbnail } from 'native-base';
+import { FAB } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from "@react-navigation/native";
 import Constants from 'expo-constants';
@@ -82,6 +83,10 @@ const makeStyles = (colors) => StyleSheet.create({
         justifyContent: 'space-between',
         padding: 5
     },
+    fab: { // Check this styling absolutism
+        position: 'absolute',
+        right: 10,
+    },
 });
 
 const RecipeCard = (props) => {
@@ -120,12 +125,10 @@ const RecipeCard = (props) => {
     )
 }
 
-export default ({ navigation }) => {
+export default ({route, navigation}) => {
 
     let [recipes, setRecipes] = useState([]);
-    let [imageArray, setImageArray] = useState([]);
-    let [ingredientSelections, setIngredientSelections] = useState([]);
-    let [search, setSearch] = useState('');
+    const [recipesAreSelected, setRecipesAreSelected] = useState(false)
 
     const isFocused = useIsFocused()
     const { colors } = useTheme();
@@ -134,32 +137,49 @@ export default ({ navigation }) => {
     useEffect(() => {
 
         async function generateRecipes() {
-            // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
-            // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
             const currentPantry = await AsyncStorage.getItem('ingredients');
 
-            console.log("Making Spoonacular API Recipe Request")
+            let requestParam = currentPantry;
 
-            let recipeList = await getRecipes(currentPantry);
-    
-            // Here is where we want to work on the recipe data sent from the API to build our cards
-            // console.log("Returned Recipes")
-            // console.log(recipeList)
+            // If the route contains a list, we know we were sent via the Generate Recipes button
+            if (route.params != undefined) {
+                requestParam = route.params.recipeList.join() // Using join for array-json compatibility
+                await setRecipesAreSelected(true)
+            }
+
+            let recipeList = await getRecipes(requestParam);
                 
             await setRecipes(recipeList)
-
-            // Otherwise, set the recipe list again (?)
         }
         generateRecipes()
-    }, [isFocused]);
+    }, [isFocused, recipesAreSelected]);
+
+    const ResetRecipesButton = (props) => {
+        const { colors } = useTheme();
+        const styles = makeStyles(colors);
+        if (recipesAreSelected == true) {
+            return (
+                <FAB
+                    style={styles.fab}
+                    small
+                    label="Reset Generated Recipes"
+                    onPress={() => {
+                        console.log("Selected Ingredients")
+                        setRecipesAreSelected(false)
+                        route.params = undefined // Setting to undefined to reload generation
+                    }}
+                />
+            )
+        }
+        else {
+            return (<View></View>)
+        }
+    }
 
 
     const getRecipes = async (currentPantry) => {
 
         try {
-            // console.log("MAKING RECIPE REQUEST")
-            // console.log(currentPantry)
-
             let config = {
                 headers: {
                   'Content-Type': 'application/json',
@@ -183,6 +203,7 @@ export default ({ navigation }) => {
     if (recipes.length > 0) {
         return (
             <View>
+            <ResetRecipesButton></ResetRecipesButton>
             <SafeAreaView style={styles.safeAreaView}>
                 {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
