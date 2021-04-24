@@ -106,8 +106,6 @@ export default ({route, navigation}) => {
             // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
             // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
 
-            console.log("Making Spoonacular API Request for Recipe Info")
-
             let recipeData = await getRecipeInfo(route.params.recipeID);
     
             // Here is where we want to work on the recipe data sent from the API to build our cards
@@ -207,6 +205,7 @@ export default ({route, navigation}) => {
     }
 
     else {
+        let loadText = "Generating Recipes..."
         return (
             <View>
             <SafeAreaView style={styles.safeAreaView}>
@@ -214,7 +213,7 @@ export default ({route, navigation}) => {
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
-                        <Loader></Loader>
+                        <Loader color={colors} text={loadText}></Loader>
                     </View>
                 </ScrollView>
             </SafeAreaView>

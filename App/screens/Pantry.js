@@ -111,9 +111,9 @@ const makeStyles = (colors) => StyleSheet.create({
     },
     fab: { // Check this styling absolutism
         position: 'absolute',
-        margin: 20,
-        right: 0,
-        bottom: '5%',
+        margin: 5,
+        right: 10,
+        bottom: 50,
     },
     centeredView: {
         flex: 1,
@@ -292,26 +292,8 @@ const IngredientSelect = (props) => {
                 console.log("BLACK")
                 setColor('gray')
 
-                // setSelect((old) => [
-                //     ...old,
-                //     {
-                //       id: props.ingKey,
-                //       val: false,
-                //     },
-                //   ]);
-
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
-            // console.log("selections: ");
-            // for (let i = 0; i< ingredientSelections.length; ++i) {
-            //     console.log(ingredientSelections[i]);
-            // }
-            // console.log("first");
-            // console.log(ingredientSelections[0]);
-            // console.log('selected?');
-            // console.log(select[props.ingKey]);
-
-            
         }}>
             <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 25 }} />
         </TouchableOpacity>
@@ -591,7 +573,7 @@ export default ({ navigation }) => {
                 clearIcon={{ color: colors.text }}
                 onChangeText={setSearch}
                 value={search}
-                inputStyle={{ color: colors.text }}
+                inputStyle={{ color: colors.background }}
                 containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: window.height * 0.01 }}>
                 <Text style={{ color: colors.text }}>Sort: </Text>

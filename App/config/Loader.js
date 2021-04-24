@@ -6,39 +6,53 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@react-navigation/native';
 
 
-export default LoaderFuncComp = () => {
-  const { colors } = useTheme();
+// export default LoaderFuncComp = () => {
+//   const { colors } = useTheme();
 
-  const [themeColor, setThemeColor] = useState(colors)
+//   const [themeColor, setThemeColor] = useState(colors)
 
-  useEffect(() => {
-    async function generateTheme() {
-      console.log("Reloading theme")
-      console.log(colors)
-      await setThemeColor(colors)
-    }
-    generateTheme()
-  }, [colors]);
+//   console.log("THEME LOAD")
+//   console.log(colors)
 
-  return (<Loader background={themeColor.background}></Loader>)
-}
+//   useEffect(() => {
+//     async function generateTheme() {
+//       // console.log("Reloading theme")
+//       // console.log(colors)
+//       await setThemeColor(colors)
+//     }
+//     generateTheme()
+//   }, [colors]);
+
+//   return (<Loader background={colors}></Loader>)
+// }
 
 
-class Loader extends React.Component {
+export default class Loader extends React.Component {
 
   constructor(props) {
       super(props)
       this.state = {pantry: []}
-      this.state = {background: props.background}
+      this.state = {colors: ""}
       this.state = {text: props.text}
   }
 
-  async componentDidMount() {
+  async componentDidUpdate(props) {
+    let animationColor = await AsyncStorage.getItem('animation-theme')
+    if (this.state.colors !== animationColor) {
+      await this.setState({
+        colors: animationColor
+      })
+    }
+  }
+
+  async componentDidMount(props) {
+
+    let animationColor = await AsyncStorage.getItem("animation-theme")
 
     this.animation.play();
-    const currentPantry = await AsyncStorage.getItem('ingredients'); // async storage is kinda tricky here, be careful
-    this.setState({ 
-        pantry: currentPantry
+    // const currentPantry = await AsyncStorage.getItem('ingredients'); // async storage is kinda tricky here, be careful
+    await this.setState({ 
+        colors: animationColor
      });
     // Or set a specific startFrame and endFrame with:
     // this.animation.play(30, 120);
@@ -51,12 +65,11 @@ class Loader extends React.Component {
 
   render() {
 
-    // console.log("RENDERING")
-    // console.log(this.state.background)
+    let lottieColor = (this.state.colors == "white") ? "#fff" : "#222"
 
     // Fix the conditional rendering here: also make sure AsyncStorage is up to date / makes sense
     return (
-      <View style={styles.animationContainer}>
+      <View style={this.state.colors == "white" ? styles.animationContainer : styles.darkAnimationContainer}>
         <LottieView
           ref={animation => {
             this.animation = animation;
@@ -64,14 +77,14 @@ class Loader extends React.Component {
           style={{
             width: 200,
             height: 200,
-            backgroundColor: '#eee',
+            backgroundColor: lottieColor,
           }}
           source={require('../assets/loading.json')}
           // OR find more Lottie files @ https://lottiefiles.com/featured
           // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
         />
-        <View style={styles.buttonContainer}>
-          <Text>"Add items to your Pantry to generate Recipes!"</Text>
+        <View>
+        <Text style={{ color: this.state.colors == "white" ? "black" : "white" }}>{this.state.text}</Text>
         </View>
       </View>
     );
@@ -86,13 +99,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   darkAnimationContainer: {
-    backgroundColor: 'black',
+    backgroundColor: '#222',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-  },
-  textStyle: {
-    fontSize: 16,
-    color: '#8e8e93'
-}
+  }
 });
