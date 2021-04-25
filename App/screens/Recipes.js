@@ -259,9 +259,6 @@ export default ({route, navigation}) => {
                 }
               }
 
-              console.log("TESTY")
-              console.log(currentPantry)
-
             let response = await api.post('/recipes', {
                 ingredients: currentPantry
             }, config);
