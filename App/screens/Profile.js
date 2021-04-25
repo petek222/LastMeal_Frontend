@@ -153,6 +153,7 @@ export default ({ navigation }) => {
         fetchUser();
     }, []);
 
+    // Add in component/section for displaying the favorited recipes
     return (
         <Fragment>
         <SafeAreaView style={{flex: 0}} />

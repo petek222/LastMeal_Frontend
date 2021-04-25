@@ -87,6 +87,11 @@ const makeStyles = (colors) => StyleSheet.create({
         position: 'absolute',
         right: 10,
     },
+    favfab: { // Check this styling absolutism
+        position: 'absolute',
+        left: 10,
+        backgroundColor: '#FF69B4'
+    },
 });
 
 const RecipeCard = (props) => {
@@ -112,9 +117,15 @@ const RecipeCard = (props) => {
                     if (color !== '#FF69B4') {
                         setColor('#FF69B4')
                         // Here we will want to add the item to some favorites object that can be sent to the user's profile
+                        await props.selectRecipe(currentElements => [...currentElements, {
+                            "recipe_name": props.title,
+                            "recipe_id": props.id,
+                            "picture": props.image
+                        }])
                     }
                     else {
                         setColor('#808080')
+                        await props.selectRecipe(props.recipeSelections.filter(item => item.recipe_name !== props.title))
                         // Here we will want to remove the item from the object described above
                     }
                 }}>
@@ -125,10 +136,65 @@ const RecipeCard = (props) => {
     )
 }
 
+const FavoriteRecipeButton = (props) => {
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+    return (
+        <FAB
+            style={styles.favfab}
+            small
+            label="Favorite Recipes"
+            onPress={async () => {
+                console.log("Chosen Recipes")
+                console.log(props.favorites)
+
+                try {
+                    let username = await AsyncStorage.getItem('username')
+
+                    let config = {
+                        headers: {
+                          'Content-Type': 'application/json',
+                        }
+                      }
+
+                      console.log("USERNAME")
+                      console.log(username)
+    
+                    // Make some API call here to actually generate the recipes
+                    let response = await api.post(`/favorite/create/${username}`, {
+                        recipeArray: props.favorites
+                    }, config);
+
+                    let recipeInformation = response.data;
+
+                    if (recipeInformation.success) {
+                        // If the request was successful, reroute to the profile
+                        console.log(recipeInformation)
+                        props.nav.navigate('Profile')
+                    }
+                    else {
+                        console.log("Your Recipes could not be Favorited")
+                    }
+
+                }
+                catch (error) {
+                    console.log("Error in favoriting recipe selections:")
+                    console.log(error)
+                }
+
+                // navigate to recipe page
+                // props.nav.navigate('Profile')
+            }}
+        />
+    )
+}
+
 export default ({route, navigation}) => {
 
     let [recipes, setRecipes] = useState([]);
     const [recipesAreSelected, setRecipesAreSelected] = useState(false)
+    let [recipeSelections, setRecipeSelections] = useState([])
+
 
     const isFocused = useIsFocused()
     const { colors } = useTheme();
@@ -162,7 +228,7 @@ export default ({route, navigation}) => {
                 <FAB
                     style={styles.fab}
                     small
-                    label="Reset Generated Recipes"
+                    label="Undo Generation"
                     onPress={() => {
                         console.log("Selected Ingredients")
                         setRecipesAreSelected(false)
@@ -200,10 +266,13 @@ export default ({route, navigation}) => {
         }
     }
 
+    const favoriteRecipeButton = recipeSelections.length > 0 ? <FavoriteRecipeButton favorites={recipeSelections} nav={navigation}></FavoriteRecipeButton> : <View></View>
+
     if (recipes.length > 0) {
         return (
             <View>
             <ResetRecipesButton></ResetRecipesButton>
+            {favoriteRecipeButton}
             <SafeAreaView style={styles.safeAreaView}>
                 {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
@@ -220,7 +289,15 @@ export default ({route, navigation}) => {
                                 // it on the backend later)
                                 if (!/\d/.test(recipe.title)) { 
                                     return (
-                                        <RecipeCard key={i} image={recipe.image} title={recipe_name} nav={navigation} id={recipe_id}></RecipeCard>
+                                        <RecipeCard 
+                                        key={i}
+                                        image={recipe.image}
+                                        title={recipe_name} 
+                                        nav={navigation} 
+                                        id={recipe_id}
+                                        selectRecipe={setRecipeSelections}
+                                        recipeSelections={recipeSelections}
+                                        ></RecipeCard>
                                     )
                                 }
     
