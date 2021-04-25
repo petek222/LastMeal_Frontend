@@ -12,7 +12,7 @@ import {
     atom,
     useRecoilState
 } from 'recoil';
-import { darkState } from '../config/Navigation';
+// import { darkState } from '../config/Navigation';
 import { useTheme } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -54,6 +54,14 @@ export default ({ navigation }) => {
     const [show, setShow] = useState(false);
 
     const { colors } = useTheme();
+    
+    const BackArrow = () => {
+        return (
+            <TouchableOpacity onPress={() => navigation.goBack()} >
+            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/>
+        </TouchableOpacity>
+        )
+    }
 
     const onDayChange = (value) => {
         if (value === 0) {
@@ -139,8 +147,9 @@ export default ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={{ marginTop: statusBarHeight, backgroundColor: colors.background, flex: 1 }}>
-            <View style={{ backgroundColor: colors.background, flex: 1 }}>
+        <SafeAreaView style={{backgroundColor: colors.background, flex: 1 }}>
+            <BackArrow></BackArrow>
+            <View style={{ backgroundColor: colors.background, flex: 1, marginTop: 15}}>
                 <SettingsList borderColor='#fff' defaultItemSize={50}>
                     <SettingsList.Header headerText='Remind Me:' headerStyle={{ color: colors.text, fontSize: 20 }} />
                     <SettingsList.Item
@@ -202,6 +211,5 @@ export default ({ navigation }) => {
                 )}
             </View>
         </SafeAreaView>
-        // </View>
     );
 }

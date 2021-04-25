@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Thumbnail } from 'native-base';
+import { FAB } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from "@react-navigation/native";
 import Constants from 'expo-constants';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoaderFuncComp from '../config/Loader'
+import Loader from '../config/Loader'
 
 import { useTheme } from '@react-navigation/native';
 
@@ -20,7 +21,7 @@ const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
-        marginTop: statusBarHeight
+       marginTop: statusBarHeight // We need this styling for the reset generated recipes button to appear properly
     },
     scrollViewContent: {
         alignItems: 'center'
@@ -82,12 +83,16 @@ const makeStyles = (colors) => StyleSheet.create({
         justifyContent: 'space-between',
         padding: 5
     },
+    fab: { // Check this styling absolutism
+        position: 'absolute',
+        right: 10,
+    },
 });
 
 const RecipeCard = (props) => {
     const { colors } = useTheme();
     const styles = makeStyles(colors);
-    const [color, setColor] = useState("#000000")
+    const [color, setColor] = useState("#808080")
 
     return (
         <TouchableOpacity style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} onPress={() => {
@@ -109,7 +114,7 @@ const RecipeCard = (props) => {
                         // Here we will want to add the item to some favorites object that can be sent to the user's profile
                     }
                     else {
-                        setColor('#000000')
+                        setColor('#808080')
                         // Here we will want to remove the item from the object described above
                     }
                 }}>
@@ -120,12 +125,10 @@ const RecipeCard = (props) => {
     )
 }
 
-export default ({ navigation }) => {
+export default ({route, navigation}) => {
 
     let [recipes, setRecipes] = useState([]);
-    let [imageArray, setImageArray] = useState([]);
-    let [ingredientSelections, setIngredientSelections] = useState([]);
-    let [search, setSearch] = useState('');
+    const [recipesAreSelected, setRecipesAreSelected] = useState(false)
 
     const isFocused = useIsFocused()
     const { colors } = useTheme();
@@ -134,32 +137,49 @@ export default ({ navigation }) => {
     useEffect(() => {
 
         async function generateRecipes() {
-            // Note that we will only want to grab whatever is here if user hasnt selected anything and navigated
-            // via the 'Generate Recipes' Button (ie. this will grab whatever the default is)
             const currentPantry = await AsyncStorage.getItem('ingredients');
 
-            console.log("Making Spoonacular API Request")
+            let requestParam = currentPantry;
 
-            let recipeList = await getRecipes(currentPantry);
-    
-            // Here is where we want to work on the recipe data sent from the API to build our cards
-            // console.log("Returned Recipes")
-            // console.log(recipeList)
+            // If the route contains a list, we know we were sent via the Generate Recipes button
+            if (route.params != undefined) {
+                requestParam = route.params.recipeList.join() // Using join for array-json compatibility
+                await setRecipesAreSelected(true)
+            }
+
+            let recipeList = await getRecipes(requestParam);
                 
             await setRecipes(recipeList)
-
-            // Otherwise, set the recipe list again (?)
         }
         generateRecipes()
-    }, [isFocused]);
+    }, [isFocused, recipesAreSelected]);
+
+    const ResetRecipesButton = (props) => {
+        const { colors } = useTheme();
+        const styles = makeStyles(colors);
+        if (recipesAreSelected == true) {
+            return (
+                <FAB
+                    style={styles.fab}
+                    small
+                    label="Reset Generated Recipes"
+                    onPress={() => {
+                        console.log("Selected Ingredients")
+                        setRecipesAreSelected(false)
+                        route.params = undefined // Setting to undefined to reload generation
+                    }}
+                />
+            )
+        }
+        else {
+            return (<View></View>)
+        }
+    }
 
 
     const getRecipes = async (currentPantry) => {
 
         try {
-            // console.log("MAKING RECIPE REQUEST")
-            // console.log(currentPantry)
-
             let config = {
                 headers: {
                   'Content-Type': 'application/json',
@@ -183,6 +203,7 @@ export default ({ navigation }) => {
     if (recipes.length > 0) {
         return (
             <View>
+            <ResetRecipesButton></ResetRecipesButton>
             <SafeAreaView style={styles.safeAreaView}>
                 {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
@@ -220,7 +241,7 @@ export default ({ navigation }) => {
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
-                        <LoaderFuncComp color={colors} text={loadText}></LoaderFuncComp>
+                        <Loader color={colors} text={loadText}></Loader>
                     </View>
                 </ScrollView>
             </SafeAreaView>

@@ -39,7 +39,7 @@ const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
-        marginTop: statusBarHeight,
+        // marginTop: statusBarHeight,
     },
     scrollViewContent: {
         alignItems: 'center'
@@ -111,9 +111,8 @@ const makeStyles = (colors) => StyleSheet.create({
     },
     fab: { // Check this styling absolutism
         position: 'absolute',
-        margin: 20,
-        right: 0,
-        bottom: '5%',
+        bottom: window.width * 0.08,
+        right: window.width * 0.08
     },
     centeredView: {
         flex: 1,
@@ -203,7 +202,9 @@ const GenerateRecipesButton = (props) => {
                 // Make some API call here to actually generate the recipes
 
                 // navigate to recipe page
-                props.nav.navigate('Recipes')
+                props.nav.navigate('Recipes', {
+                    recipeList: recipeIngredients
+                })
             }}
         />
     )
@@ -292,26 +293,8 @@ const IngredientSelect = (props) => {
                 console.log("BLACK")
                 setColor('gray')
 
-                // setSelect((old) => [
-                //     ...old,
-                //     {
-                //       id: props.ingKey,
-                //       val: false,
-                //     },
-                //   ]);
-
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
-            // console.log("selections: ");
-            // for (let i = 0; i< ingredientSelections.length; ++i) {
-            //     console.log(ingredientSelections[i]);
-            // }
-            // console.log("first");
-            // console.log(ingredientSelections[0]);
-            // console.log('selected?');
-            // console.log(select[props.ingKey]);
-
-
         }}>
             <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 25 }} />
         </TouchableOpacity>
@@ -577,7 +560,7 @@ export default ({ navigation }) => {
             {actionButton}
         </Animatable.View>)
     } else {
-        button = actionButton;
+        button = actionButton; 
     }
 
     return (
@@ -588,10 +571,10 @@ export default ({ navigation }) => {
                 // platform={'android'}
                 platform={Platform.OS === "ios" ? "ios" : "android"}
                 placeholder="Search"
-                placeholderTextColor={colors.text}
-                searchIcon={{ color: colors.text }}
-                cancelIcon={{ color: colors.text }}
-                clearIcon={{ color: colors.text }}
+                // placeholderTextColor="black"
+                // searchIcon={{ color: "black" }}
+                // cancelIcon={{ color: "black" }}
+                // clearIcon={{ color: "black" }}
                 onChangeText={setSearch}
                 value={search}
                 inputStyle={{ color: colors.text }}

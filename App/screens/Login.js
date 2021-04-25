@@ -11,7 +11,8 @@ import {
     ToastAndroid,
     Platform,
     Alert,
-    StatusBar
+    StatusBar,
+    TouchableWithoutFeedback
 } from "react-native";
 import api from "../api/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +20,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
 
 import { useTheme } from '@react-navigation/native';
+
+import DismissKeyboard from "../config/DismissKeyboard.js";
 
 const logo = require("../assets/lastmeal2.png");
 const darkLogo = require("../assets/lastmealdark2.png");
@@ -128,6 +131,8 @@ export default ({ navigation }) => {
             await AsyncStorage.setItem("last", userResponse.data.last_name);
             await AsyncStorage.setItem("email", userResponse.data.email);
             await AsyncStorage.setItem("username", userResponse.data.username);
+            
+            await AsyncStorage.setItem("animation-theme", 'white') // Adding extra value for animation-state-management
 
             //notifyMessage("Success!");
             navigation.navigate('Profile', { screen: 'Profile' });
@@ -150,53 +155,54 @@ export default ({ navigation }) => {
 
     return (
         // <View style={styles.container}>
-         <SafeAreaView style={[styles.container, {marginTop: statusBarHeight}]}>
+        <DismissKeyboard> 
+            <SafeAreaView style={[styles.container, {marginTop: statusBarHeight}]}>
 
-            {/* <StatusBar style="light-content" barStyle="light-content" backgroundColor="white" /> */}
-            {/* <StatusBar style={colors.background === 'white' ? 'dark-content' : 'light-content'}  backgroundColor={colors.background}/> */}
-            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}/>
+                {/* <StatusBar style="light-content" barStyle="light-content" backgroundColor="white" /> */}
+                {/* <StatusBar style={colors.background === 'white' ? 'dark-content' : 'light-content'}  backgroundColor={colors.background}/> */}
+                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}/>
 
-            <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
+                <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
 
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Username"
-                    placeholderTextColor="#003f5c"
-                    autoCapitalize="none"
-                    onChangeText={(username) => setUsername(username)}
-                />
-            </View>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Username"
+                        placeholderTextColor="#003f5c"
+                        autoCapitalize="none"
+                        onChangeText={(username) => setUsername(username)}
+                    />
+                </View>
 
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.TextInput}
-                    placeholder="Password"
-                    placeholderTextColor="#003f5c"
-                    secureTextEntry={true}
-                    onChangeText={(password) => setPassword(password)}
-                />
-            </View>
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Password"
+                        placeholderTextColor="#003f5c"
+                        secureTextEntry={true}
+                        onChangeText={(password) => setPassword(password)}
+                    />
+                </View>
 
-            <TouchableOpacity>
-                <Text style={styles.forgotButt} onPress={() => navigation.navigate('ResetPassword')}>Forgot Password</Text>
-            </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text style={styles.forgotButt} onPress={() => navigation.navigate('ResetPassword')}>Forgot Password</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity style={styles.loginButt}
-                // activeOpacity={username === '' || password === '' ? 1 : 0.5}
-                disabled={!Boolean(username && password)}
-                onPress={() => login()}>
-                <Text>Log In</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.loginButt}
+                    // activeOpacity={username === '' || password === '' ? 1 : 0.5}
+                    disabled={!Boolean(username && password)}
+                    onPress={() => login()}>
+                    <Text>Log In</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity>
-                <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
-            </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text style={styles.signupButt} onPress={() => navigation.navigate('Signup')}>or Sign Up</Text>
+                </TouchableOpacity>
 
-            {/* <TouchableOpacity>
-                <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>[]</Text>
-            </TouchableOpacity> */}
+                {/* <TouchableOpacity>
+                    <Text onPress={() => navigation.navigate('Profile', { screen: 'Pantry' })}>[]</Text>
+                </TouchableOpacity> */}
             </SafeAreaView>
-        //  </View> 
+        </DismissKeyboard> 
     );
 }
