@@ -311,7 +311,7 @@ const IngredientSelect = (props) => {
             // console.log('selected?');
             // console.log(select[props.ingKey]);
 
-            
+
         }}>
             <Ionicons name="checkmark-circle-outline" color={color} style={{ fontSize: 25 }} />
         </TouchableOpacity>
@@ -524,47 +524,139 @@ export default ({ navigation }) => {
     const [nameSort, setNameSort] = useState(false);
     const [dateSort, setDateSort] = useState(false);
 
-    const updateNameSort = () => {
-        // console.log(ingredients[0].name);
-        ingredients.sort(function (a, b) {
-            if (nameSort) {
-                return b.name.localeCompare(a.name);
-            } else {
-                return a.name.localeCompare(b.name);
-            }
-        });
-        setNameSort(!nameSort);
+    function reorder(arr, index) {
+        // var temp = [...Array(arr.length)];
+        const temp = [];
 
-        // try to sort the images in the same way, doesn't work
-        // imageArray.sort(function (a, b) {
-        //     return ing.indexOf(a) - ing.indexOf(b);
-        // });
 
-        // setIngredients(ingredients);
-        // setImageArray(imageArray);
+        // arr[i] should be present at index[i] index
+        for (var i = 0; i < arr.length; i++) {
+            temp[index[i]] = arr[i];
+            console.log('here');
+            console.log(temp[i]);
+            console.log(arr[i]);
+        }
+
+        // Copy temp[] to arr[]
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = temp[i];
+            index[i] = i;
+        }
     }
 
-    const updateDateSort = () => {
+    // const updateNameSort = () => {
+    //     // console.log(ingredients[0].name);
+    //     let ing = ingredients;
+    //     // add id property so I can get their indexes
+    //     for (let i = 0; i < ing.length; ++i) {
+    //         ing[i]['id'] = i;
+    //     }
+
+    //     ing.sort(function (a, b) {
+    //         if (nameSort) {
+    //             return b.name.localeCompare(a.name);
+    //         } else {
+    //             return a.name.localeCompare(b.name);
+    //         }
+    //     });
+
+    //     const arr = [];
+    //     // take out the ids from ingredients to make an array of indexes
+    //     for (let i = 0; i < ing.length; ++i) {
+    //         arr[i] = ing[i].id;
+    //     }
+
+    //     var img = [];
+    //     // use the array of indexes to sort imageArray in the same way ingredients was sorted
+    //     for (var i = 0; i < arr.length; i++) {
+    //         img[i] = imageArray[arr[i]]
+    //     }
+
+    //     setIngredients(ing);
+    //     setImageArray(img);
+    //     setNameSort(!nameSort);
+    // }
+
+    // const updateDateSort = () => {
+    //     // console.log(ingredients[0].expiration_date.$date);
+    //     let ing = ingredients;
+    //     // add id property so I can get their indexes
+    //     for (let i = 0; i < ing.length; ++i) {
+    //         ing[i]['id'] = i;
+    //     }
+
+    //     ing.sort(function (a, b) {
+    //         if (dateSort) {
+    //             // return new Date(b.expiration_date.$date) - new Date(a.expiration_date.$date);
+    //             return b.expiration_date.$date - a.expiration_date.$date;
+
+    //         } else {
+    //             // return new Date(a.expiration_date.$date) - new Date(b.expiration_date.$date);
+    //             return a.expiration_date.$date - b.expiration_date.$date;
+    //         }
+    //     });
+
+    //     const arr = [];
+    //     // take out the ids from ingredients to make an array of indexes
+    //     for (let i = 0; i < ing.length; ++i) {
+    //         arr[i] = ing[i].id;
+    //     }
+
+    //     var img = [];
+    //     // use the array of indexes to sort imageArray in the same way ingredients was sorted
+    //     for (var i = 0; i < arr.length; i++) {
+    //         img[i] = imageArray[arr[i]]
+    //     }
+
+    //     setIngredients(ing);
+    //     setImageArray(img);
+    //     setDateSort(!dateSort);
+    // }
+
+    const updateSort = (sortType) => {
         // console.log(ingredients[0].expiration_date.$date);
-        ingredients.sort(function (a, b) {
-            if (dateSort) {
-                // return new Date(b.expiration_date.$date) - new Date(a.expiration_date.$date);
-                return b.expiration_date.$date - a.expiration_date.$date;
+        let ing = ingredients;
+        // add id property so I can get their indexes
+        for (let i = 0; i < ing.length; ++i) {
+            ing[i]['id'] = i;
+        }
 
-            } else {
-                // return new Date(a.expiration_date.$date) - new Date(b.expiration_date.$date);
-                return a.expiration_date.$date - b.expiration_date.$date;
-            }
-        });
-        setDateSort(!dateSort);
+        if (sortType === 'name') {
+            ing.sort(function (a, b) {
+                if (nameSort) {
+                    return b.name.localeCompare(a.name);
+                } else {
+                    return a.name.localeCompare(b.name);
+                }
+            });
+            setNameSort(!nameSort);
+        } else if (sortType === 'date') {
+            ing.sort(function (a, b) {
+                if (dateSort) {
+                    return b.expiration_date.$date - a.expiration_date.$date;
 
-        // try to sort the images in the same way, doesn't work
-        // imageArray.sort(function (a, b) {
-        //     return ing.indexOf(a) - ing.indexOf(b);
-        // });
+                } else {
+                    return a.expiration_date.$date - b.expiration_date.$date;
+                }
+            });
+            setDateSort(!dateSort);
+        }
 
-        // setIngredients(ingredients);
-        // setImageArray(imageArray);
+        const arr = [];
+        // take out the ids from ingredients to make an array of indexes
+        for (let i = 0; i < ing.length; ++i) {
+            arr[i] = ing[i].id;
+        }
+
+        var img = [];
+        // use the array of indexes to sort imageArray in the same way ingredients was sorted
+        for (var i = 0; i < arr.length; i++) {
+            img[i] = imageArray[arr[i]]
+        }
+
+        setIngredients(ing);
+        setImageArray(img);
+
     }
 
     let button;
@@ -598,14 +690,14 @@ export default ({ navigation }) => {
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
-                        updateNameSort()
+                        updateSort('name')
                     }}>
                     <Text>Name</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.sortButt}
                     onPress={() => {
-                        updateDateSort()
+                        updateSort('date')
                     }}>
                     <Text>Date</Text>
                 </TouchableOpacity>
