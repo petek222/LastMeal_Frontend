@@ -14,7 +14,7 @@ import {
 } from 'recoil';
 // import { darkState } from '../config/Navigation';
 import { useTheme } from '@react-navigation/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
 
 const statusBarHeight = Constants.statusBarHeight;
 
@@ -199,7 +199,7 @@ export default ({ navigation }) => {
                         onPress={showTimepicker}
                     />
                 </SettingsList>
-                {show && (
+                {/* {show && (
                     <DateTimePicker
                         testID="timePicker"
                         value={date}
@@ -208,7 +208,7 @@ export default ({ navigation }) => {
                         display="default"
                         onChange={onChange}
                     />
-                )}
+                )} */}
             </View>
         </SafeAreaView>
     );

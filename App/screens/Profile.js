@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
     lightItemCard: {
         flex: 1,
         flexDirection: 'row',
-        width: cardWidth,
-        height: cardHeight,
+        width: screen.width * 0.85,
+        height: screen.height * 0.1133,
         marginTop: screen.height * 0.01,
         marginBottom: screen.height * 0.01,
         borderRadius: 10,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     },
     favoritesSection: {
         width: cardWidth,
-        margin: '2%',
+        alignItems: "center",
         borderRadius: 10,
     },
     sectionTitle: {
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         // marginTop: 40,
         backgroundColor: "#f2c572",
-        marginBottom: 30,
+        //marginBottom: 30,
     },
     centeredView: {
         flex: 1,
@@ -429,16 +429,16 @@ export default ({ navigation }) => {
             {/* <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar> */}
             <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
 
-            <Text style={{ fontSize: 40, marginBottom: screen.height * 0.05, color: colors.text }}>Hi, {first}</Text>
+            <Text style={{ fontSize: 40, marginBottom: screen.height * 0.025, marginTop: screen.height * 0.025, color: colors.text }}>Hi, {first}</Text>
 
             <Gravatar options={{
                 email: email,
-                parameters: { "size": "500", "d": "mm" },
+                parameters: { "size": "400", "d": "mm" },
                 secure: true
             }}
                 style={styles.roundedProfileImage} />
 
-            <View style={{ position: 'absolute', top: 150, left: 30 }}> 
+            <View style={{ position: 'absolute', top: 0, left: 0, paddingTop: screen.height * 0.025, paddingLeft: screen.height * 0.025 }}> 
                 <TouchableOpacity style={styles.logoutButt} onPress={async () => {
                     await AsyncStorage.clear();
                     navigation.navigate('Login');
@@ -450,35 +450,42 @@ export default ({ navigation }) => {
             <UserInfo title={'Name'} info={name} themeText={colors.text} />
             <UserInfo title={'Username'} info={username} themeText={colors.text} />
             <UserInfo title={'Email'} info={email} themeText={colors.text} />
-
-            <View style={styles.favoritesSection}>
-            <View style={{ padding: 10 }}>
-                <Text style={styles.sectionTitle}>Favorite Recipes</Text>
-            </View>
+            
+            <View style={styles.section}>
+                <View style={{ padding: 10 }}>
+                    <Text style={styles.sectionTitle}>Favorite Recipes</Text>
+                </View>
                 <View style={styles.separator} />
-            </View>           
+            </View>
 
-            <ScrollView>
-            <View>
-            {
-                favoriteRecipes.map((recipe, i) => {
-        
-                    let recipe_name = recipe.recipe_name;
-                    let recipe_id = recipe.recipe_id;
-                    let recipe_image = recipe.picture
-                    
-                        return (
-                            <FavoriteRecipeCard 
-                            key={i}
-                            image={recipe_image}
-                            title={recipe_name} 
-                            nav={navigation} 
-                            id={recipe_id}
-                            ></FavoriteRecipeCard>
-                        )
-                })
-            }
-        </View>
+            {/* <View>
+                <View style={{ padding: 10 }}>
+                    <Text style={styles.sectionTitle}>Favorite Recipes</Text>
+                </View>
+                <View style={styles.separator} />
+            </View>            */}
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.favoritesSection}>
+                {
+                    favoriteRecipes.map((recipe, i) => {
+            
+                        let recipe_name = recipe.recipe_name;
+                        let recipe_id = recipe.recipe_id;
+                        let recipe_image = recipe.picture
+                        
+                            return (
+                                <FavoriteRecipeCard 
+                                key={i}
+                                image={recipe_image}
+                                title={recipe_name} 
+                                nav={navigation} 
+                                id={recipe_id}
+                                ></FavoriteRecipeCard>
+                            )
+                    })
+                }
+                </View>
             </ScrollView> 
 
             {/* <View style={{position: 'absolute', right: 0}}> */}
