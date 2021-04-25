@@ -333,7 +333,7 @@ const PantryCard = (props) => {
             // Make call to API to delete ingredient from user account
             let username = await AsyncStorage.getItem("username");
 
-            console.log("Removing item to pantry")
+            console.log("Removing item from pantry")
             console.log(username)
             console.log(props.title)
             console.log(props.quantity)
@@ -356,7 +356,6 @@ const PantryCard = (props) => {
             }
 
         }
-
     }
 
     if (props.title != deletedItem) {

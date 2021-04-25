@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useReducer, Fragment } from 'react';
-import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image, Modal, TouchableWithoutFeedback } from 'react-native';
 import { Thumbnail } from 'native-base';
 import { Avatar } from "react-native-elements";
 import { Ionicons } from '@expo/vector-icons';
@@ -43,21 +43,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     section: {
-        // flex: 1,
-        // flexDirection: 'row',
         width: cardWidth,
         height: cardHeight / 1.5,
         margin: '2%',
         borderRadius: 10,
-        // borderColor: '#E2E2E2',
-        // borderWidth: 2,
-        // shadowOffset: {
-        //     width: 2,
-        //     height: 4,
-        // },
-        // shadowOpacity: 0.2,
-        // shadowRadius: 4,
-        // backgroundColor: 'white'
+    },
+    favoritesSection: {
+        width: cardWidth,
+        margin: '2%',
+        borderRadius: 10,
     },
     sectionTitle: {
         color: '#6be3d9',
@@ -124,84 +118,62 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         shadowColor: 'white',
         backgroundColor: 'black'
-    }
-})
-
-const cardStyles = (colors) => StyleSheet.create({
-    safeAreaView: {
-        height: "100%",
-        width: "100%",
-       marginTop: statusBarHeight // We need this styling for the reset generated recipes button to appear properly
     },
-    scrollViewContent: {
-        alignItems: 'center'
+    logoutButt: {
+        width: "150%",
+        borderRadius: 25,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        // marginTop: 40,
+        backgroundColor: "#f2c572",
+        marginBottom: 30,
     },
-    itemCard: {
+    centeredView: {
         flex: 1,
-        flexDirection: 'row',
-        width: cardWidth,
-        height: cardHeight,
-        marginTop: window.height * 0.01,
-        marginBottom: window.height * 0.01,
-        borderRadius: 10,
-        borderWidth: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: '10%',
+        // backgroundColor: "white",
+        backgroundColor: 'white', // MAKE CONFIGURABLE WITH THEME
+        borderRadius: 50,
+        padding: 30,
+        alignItems: "center",
+        shadowColor: "#000",
         shadowOffset: {
-            width: 2,
-            height: 4,
+            width: 0,
+            height: 2
         },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.25,
         shadowRadius: 4,
-        shadowColor: 'white',
-        backgroundColor: colors.black
+        elevation: 5
     },
-    lightItemCard: {
-        flex: 1,
-        flexDirection: 'row',
-        width: cardWidth,
-        height: cardHeight,
-        marginTop: window.height * 0.01,
-        marginBottom: window.height * 0.01,
-        borderRadius: 10,
-        shadowOffset: {
-            width: 2,
-            height: 4,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        backgroundColor: 'white'
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        color: 'black' // MAKE CONFIGURABLE WITH THEME
     },
-    itemCardContent: {
-        flex: 6,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: (cardHeight * 0.15)
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
     },
-    itemCardText: {
-        flex: 1,
-        justifyContent: 'center',
-        paddingLeft: (cardWidth * 0.05),
-        color: colors.text
+    button: {
+        borderRadius: 20,
+        padding: 10
+        // elevation: 2
     },
-    recipeNameText: {
-        fontSize: 16,
-        color: colors.text
+    buttonOpen: {
+        backgroundColor: "#ff5151",
+        width: 100
     },
-    cardButtons: {
-        flex: 1,
-        alignItems: 'flex-end',
-        justifyContent: 'space-between',
-        padding: 5
-    },
-    fab: { // Check this styling absolutism
-        position: 'absolute',
-        right: 10,
-    },
-    favfab: { // Check this styling absolutism
-        position: 'absolute',
-        left: 10,
-        backgroundColor: '#FF69B4'
-    },
+    buttonClose: {
+        backgroundColor: "#6be3d9",
+        width: 70
+    }
 })
 
 // Component for each bit of user info
@@ -255,41 +227,127 @@ const getUsername = async () => {
     }
 }
 
+const DeletionModal = (props) => {
+    // const { colors } = useTheme();
+    // const styles = makeStyles(colors);
+
+    const [modalVisible, setModalVisible] = useState(false);
+    console.log("PROPS TEST")
+    console.log(props)
+    return (
+        <View style={styles.centeredView}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <TouchableOpacity
+                    style={styles.centeredView}
+                    activeOpacity={1}
+                    onPressOut={() => { setModalVisible(false) }}
+                >
+                    <View style={styles.centeredView}>
+                        <TouchableWithoutFeedback>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your favorite recipes?</Text>
+                                <TouchableOpacity
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        props.remove(false);
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>Yes</Text>
+                                </TouchableOpacity>
+                                <Text>  </Text>
+                                <TouchableOpacity
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        props.remove(true);
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>No</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+            <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
+                <Ionicons name="trash-outline" style={{ fontSize: 25, color: 'gray' }} />
+            </TouchableOpacity>
+        </View>
+    );
+}
+
 const FavoriteRecipeCard = (props) => {
     const { colors } = useTheme();
     // const styles = cardStyles(colors);
     // const [color, setColor] = useState("#808080")
+    const [deletedItem, setDeletedItem] = useState('')
 
-    return (
-        <TouchableOpacity style={styles.lightItemCard} onPress={() => {
+    // Callback function for deletion
+    const stateCallback = async (result) => {
+
+        if (!result) { // http://54.237.232.9/v1/favorite/delete/petek222?recipe_id=205099
             
-            props.nav.navigate('RecipeInfo', {
-                recipeID: props.id
-            })
-        }}>
-            <View style={styles.itemCardContent} >
-                <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
-                <View style={styles.itemCardText}>
-                    <Text style={styles.recipeNameText} >{props.title}</Text>
-                </View>
-            </View>
-            <View style={styles.cardButtons}>
-            <TouchableOpacity onPress={async () => {
-                    // Code for popping up deletion modal to remove recipe from favorites
+            let username = await AsyncStorage.getItem('username')
 
+            console.log("Removing item from favorites")
+            console.log(username)
+            console.log(props.id)
+            console.log(props.recipe_name)
+            console.log(props.picture)
+
+            try {
+
+                let response = await api.delete(`/favorite/delete/${username}?recipe_id=${props.id}`);
+
+                console.log("Ingredient Deletion Response")
+                console.log(response)
+                setDeletedItem(props.id)
+
+            }
+            catch (error) {
+                console.log("Error in deleting recipe from favorites")
+                console.log(error)
+            }
+        }
+    }
+
+    // Boolean removes deleted card from view immediately
+    if (props.id !== deletedItem) {
+        return (
+            <TouchableOpacity style={styles.lightItemCard} onPress={() => {
+                props.nav.navigate('RecipeInfo', {
+                    recipeID: props.id
+                })
                 }}>
-                <Ionicons name="trash-outline" style={{ fontSize: 25 }} />
-        </TouchableOpacity>
-            </View>
-        </TouchableOpacity>
-    )
+                <View style={styles.itemCardContent} >
+                    <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
+                    <View style={styles.itemCardText}>
+                        <Text style={styles.recipeNameText} >{props.title}</Text>
+                    </View>
+                </View>
+                <View style={styles.cardButtons}>
+                    <DeletionModal item={props.title} remove={stateCallback}></DeletionModal>
+                </View>
+            </TouchableOpacity>
+        )
+    }
+    else {
+        return null
+    }
 }
 
 const fetchFavoriteRecipes = async (username) => {
 
     try {
-        console.log("PARAM CGHECK")
-        console.log(username)
         // Make some API call here to actually generate the recipes
         let response = await api.get(`/favorite/${username}`);
 
@@ -301,6 +359,27 @@ const fetchFavoriteRecipes = async (username) => {
         console.log(e)
     }
 
+}
+
+const generatePantry = async (username) => {
+    try {
+        let response = await api.get(`/pantry/${username}`);
+        if (response.data.ingredients) {
+
+            let ingredientNames = [];
+
+            // loop to grab ingredient names for recipe gen
+            for (let i = 0; i < response.data.ingredients.length; i++) {
+                let entry = response.data.ingredients[i]
+                let ingredientName = entry["name"]
+                ingredientNames.push(ingredientName)
+            }
+
+            await AsyncStorage.setItem("ingredients", JSON.stringify(ingredientNames));
+        }
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export default ({ navigation }) => {
@@ -327,18 +406,22 @@ export default ({ navigation }) => {
             setUsername(username);
             setEmail(email);
 
-            // Extra Stuff for Favorite Recipe Generation
+            // Extra Stuff for Recipe Generation
+
+            // Fetching stored favorite recipes
             let favorites = await fetchFavoriteRecipes(username)
-
-            console.log("CHECKING USEEFFECT FAV")
-            console.log(favorites)
-
             await setFavoriteRecipes(favorites.favorites)
+
+            // Fetching User's Current Pantry
+            await generatePantry(username)
+
         }
         fetchUser();
     }, [isFocused]);
 
     // Add in component/section for displaying the favorited recipes
+
+    // NOTE: CHECK ABSOLUTE STYLING/POSITION OF THE LOG OUT BUTTON
     return (
         <Fragment>
         <SafeAreaView style={{flex: 0}} />
@@ -355,11 +438,20 @@ export default ({ navigation }) => {
             }}
                 style={styles.roundedProfileImage} />
 
+            <View style={{ position: 'absolute', top: 150, left: 30 }}> 
+                <TouchableOpacity style={styles.logoutButt} onPress={async () => {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Login');
+                }}>
+                    <Text style={{color: colors.text}}>Log Out</Text>
+                </TouchableOpacity>
+            </View>
+
             <UserInfo title={'Name'} info={name} themeText={colors.text} />
             <UserInfo title={'Username'} info={username} themeText={colors.text} />
             <UserInfo title={'Email'} info={email} themeText={colors.text} />
 
-            <View style={styles.section}>
+            <View style={styles.favoritesSection}>
             <View style={{ padding: 10 }}>
                 <Text style={styles.sectionTitle}>Favorite Recipes</Text>
             </View>
@@ -390,16 +482,6 @@ export default ({ navigation }) => {
             </ScrollView> 
 
             {/* <View style={{position: 'absolute', right: 0}}> */}
-            <View style={{ position: 'absolute', bottom: 10 }}>
-                {/* <View style={{flexDirection: 'row-reverse'}}> */}
-
-                <TouchableOpacity onPress={async () => {
-                    await AsyncStorage.clear();
-                    navigation.navigate('Login');
-                }}>
-                    <Text style={{color: colors.text}}>Log Out</Text>
-                </TouchableOpacity>
-            </View>
 
         </View>
         </Fragment>
