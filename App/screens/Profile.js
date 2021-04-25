@@ -9,6 +9,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Constants from 'expo-constants';
 import { Component } from 'react';
+import api from '../api/api';
 
 const screen = Dimensions.get('window');
 
@@ -22,7 +23,22 @@ const styles = StyleSheet.create({
         width: "100%",
         marginTop: statusBarHeight
     },
-
+    lightItemCard: {
+        flex: 1,
+        flexDirection: 'row',
+        width: cardWidth,
+        height: cardHeight,
+        marginTop: window.height * 0.01,
+        marginBottom: window.height * 0.01,
+        borderRadius: 10,
+        shadowOffset: {
+            width: 2,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        backgroundColor: 'white'
+    },
     section: {
         // flex: 1,
         // flexDirection: 'row',
@@ -74,6 +90,19 @@ const styles = StyleSheet.create({
     roundedProfileImage: {
         width: 150, height: 150, borderWidth: 3,
         borderColor: '#6be3d9', borderRadius: 75
+    },
+    itemCardContent: {
+        flex: 6,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: (cardHeight * 0.15)
+    },
+    itemCardText: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingLeft: (cardWidth * 0.05),
+        color: 'black' // Used to be colors.text; fix for actual styling
     }
 })
 
@@ -128,6 +157,78 @@ const getUsername = async () => {
     }
 }
 
+const FavoriteRecipeCard = (props) => {
+    // const { colors } = useTheme();
+    // const styles = makeStyles(colors);
+    const [color, setColor] = useState("#808080")
+
+    return (
+        <TouchableOpacity style={styles.lightItemCard} onPress={() => {
+            
+            props.nav.navigate('RecipeInfo', {
+                recipeID: props.id
+            })
+        }}>
+            <View style={styles.itemCardContent} >
+                <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
+                <View style={styles.itemCardText}>
+                    <Text style={styles.recipeNameText} >{props.title}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    )
+}
+
+const FavoriteRecipes = (props) => {
+
+    console.log("TESTING RES")
+    console.log(props.recipes.favorites)
+
+    // THE TRAILING COMMA ON THIS ARRAY BREAKS THE .map FUNCTION BELOW; FIGURE OUT HOW TO WORK AROUND THIS
+
+    return (
+        <View>
+        {/* {
+            props.recipes.favorites.map((recipe, i) => {
+
+                let recipe_name = recipe.recipe_name;
+                let recipe_id = recipe.recipe_id;
+                let recipe_image = recipe.picture
+                
+                    return (
+                        <FavoriteRecipeCard 
+                        key={i}
+                        image={recipe_image}
+                        title={recipe_name} 
+                        nav={props.nav} 
+                        id={recipe_id}
+                        ></FavoriteRecipeCard>
+                    )
+            })
+        } */}
+    </View>
+    )
+
+}
+
+const fetchFavoriteRecipes = async (username) => {
+
+    try {
+        console.log("PARAM CGHECK")
+        console.log(username)
+        // Make some API call here to actually generate the recipes
+        let response = await api.get(`/favorite/${username}`);
+
+        let res = response.data
+        return res
+    }
+    catch (e) {
+        console.log("Error in Generating Favorite Recipes")
+        console.log(e)
+    }
+
+}
+
 export default ({ navigation }) => {
     // const [user, dispatch] = useReducer(userReducer, {});
     const [first, setFirst] = useState("Developer");
@@ -135,6 +236,7 @@ export default ({ navigation }) => {
     const [email, setEmail] = useState("none");
     const [username, setUsername] = useState("none");
     const [avatarUrl, setAvatar] = useState("");
+    const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
     const { colors } = useTheme();
 
@@ -149,6 +251,14 @@ export default ({ navigation }) => {
             setName(name);
             setUsername(username);
             setEmail(email);
+
+            // Extra Stuff for Favorite Recipe Generation
+            let favorites = await fetchFavoriteRecipes(username)
+
+            console.log("CHECKING USEEFFECT FAV")
+            console.log(favorites)
+
+            await setFavoriteRecipes(favorites)
         }
         fetchUser();
     }, []);
@@ -173,6 +283,17 @@ export default ({ navigation }) => {
             <UserInfo title={'Name'} info={name} themeText={colors.text} />
             <UserInfo title={'Username'} info={username} themeText={colors.text} />
             <UserInfo title={'Email'} info={email} themeText={colors.text} />
+
+            <View style={styles.section}>
+            <View style={{ padding: 10 }}>
+                <Text style={styles.sectionTitle}>Favorite Recipes</Text>
+            </View>
+                <View style={styles.separator} />
+            </View>           
+
+            <ScrollView>
+                <FavoriteRecipes recipes={favoriteRecipes} nav={navigation}></FavoriteRecipes>
+            </ScrollView> 
 
             {/* <View style={{position: 'absolute', right: 0}}> */}
             <View style={{ position: 'absolute', bottom: 10 }}>

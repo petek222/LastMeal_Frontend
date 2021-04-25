@@ -159,6 +159,11 @@ const FavoriteRecipeButton = (props) => {
 
                       console.log("USERNAME")
                       console.log(username)
+                    
+                    let favoriteArray = JSON.stringify(props.favorites);
+
+                    console.log("CHECKING FAVORITES")
+                    console.log(favoriteArray)
     
                     // Make some API call here to actually generate the recipes
                     let response = await api.post(`/favorite/create/${username}`, {
