@@ -33,19 +33,25 @@ const makeStyles = (colors) => StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         maxWidth: windowWidth * 0.9,
-        paddingTop: windowHeight * 0.02
+        paddingTop: windowHeight * 0.02,
+        paddingBottom: windowHeight * 0.02,
+        paddingLeft: windowWidth * 0.05
     },
     nameContainer: {
-        maxWidth: windowWidth * 0.50
+        maxWidth: windowWidth * 0.40
     },
     recipeNameText: {
         fontSize: 32,
         fontWeight: 'bold',
         color: colors.text,
     },
+    thumbnailContainer: {
+        paddingRight: windowWidth * 0.05
+    },
     thumbnail: {
         height: windowWidth * 0.35,
-        width: windowWidth * 0.35
+        width: windowWidth * 0.35,
+        
     },
     bodyContainer: {
         padding: windowHeight * 0.015,
@@ -133,9 +139,11 @@ export default ({route, navigation}) => {
 
     const BackArrow = () => {
         return (
-            <TouchableOpacity onPress={() => navigation.goBack()} >
-            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/>
-        </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={{flex: 1, flexDirection: 'row'}}>
+                <Text style={{fontSize: 20, fontWeight: 'bold', color: colors.text,}}>
+                    <Ionicons name="chevron-back" size={18} color={colors.background == 'white' ? 'black' : 'white'}/>Back
+                </Text>
+            </TouchableOpacity>
         )
     }
 
@@ -144,14 +152,14 @@ export default ({route, navigation}) => {
         let recipeDataParsed = recipeData.data.recipe_data.recipe_info
         return (
             <SafeAreaView style={styles.safeAreaView}>
-                <BackArrow></BackArrow>
+                
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
-    
+                    <BackArrow></BackArrow>
                     <View style={styles.headerContainer}>
                         <View style={styles.nameContainer}>
                             <Text style={styles.recipeNameText}>{recipeDataParsed.title}</Text>
                         </View>
-                        <View>
+                        <View style={styles.thumbnailContainer}>
                             <Thumbnail style={styles.thumbnail} source={recipeDataParsed.image ? {uri: recipeDataParsed.image} : {source: require('../assets/default.png')}}/>
                         </View>
                     </View>
