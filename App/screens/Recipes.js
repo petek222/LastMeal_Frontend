@@ -21,7 +21,7 @@ const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
-       // marginTop: statusBarHeight
+       marginTop: statusBarHeight // We need this styling for the reset generated recipes button to appear properly
     },
     scrollViewContent: {
         alignItems: 'center'
