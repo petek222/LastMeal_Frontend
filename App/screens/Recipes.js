@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, SafeAreaView, TouchableOpacity, Platform } from 'react-native';
 import { Thumbnail } from 'native-base';
 import { FAB } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import Constants from 'expo-constants';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../config/Loader'
+import * as Animatable from 'react-native-animatable';
 
 import { useTheme } from '@react-navigation/native';
 
@@ -156,14 +157,8 @@ const FavoriteRecipeButton = (props) => {
                           'Content-Type': 'application/json',
                         }
                       }
-
-                      console.log("USERNAME")
-                      console.log(username)
                     
                     let favoriteArray = JSON.stringify(props.favorites);
-
-                    console.log("CHECKING FAVORITES")
-                    console.log(favoriteArray)
     
                     // Make some API call here to actually generate the recipes
                     let response = await api.post(`/favorite/create/${username}`, {
@@ -215,6 +210,13 @@ export default ({route, navigation}) => {
             // If the route contains a list, we know we were sent via the Generate Recipes button
             if (route.params != undefined) {
                 requestParam = route.params.recipeList.join() // Using join for array-json compatibility
+
+                // Reset selected favorites 
+                await setRecipeSelections([])
+
+                // If resetting selections, de-select all hearts in cards
+
+                // Set Manual Generation Flag
                 await setRecipesAreSelected(true)
             }
 
@@ -271,7 +273,12 @@ export default ({route, navigation}) => {
         }
     }
 
-    const favoriteRecipeButton = recipeSelections.length > 0 ? <FavoriteRecipeButton favorites={recipeSelections} nav={navigation}></FavoriteRecipeButton> : <View></View>
+    const favoriteRecipeButton = recipeSelections.length > 0 && Platform.OS === "ios" ? 
+    <Animatable.View animation='lightSpeedIn'>
+            <FavoriteRecipeButton favorites={recipeSelections} nav={navigation}></FavoriteRecipeButton> 
+    </Animatable.View>
+    : <View></View>
+
 
     if (recipes.length > 0) {
         return (
