@@ -1,7 +1,10 @@
 import React, { createContext, useState, useEffect, useReducer, Fragment } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { Thumbnail } from 'native-base';
 import { Avatar } from "react-native-elements";
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from "@react-navigation/native";
 import { Gravatar, GravatarApi } from 'react-native-gravatar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Notifications from 'expo-notifications';
@@ -28,8 +31,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: cardWidth,
         height: cardHeight,
-        marginTop: window.height * 0.01,
-        marginBottom: window.height * 0.01,
+        marginTop: screen.height * 0.01,
+        marginBottom: screen.height * 0.01,
         borderRadius: 10,
         shadowOffset: {
             width: 2,
@@ -103,7 +106,102 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingLeft: (cardWidth * 0.05),
         color: 'black' // Used to be colors.text; fix for actual styling
+    },
+    itemCard: {
+        flex: 1,
+        flexDirection: 'row',
+        width: cardWidth,
+        height: cardHeight,
+        marginTop: window.height * 0.01,
+        marginBottom: window.height * 0.01,
+        borderRadius: 10,
+        borderWidth: 1,
+        shadowOffset: {
+            width: 2,
+            height: 4,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        shadowColor: 'white',
+        backgroundColor: 'black'
     }
+})
+
+const cardStyles = (colors) => StyleSheet.create({
+    safeAreaView: {
+        height: "100%",
+        width: "100%",
+       marginTop: statusBarHeight // We need this styling for the reset generated recipes button to appear properly
+    },
+    scrollViewContent: {
+        alignItems: 'center'
+    },
+    itemCard: {
+        flex: 1,
+        flexDirection: 'row',
+        width: cardWidth,
+        height: cardHeight,
+        marginTop: window.height * 0.01,
+        marginBottom: window.height * 0.01,
+        borderRadius: 10,
+        borderWidth: 1,
+        shadowOffset: {
+            width: 2,
+            height: 4,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        shadowColor: 'white',
+        backgroundColor: colors.black
+    },
+    lightItemCard: {
+        flex: 1,
+        flexDirection: 'row',
+        width: cardWidth,
+        height: cardHeight,
+        marginTop: window.height * 0.01,
+        marginBottom: window.height * 0.01,
+        borderRadius: 10,
+        shadowOffset: {
+            width: 2,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        backgroundColor: 'white'
+    },
+    itemCardContent: {
+        flex: 6,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: (cardHeight * 0.15)
+    },
+    itemCardText: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingLeft: (cardWidth * 0.05),
+        color: colors.text
+    },
+    recipeNameText: {
+        fontSize: 16,
+        color: colors.text
+    },
+    cardButtons: {
+        flex: 1,
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+        padding: 5
+    },
+    fab: { // Check this styling absolutism
+        position: 'absolute',
+        right: 10,
+    },
+    favfab: { // Check this styling absolutism
+        position: 'absolute',
+        left: 10,
+        backgroundColor: '#FF69B4'
+    },
 })
 
 // Component for each bit of user info
@@ -158,9 +256,9 @@ const getUsername = async () => {
 }
 
 const FavoriteRecipeCard = (props) => {
-    // const { colors } = useTheme();
-    // const styles = makeStyles(colors);
-    const [color, setColor] = useState("#808080")
+    const { colors } = useTheme();
+    // const styles = cardStyles(colors);
+    // const [color, setColor] = useState("#808080")
 
     return (
         <TouchableOpacity style={styles.lightItemCard} onPress={() => {
@@ -175,40 +273,16 @@ const FavoriteRecipeCard = (props) => {
                     <Text style={styles.recipeNameText} >{props.title}</Text>
                 </View>
             </View>
+            <View style={styles.cardButtons}>
+            <TouchableOpacity onPress={async () => {
+                    // Code for popping up deletion modal to remove recipe from favorites
+
+                }}>
+                <Ionicons name="trash-outline" style={{ fontSize: 25 }} />
+        </TouchableOpacity>
+            </View>
         </TouchableOpacity>
     )
-}
-
-const FavoriteRecipes = (props) => {
-
-    console.log("TESTING RES")
-    console.log(props.recipes.favorites)
-
-    // THE TRAILING COMMA ON THIS ARRAY BREAKS THE .map FUNCTION BELOW; FIGURE OUT HOW TO WORK AROUND THIS
-
-    return (
-        <View>
-        {/* {
-            props.recipes.favorites.map((recipe, i) => {
-
-                let recipe_name = recipe.recipe_name;
-                let recipe_id = recipe.recipe_id;
-                let recipe_image = recipe.picture
-                
-                    return (
-                        <FavoriteRecipeCard 
-                        key={i}
-                        image={recipe_image}
-                        title={recipe_name} 
-                        nav={props.nav} 
-                        id={recipe_id}
-                        ></FavoriteRecipeCard>
-                    )
-            })
-        } */}
-    </View>
-    )
-
 }
 
 const fetchFavoriteRecipes = async (username) => {
@@ -239,6 +313,7 @@ export default ({ navigation }) => {
     const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
     const { colors } = useTheme();
+    const isFocused = useIsFocused()
 
     // fetch user info on load
     useEffect(() => {
@@ -258,10 +333,10 @@ export default ({ navigation }) => {
             console.log("CHECKING USEEFFECT FAV")
             console.log(favorites)
 
-            await setFavoriteRecipes(favorites)
+            await setFavoriteRecipes(favorites.favorites)
         }
         fetchUser();
-    }, []);
+    }, [isFocused]);
 
     // Add in component/section for displaying the favorited recipes
     return (
@@ -292,7 +367,26 @@ export default ({ navigation }) => {
             </View>           
 
             <ScrollView>
-                <FavoriteRecipes recipes={favoriteRecipes} nav={navigation}></FavoriteRecipes>
+            <View>
+            {
+                favoriteRecipes.map((recipe, i) => {
+        
+                    let recipe_name = recipe.recipe_name;
+                    let recipe_id = recipe.recipe_id;
+                    let recipe_image = recipe.picture
+                    
+                        return (
+                            <FavoriteRecipeCard 
+                            key={i}
+                            image={recipe_image}
+                            title={recipe_name} 
+                            nav={navigation} 
+                            id={recipe_id}
+                            ></FavoriteRecipeCard>
+                        )
+                })
+            }
+        </View>
             </ScrollView> 
 
             {/* <View style={{position: 'absolute', right: 0}}> */}

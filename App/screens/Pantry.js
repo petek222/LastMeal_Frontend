@@ -458,6 +458,10 @@ export default ({ navigation }) => {
             let username = await getUsername();
             let response = await api.get(`/pantry/${username}`);
             if (response.data.ingredients) {
+
+                console.log("TESTING PANTRY INGREDIENT ARRAY")
+                console.log(response.data.ingredients)
+
                 await setIngredients(response.data.ingredients);
 
                 // Setting async storage for use in Recipe Screen (Band-Aid Solution)
