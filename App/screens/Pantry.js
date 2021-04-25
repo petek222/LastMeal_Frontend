@@ -333,7 +333,7 @@ const PantryCard = (props) => {
             // Make call to API to delete ingredient from user account
             let username = await AsyncStorage.getItem("username");
 
-            console.log("Removing item to pantry")
+            console.log("Removing item from pantry")
             console.log(username)
             console.log(props.title)
             console.log(props.quantity)
@@ -356,7 +356,6 @@ const PantryCard = (props) => {
             }
 
         }
-
     }
 
     if (props.title != deletedItem) {
@@ -458,6 +457,10 @@ export default ({ navigation }) => {
             let username = await getUsername();
             let response = await api.get(`/pantry/${username}`);
             if (response.data.ingredients) {
+
+                console.log("TESTING PANTRY INGREDIENT ARRAY")
+                console.log(response.data.ingredients)
+
                 await setIngredients(response.data.ingredients);
 
                 // Setting async storage for use in Recipe Screen (Band-Aid Solution)
