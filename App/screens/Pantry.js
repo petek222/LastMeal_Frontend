@@ -515,103 +515,12 @@ export default ({ navigation }) => {
         }
     }
 
-    let actionButton = ingredientSelections.length > 0 ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton> : <AddIngredientButton nav={navigation}></AddIngredientButton>
-
-    // updateSearch = (str) => {
-    //     setSearch(str);
-    // };
+    let actionButton = ingredientSelections.length > 0
+        ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>
+        : <AddIngredientButton nav={navigation}></AddIngredientButton>
 
     const [nameSort, setNameSort] = useState(false);
     const [dateSort, setDateSort] = useState(false);
-
-    function reorder(arr, index) {
-        // var temp = [...Array(arr.length)];
-        const temp = [];
-
-
-        // arr[i] should be present at index[i] index
-        for (var i = 0; i < arr.length; i++) {
-            temp[index[i]] = arr[i];
-            console.log('here');
-            console.log(temp[i]);
-            console.log(arr[i]);
-        }
-
-        // Copy temp[] to arr[]
-        for (var i = 0; i < arr.length; i++) {
-            arr[i] = temp[i];
-            index[i] = i;
-        }
-    }
-
-    // const updateNameSort = () => {
-    //     // console.log(ingredients[0].name);
-    //     let ing = ingredients;
-    //     // add id property so I can get their indexes
-    //     for (let i = 0; i < ing.length; ++i) {
-    //         ing[i]['id'] = i;
-    //     }
-
-    //     ing.sort(function (a, b) {
-    //         if (nameSort) {
-    //             return b.name.localeCompare(a.name);
-    //         } else {
-    //             return a.name.localeCompare(b.name);
-    //         }
-    //     });
-
-    //     const arr = [];
-    //     // take out the ids from ingredients to make an array of indexes
-    //     for (let i = 0; i < ing.length; ++i) {
-    //         arr[i] = ing[i].id;
-    //     }
-
-    //     var img = [];
-    //     // use the array of indexes to sort imageArray in the same way ingredients was sorted
-    //     for (var i = 0; i < arr.length; i++) {
-    //         img[i] = imageArray[arr[i]]
-    //     }
-
-    //     setIngredients(ing);
-    //     setImageArray(img);
-    //     setNameSort(!nameSort);
-    // }
-
-    // const updateDateSort = () => {
-    //     // console.log(ingredients[0].expiration_date.$date);
-    //     let ing = ingredients;
-    //     // add id property so I can get their indexes
-    //     for (let i = 0; i < ing.length; ++i) {
-    //         ing[i]['id'] = i;
-    //     }
-
-    //     ing.sort(function (a, b) {
-    //         if (dateSort) {
-    //             // return new Date(b.expiration_date.$date) - new Date(a.expiration_date.$date);
-    //             return b.expiration_date.$date - a.expiration_date.$date;
-
-    //         } else {
-    //             // return new Date(a.expiration_date.$date) - new Date(b.expiration_date.$date);
-    //             return a.expiration_date.$date - b.expiration_date.$date;
-    //         }
-    //     });
-
-    //     const arr = [];
-    //     // take out the ids from ingredients to make an array of indexes
-    //     for (let i = 0; i < ing.length; ++i) {
-    //         arr[i] = ing[i].id;
-    //     }
-
-    //     var img = [];
-    //     // use the array of indexes to sort imageArray in the same way ingredients was sorted
-    //     for (var i = 0; i < arr.length; i++) {
-    //         img[i] = imageArray[arr[i]]
-    //     }
-
-    //     setIngredients(ing);
-    //     setImageArray(img);
-    //     setDateSort(!dateSort);
-    // }
 
     const updateSort = (sortType) => {
         // console.log(ingredients[0].expiration_date.$date);
@@ -642,6 +551,8 @@ export default ({ navigation }) => {
             setDateSort(!dateSort);
         }
 
+        // fix images
+        
         const arr = [];
         // take out the ids from ingredients to make an array of indexes
         for (let i = 0; i < ing.length; ++i) {
