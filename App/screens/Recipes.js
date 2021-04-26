@@ -22,7 +22,7 @@ const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
-       marginTop: statusBarHeight // We need this styling for the reset generated recipes button to appear properly
+        //marginTop: statusBarHeight // We need this styling for the reset generated recipes button to appear properly
     },
     scrollViewContent: {
         alignItems: 'center'
@@ -84,15 +84,17 @@ const makeStyles = (colors) => StyleSheet.create({
         justifyContent: 'space-between',
         padding: 5
     },
-    fab: { // Check this styling absolutism
-        position: 'absolute',
-        right: 10,
+    fab: {
+        margin: window.height * 0.01,
     },
-    favfab: { // Check this styling absolutism
-        position: 'absolute',
-        left: 10,
+    favfab: {
+        margin: window.height * 0.01,
         backgroundColor: '#FF69B4'
     },
+    fabContainer: {
+        flex: 1,
+        alignItems: "center"
+    }
 });
 
 const RecipeCard = (props) => {
@@ -283,13 +285,16 @@ export default ({route, navigation}) => {
     if (recipes.length > 0) {
         return (
             <View>
-            <ResetRecipesButton></ResetRecipesButton>
-            {favoriteRecipeButton}
+            
             <SafeAreaView style={styles.safeAreaView}>
                 {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
+                        <View style={styles.fabContainer}>
+                            <ResetRecipesButton></ResetRecipesButton>
+                            {favoriteRecipeButton}
+                        </View>
                         {
                             recipes.map((recipe, i) => {
     
