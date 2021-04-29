@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     section: {
         width: cardWidth,
         height: cardHeight / 1.5,
-        margin: '2%',
+        margin: '1%',
         borderRadius: 10,
     },
     favoritesSection: {
@@ -55,35 +55,24 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         color: '#6be3d9',
-        fontSize: 20,
-        // padding
+        fontSize: 18
     },
     sectionInfo: {
-        // color: 'cyan',
-        fontSize: 16,
-        // padding
+        fontSize: 16
     },
     separator: {
         backgroundColor: "gray",
         height: StyleSheet.hairlineWidth,
-        // marginLeft: 20,
-        // marginRight: 20,
     },
     image: {
-        // marginBottom: 40,
         height: "30%",
         resizeMode: 'contain',
     },
     container: {
         flex: 1,
-        // backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
-    // safeAreaView: {
-    //     height: "100%",
-    //     width: "200%"
-    // },
     roundedProfileImage: {
         width: 150, height: 150, borderWidth: 3,
         borderColor: '#6be3d9', borderRadius: 75
@@ -120,20 +109,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'black'
     },
     logoutButt: {
-        width: "150%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        // marginTop: 40,
+        width: 75,
+        borderRadius: 20,
+        height: 35,
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: "#f2c572",
-        //marginBottom: 30,
+        marginLeft: 'auto',
+        margin: screen.width * 0.01
     },
     centeredView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22
+        //marginTop: 22
     },
     modalView: {
         margin: '10%',
@@ -173,6 +162,11 @@ const styles = StyleSheet.create({
     buttonClose: {
         backgroundColor: "#6be3d9",
         width: 70
+    },
+    ioniconContainer: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        padding: cardWidth * 0.010
     }
 })
 
@@ -278,7 +272,7 @@ const DeletionModal = (props) => {
                     </View>
                 </TouchableOpacity>
             </Modal>
-            <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity key={props.title} onPress={() => setModalVisible(true)} style={styles.ioniconContainer}>
                 <Ionicons name="trash-outline" style={{ fontSize: 25, color: 'gray' }} />
             </TouchableOpacity>
         </View>
@@ -424,73 +418,74 @@ export default ({ navigation }) => {
     // NOTE: CHECK ABSOLUTE STYLING/POSITION OF THE LOG OUT BUTTON
     return (
         <Fragment>
-        <SafeAreaView style={{flex: 0}} />
-        <View style={styles.container}>
-            {/* <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar> */}
-            <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
-
-            <Text style={{ fontSize: 40, marginBottom: screen.height * 0.025, marginTop: screen.height * 0.025, color: colors.text }}>Hi, {first}</Text>
-
-            <Gravatar options={{
-                email: email,
-                parameters: { "size": "400", "d": "mm" },
-                secure: true
-            }}
-                style={styles.roundedProfileImage} />
-
-            <View style={{ position: 'absolute', top: 0, left: 0, paddingTop: screen.height * 0.025, paddingLeft: screen.height * 0.025 }}> 
-                <TouchableOpacity style={styles.logoutButt} onPress={async () => {
+            <TouchableOpacity style={styles.logoutButt} onPress={async () => {
                     await AsyncStorage.clear();
                     navigation.navigate('Login');
                 }}>
-                    <Text style={{color: colors.text}}>Log Out</Text>
-                </TouchableOpacity>
+                <Text>Log Out</Text>
+            </TouchableOpacity>
+            <View style={styles.container}>
+                {/* <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar> */}
+                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+
+                
+                
+                    
+                <Text style={{ fontSize: 40, marginBottom: screen.height * 0.025, color: colors.text }}>Hi, {first}</Text>
+
+                <Gravatar options={{
+                    email: email,
+                    parameters: { "size": "400", "d": "mm" },
+                    secure: true
+                }}
+                    style={styles.roundedProfileImage} />
+
+                
+
+                <UserInfo title={'Name'} info={name} themeText={colors.text} />
+                <UserInfo title={'Username'} info={username} themeText={colors.text} />
+                <UserInfo title={'Email'} info={email} themeText={colors.text} />
+                
+                <View style={styles.section}>
+                    <View style={{ padding: 10 }}>
+                        <Text style={styles.sectionTitle}>Favorite Recipes</Text>
+                    </View>
+                    <View style={styles.separator} />
+                </View>
+
+                {/* <View>
+                    <View style={{ padding: 10 }}>
+                        <Text style={styles.sectionTitle}>Favorite Recipes</Text>
+                    </View>
+                    <View style={styles.separator} />
+                </View>            */}
+
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.favoritesSection}>
+                    {
+                        favoriteRecipes.map((recipe, i) => {
+                
+                            let recipe_name = recipe.recipe_name;
+                            let recipe_id = recipe.recipe_id;
+                            let recipe_image = recipe.picture
+                            
+                                return (
+                                    <FavoriteRecipeCard 
+                                    key={i}
+                                    image={recipe_image}
+                                    title={recipe_name} 
+                                    nav={navigation} 
+                                    id={recipe_id}
+                                    ></FavoriteRecipeCard>
+                                )
+                        })
+                    }
+                    </View>
+                </ScrollView> 
+
+                {/* <View style={{position: 'absolute', right: 0}}> */}
+
             </View>
-
-            <UserInfo title={'Name'} info={name} themeText={colors.text} />
-            <UserInfo title={'Username'} info={username} themeText={colors.text} />
-            <UserInfo title={'Email'} info={email} themeText={colors.text} />
-            
-            <View style={styles.section}>
-                <View style={{ padding: 10 }}>
-                    <Text style={styles.sectionTitle}>Favorite Recipes</Text>
-                </View>
-                <View style={styles.separator} />
-            </View>
-
-            {/* <View>
-                <View style={{ padding: 10 }}>
-                    <Text style={styles.sectionTitle}>Favorite Recipes</Text>
-                </View>
-                <View style={styles.separator} />
-            </View>            */}
-
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.favoritesSection}>
-                {
-                    favoriteRecipes.map((recipe, i) => {
-            
-                        let recipe_name = recipe.recipe_name;
-                        let recipe_id = recipe.recipe_id;
-                        let recipe_image = recipe.picture
-                        
-                            return (
-                                <FavoriteRecipeCard 
-                                key={i}
-                                image={recipe_image}
-                                title={recipe_name} 
-                                nav={navigation} 
-                                id={recipe_id}
-                                ></FavoriteRecipeCard>
-                            )
-                    })
-                }
-                </View>
-            </ScrollView> 
-
-            {/* <View style={{position: 'absolute', right: 0}}> */}
-
-        </View>
         </Fragment>
     )
 }

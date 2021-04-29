@@ -69,11 +69,11 @@ export default ({ navigation }) => {
 
     return (
         // <View style={{ backgroundColor: '#EFEFF4', flex: 1 }}>
-        <SafeAreaView style={{ marginTop: statusBarHeight, backgroundColor: colors.background, flex: 1 }}>
+        <SafeAreaView style={{ marginTop: statusBarHeight * 0.5, backgroundColor: colors.background, flex: 1 }}>
             {/* <View style={{borderBottomWidth:1, backgroundColor:'#f7f7f8',borderColor:'#c8c7cc'}}>
             <Text style={{alignSelf:'center',marginTop:30,marginBottom:10,fontWeight:'bold',fontSize:16}}></Text>
           </View> */}
-            <Text style={{ fontSize: 40, color: colors.text }}> Options </Text>
+            <Text style={{ fontSize: 40, color: colors.text, fontWeight: 'bold' }}> Options </Text>
 
             <View style={{ backgroundColor: colors.background, flex: 1 }}>
                 <SettingsList borderColor='#fff' defaultItemSize={50}>
