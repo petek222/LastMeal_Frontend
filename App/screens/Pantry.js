@@ -36,6 +36,16 @@ export const selected = atom({
 });
 
 const makeStyles = (colors) => StyleSheet.create({
+    screenHeaderContainer: {
+        marginTop: statusBarHeight * 0.5,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    screenHeader: {
+        fontSize: 40,
+        color: colors.text,
+        fontWeight: 'bold'
+    },
     safeAreaView: {
         height: "100%",
         width: "100%",
@@ -111,7 +121,7 @@ const makeStyles = (colors) => StyleSheet.create({
     },
     fab: { // Check this styling absolutism
         position: 'absolute',
-        bottom: window.width * 0.08,
+        bottom: window.height * 0.83,
         right: window.width * 0.08
     },
     centeredView: {
@@ -160,29 +170,49 @@ const makeStyles = (colors) => StyleSheet.create({
         color: colors.text,
     },
     sortButt: {
-        // width: "80%", 
         borderRadius: 15,
         height: 30,
         width: 60,
         alignItems: "center",
         justifyContent: "center",
-        // marginTop: 40,
         backgroundColor: "#f2c572",
         margin: 5,
-        // marginBottom: 30,
     },
+    addItemButton: {
+        borderRadius: 17,
+        height: 35,
+        width: 75,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#6be3d9",
+        margin: 5
+    },
+    generateRecipesButton: {
+        borderRadius: 17,
+        height: 35,
+        width: 130,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#6be3d9",
+        margin: 5
+    }
 });
 
 const AddIngredientButton = (props) => {
     const { colors } = useTheme();
     const styles = makeStyles(colors);
     return (
-        <FAB
-            style={styles.fab}
-            medium
-            icon="plus"
-            onPress={() => props.nav.navigate('AddItem')}
-        />
+        // <FAB
+        //     style={styles.fab}
+        //     medium
+        //     icon="plus"
+        //     onPress={() => props.nav.navigate('AddItem')}
+        // />
+        <TouchableOpacity
+            style={styles.addItemButton}
+            onPress={() => props.nav.navigate('AddItem')}>
+            <Text>Add Item</Text>
+        </TouchableOpacity>
     )
 };
 
@@ -190,23 +220,34 @@ const GenerateRecipesButton = (props) => {
     const { colors } = useTheme();
     const styles = makeStyles(colors);
     return (
-        <FAB
-            style={styles.fab}
-            small
-            label="Generate Recipes"
+        // <FAB
+        //     style={styles.fab}
+        //     small
+        //     label="Generate Recipes"
+        //     onPress={() => {
+        //         console.log("Selected Ingredients")
+        //         console.log(props.items)
+        //         recipeIngredients = props.items
+
+        //         // Make some API call here to actually generate the recipes
+
+        //         // navigate to recipe page
+        //         props.nav.navigate('Recipes', {
+        //             recipeList: recipeIngredients
+        //         })
+        //     }}
+        <TouchableOpacity
+            style={styles.generateRecipesButton}
             onPress={() => {
-                console.log("Selected Ingredients")
-                console.log(props.items)
-                recipeIngredients = props.items
-
-                // Make some API call here to actually generate the recipes
-
-                // navigate to recipe page
+                console.log("Selected Ingredients");
+                console.log(props.items);
+                let recipeIngredients = props.items;
                 props.nav.navigate('Recipes', {
                     recipeList: recipeIngredients
-                })
-            }}
-        />
+                });
+            }}>
+            <Text>Generate Recipes</Text>
+        </TouchableOpacity>
     )
 }
 
@@ -501,10 +542,6 @@ export default ({ navigation }) => {
         }
     }
 
-    let actionButton = ingredientSelections.length > 0
-        ? <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>
-        : <AddIngredientButton nav={navigation}></AddIngredientButton>
-
     const [nameSort, setNameSort] = useState(false);
     const [dateSort, setDateSort] = useState(false);
 
@@ -558,31 +595,40 @@ export default ({ navigation }) => {
 
     let button;
 
-    if (Platform.OS === "ios") {
-        button = (<Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
-            {actionButton}
-        </Animatable.View>)
-    } else {
-        button = actionButton; 
+    if(ingredientSelections.length > 0) {
+        if (Platform.OS === "ios") {
+            button = (<Animatable.View animation={'lightSpeedIn'}>
+                <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>
+            </Animatable.View>)
+        } else {
+            button = <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>; 
+        }
     }
+
+    
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
             {/* To make notification bar same color as background */}
             <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+            <View style={styles.screenHeaderContainer}>
+                <Text style={styles.screenHeader}> Pantry </Text>
+                <AddIngredientButton nav={navigation}/>
+                {button}
+            </View>
             <SearchBar
-                // platform={'android'}
-                platform={Platform.OS === "ios" ? "ios" : "android"}
-                placeholder="Search"
-                // placeholderTextColor="black"
-                // searchIcon={{ color: "black" }}
-                // cancelIcon={{ color: "black" }}
-                // clearIcon={{ color: "black" }}
-                onChangeText={setSearch}
-                value={search}
-                inputStyle={{ color: colors.text }}
-                containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto', marginTop: window.height * 0.01 }}>
+                    // platform={'android'}
+                    platform={Platform.OS === "ios" ? "ios" : "android"}
+                    placeholder="Search"
+                    // placeholderTextColor="black"
+                    // searchIcon={{ color: "black" }}
+                    // cancelIcon={{ color: "black" }}
+                    // clearIcon={{ color: "black" }}
+                    onChangeText={setSearch}
+                    value={search}
+                    inputStyle={{ color: colors.text }}
+                    containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 'auto', marginLeft: 'auto', marginTop: window.height * 0.005  }}>
                 <Text style={{ color: colors.text }}>Sort: </Text>
                 <TouchableOpacity
                     style={styles.sortButt}
@@ -599,7 +645,6 @@ export default ({ navigation }) => {
                     <Text>Date</Text>
                 </TouchableOpacity>
             </View>
-
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View>
                     {
@@ -654,7 +699,7 @@ export default ({ navigation }) => {
             {/* <Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
                 {actionButton}
             </Animatable.View> */}
-            {button}
+            {/* {button} */}
         </SafeAreaView>
     );
 }
