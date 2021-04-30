@@ -312,6 +312,8 @@ export default ({ navigation }) => {
     const ExpirationModal = (props) => {
         const { colors } = useTheme();
         const styles = makeStyles(colors);
+
+        
     
         // const [modalVisible, setModalVisible] = useState(false);
         if (modalVisible == true) {
@@ -334,7 +336,7 @@ export default ({ navigation }) => {
                             <View style={styles.centeredView}>
                                 <TouchableWithoutFeedback>
                                     <View style={styles.modalView}>
-                                        <Text style={styles.modalText}>Suggested Expiration Date For {props.item}: {props.expiration}</Text>
+                                        <Text style={styles.modalText}>Suggested Expiration Date For {props.item}: {props.expiration ? props.expiration : "N/A"}</Text>
                                         <TouchableOpacity
                                             style={[styles.button, styles.buttonClose]}
                                             onPress={() => {
