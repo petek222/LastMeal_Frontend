@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import api from '../api/api';
 import { useTheme } from '@react-navigation/native';
 import DismissKeyboard from "../config/DismissKeyboard.js";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const logo = require("../assets/lastmeal2.png");
 const darkLogo = require("../assets/lastmealdark2.png");
@@ -85,6 +86,9 @@ const styles = StyleSheet.create({
     }
 });
 
+
+
+
 export default ({ navigation }) => {
 
     const [username, setUsername] = useState("");
@@ -99,6 +103,14 @@ export default ({ navigation }) => {
     const [hideConfirmPass, setHideConfirmPass] = useState(true)
 
     const { colors } = useTheme();
+
+    const BackArrow = () => {
+        return (
+            <TouchableOpacity onPress={() => navigation.goBack()} >
+            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: '90%'}}/>
+        </TouchableOpacity>
+        )
+    }
 
     // Function for performing password reset
     const changePassword = async () => {
@@ -158,6 +170,7 @@ export default ({ navigation }) => {
     return (
         <DismissKeyboard>
             <View style={styles.container}>
+                <BackArrow/>
                 <Image style={styles.image} source={colors.background === 'white' ? logo : darkLogo} />
 
                 {/* <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background} /> */}
