@@ -32,9 +32,10 @@ const styles = StyleSheet.create({
     }
 });
 
+// default notify day before and on the day
 export const notifyDays = atom({
     key: 'notifyDays', // unique ID
-    default: [false, false, false, false], // initial value
+    default: [true, true, false, false], // initial value
 });
 
 export const notifyTime = atom({
@@ -58,7 +59,8 @@ export default ({ navigation }) => {
     const BackArrow = () => {
         return (
             <TouchableOpacity onPress={() => navigation.goBack()} >
-            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/>
+            {/* <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/> */}
+            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: '90%'}}/>
         </TouchableOpacity>
         )
     }
@@ -188,7 +190,7 @@ export default ({ navigation }) => {
                         title='Three Days Before Expiry'
                         titleStyle={{ color: colors.text }}
                     />
-                    <SettingsList.Header headerText={'Remind Me At:'} headerStyle={{ color: colors.text, fontSize: 20 }} />
+                    <SettingsList.Header headerText={'Remind Me At: (beta)'} headerStyle={{ color: colors.text, fontSize: 20 }} />
                     <SettingsList.Item
                         // icon={<Image style={styles.imageStyle} source={require('./images/blutooth.png')}/>}
                         backgroundColor={colors.background}

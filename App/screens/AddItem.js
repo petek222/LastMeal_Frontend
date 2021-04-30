@@ -240,6 +240,8 @@ export default ({ navigation }) => {
                     // and then plus 18000 + (3600 * 10) means remind me at 10 am? (could customize this as well) // hold up, let me check this first
                     // (startOfDay.getTime() / 1000) -
                     // expiration is at 7 pm?
+
+                    // for some reason this works on mine but not main ?
                     let expirationDate = ((new Date(expiration).getTime() / 1000) - (Date.now() / 1000) - i * 86400 + 18000 + (3600 * time));
 
                     console.log("Testing date computation:")
@@ -419,10 +421,9 @@ export default ({ navigation }) => {
 
     const BackArrow = () => {
         return (
-        <TouchableOpacity onPress={() => navigation.goBack()} >
-            <Text style={{marginRight: windowWidth * .80, fontSize: 20, fontWeight: 'bold', color: colors.text,}}>
-                <Ionicons name="chevron-back" size={18} color={colors.background == 'white' ? 'black' : 'white'}/>Back
-            </Text>
+            <TouchableOpacity onPress={() => navigation.goBack()} >
+            {/* <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: 370}}/> */}
+            <Ionicons name="chevron-back" size={35} color={colors.background == 'white' ? 'black' : 'white'} style={{marginRight: '90%'}}/>
         </TouchableOpacity>
         )
     }
