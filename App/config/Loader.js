@@ -65,11 +65,11 @@ export default class Loader extends React.Component {
 
   render() {
 
-    let lottieColor = (this.state.colors == "white") ? "#222" : "#fff"
+    let lottieColor = (this.state.colors == "white") ? "#fff" : "#222"
 
     // Fix the conditional rendering here: also make sure AsyncStorage is up to date / makes sense
     return (
-      <View style={this.state.colors == "white" ? styles.darkAnimationContainer : styles.animationContainer}>
+      <View style={this.state.colors == "white" ? styles.animationContainer : styles.darkAnimationContainer}>
         <LottieView
           ref={animation => {
             this.animation = animation;
@@ -84,7 +84,7 @@ export default class Loader extends React.Component {
           // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
         />
         <View>
-        <Text style={{ color: this.state.colors == "white" ? "white" : "black" }}>{this.state.text}</Text>
+        <Text style={{ color: this.state.colors == "white" ? "black" : "white" }}>{this.state.text}</Text>
         </View>
       </View>
     );
