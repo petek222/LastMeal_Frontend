@@ -372,7 +372,7 @@ export default ({route, navigation}) => {
         }
     }
 
-    const favoriteRecipeButton = recipeSelections.length > 0 && Platform.OS === "ios" ? 
+    const favoriteRecipeButton = recipeSelections.length > 0 && Platform.OS === "ios" && recipes.length > 0 ? 
     <Animatable.View animation='lightSpeedIn'>
             <FavoriteRecipeButton favorites={recipeSelections} nav={navigation}></FavoriteRecipeButton> 
     </Animatable.View>
