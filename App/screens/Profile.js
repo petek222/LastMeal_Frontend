@@ -20,7 +20,7 @@ const statusBarHeight = Constants.statusBarHeight;
 const cardWidth = screen.width * 0.9;
 const cardHeight = screen.height * 0.12;
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
         width: "100%",
@@ -41,6 +41,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 5,
         backgroundColor: 'white'
+    },
+    recipeNameText: {
+        fontSize: 16,
+        color: colors.text
     },
     section: {
         width: cardWidth,
@@ -93,20 +97,19 @@ const styles = StyleSheet.create({
     itemCard: {
         flex: 1,
         flexDirection: 'row',
-        width: cardWidth,
-        height: cardHeight,
-        marginTop: window.height * 0.01,
-        marginBottom: window.height * 0.01,
+        width: screen.width * 0.85,
+        height: screen.height * 0.1133,
+        marginTop: screen.height * 0.01,
+        marginBottom: screen.height * 0.01,
         borderRadius: 10,
-        borderWidth: 1,
         shadowOffset: {
             width: 2,
             height: 4,
         },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
         shadowColor: 'white',
-        backgroundColor: 'black'
+        backgroundColor: colors.black
     },
     logoutButt: {
         width: 75,
@@ -172,6 +175,8 @@ const styles = StyleSheet.create({
 
 // Component for each bit of user info
 const UserInfo = ({ title, info, themeText }) => {
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
     return (
         <View style={styles.section}>
             <View style={{ padding: 10 }}>
@@ -222,8 +227,8 @@ const getUsername = async () => {
 }
 
 const DeletionModal = (props) => {
-    // const { colors } = useTheme();
-    // const styles = makeStyles(colors);
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
 
     const [modalVisible, setModalVisible] = useState(false);
     console.log("PROPS TEST")
@@ -281,7 +286,7 @@ const DeletionModal = (props) => {
 
 const FavoriteRecipeCard = (props) => {
     const { colors } = useTheme();
-    // const styles = cardStyles(colors);
+    const styles = makeStyles(colors);
     // const [color, setColor] = useState("#808080")
     const [deletedItem, setDeletedItem] = useState('')
 
@@ -317,7 +322,7 @@ const FavoriteRecipeCard = (props) => {
     // Boolean removes deleted card from view immediately
     if (props.id !== deletedItem) {
         return (
-            <TouchableOpacity style={styles.lightItemCard} onPress={() => {
+            <TouchableOpacity style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} onPress={() => {
                 props.nav.navigate('RecipeInfo', {
                     recipeID: props.id
                 })
@@ -386,6 +391,7 @@ export default ({ navigation }) => {
     const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
     const { colors } = useTheme();
+    const styles = makeStyles(colors);
     const isFocused = useIsFocused()
 
     // fetch user info on load
