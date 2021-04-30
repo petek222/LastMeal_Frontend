@@ -389,9 +389,15 @@ const PantryCard = (props) => {
 
                 console.log("Ingredient Deletion Response")
                 console.log(response)
-                setDeletedItem(props.title)
-                // setViewComponent(true);
-                // return json;
+                await setDeletedItem(props.title)
+
+                // Updating the ingredients array accordingly
+                await props.setIngredients(props.ingredients.filter(item => item.name !== props.title))
+                await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.title))
+
+                console.log("TESTING ARRAY")
+                console.log(props.ingredients)
+
             } catch (error) {
                 notifyMessage("Deletion Failed");
                 console.error(error);
@@ -415,7 +421,7 @@ const PantryCard = (props) => {
                                 ? formatDate(props.expr) : "Not specified"}</Text>}
                         {/* <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text> */}
 
-                        <Text style={styles.expirationText}>Quantity: {props.quantity ? props.quantity : "Not specified"}</Text>
+                        <Text style={styles.expirationText}>Quantity (number): {props.quantity ? props.quantity : "Not specified"}</Text>
                     </View>
                 </View>
                 {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
@@ -603,7 +609,11 @@ export default ({ navigation }) => {
 
     let button;
 
-    if(ingredientSelections.length > 0) {
+    if(ingredientSelections.length > 0 && ingredients.length > 0) {
+
+        console.log("TESTING LENGTH FOR BUTTION")
+        console.log(ingredients.length)
+
         if (Platform.OS === "ios") {
             button = (<Animatable.View animation={'lightSpeedIn'}>
                 <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>
@@ -689,6 +699,8 @@ export default ({ navigation }) => {
                                         // selected={selectionArray[i]}
                                         selectIngredient={setIngredientSelections}
                                         ingredientSelections={ingredientSelections}
+                                        ingredients={ingredients}
+                                        setIngredients={setIngredients}
                                         warnNotification={warnNotification}
                                         dateSort={dateSort}
                                         nameSort={nameSort}
