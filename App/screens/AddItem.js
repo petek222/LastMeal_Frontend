@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+    Dimensions,
     StyleSheet,
     Text,
     View,
@@ -36,6 +37,10 @@ LogBox.ignoreAllLogs();
 
 // JSON data for use in autocomplete
 const ingredientData = require('../assets/ingredientList.json')
+
+const window = Dimensions.get('window');
+const windowWidth = window.width;
+const windowHeight = window.height;
 
 const makeStyles = (colors) => StyleSheet.create({
     modalView: {
@@ -236,7 +241,7 @@ export default ({ navigation }) => {
                     // (startOfDay.getTime() / 1000) -
                     // expiration is at 7 pm?
 
-                    // for some reason this works on mine but not main ?
+                    // time is 13.5 by default so notifies at 1:30pm I think
                     let expirationDate = ((new Date(expiration).getTime() / 1000) - (Date.now() / 1000) - i * 86400 + 18000 + (3600 * time));
 
                     console.log("Testing date computation:")
@@ -307,6 +312,8 @@ export default ({ navigation }) => {
     const ExpirationModal = (props) => {
         const { colors } = useTheme();
         const styles = makeStyles(colors);
+
+        
     
         // const [modalVisible, setModalVisible] = useState(false);
         if (modalVisible == true) {
@@ -329,7 +336,7 @@ export default ({ navigation }) => {
                             <View style={styles.centeredView}>
                                 <TouchableWithoutFeedback>
                                     <View style={styles.modalView}>
-                                        <Text style={styles.modalText}>Suggested Expiration Date For {props.item}: {props.expiration}</Text>
+                                        <Text style={styles.modalText}>Suggested Expiration Date For {props.item}: {props.expiration ? props.expiration : "N/A"}</Text>
                                         <TouchableOpacity
                                             style={[styles.button, styles.buttonClose]}
                                             onPress={() => {

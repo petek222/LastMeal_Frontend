@@ -35,12 +35,12 @@ const styles = StyleSheet.create({
 // default notify day before and on the day
 export const notifyDays = atom({
     key: 'notifyDays', // unique ID
-    default: [true, true, false, false], // initial value
+    default: [true, true, true, true], // initial value
 });
 
 export const notifyTime = atom({
     key: 'notifyTime', // unique ID
-    default: 10, // initial value, 10am
+    default: 13.5, // initial value, 1:30pm
 });
 
 export default ({ navigation }) => {
@@ -69,35 +69,35 @@ export default ({ navigation }) => {
         if (value === 0) {
             let newarr = [...days];
             newarr[0] = !newarr[0];
-            console.log('0');
-            console.log(days[0]);
+            // console.log('0');
+            // console.log(days[0]);
             setDays(newarr);
-            console.log(days[0]);
+            // console.log(days[0]);
         }
         else if (value === 1) {
             let newarr = [...days];
             newarr[1] = !newarr[1];
-            console.log('1');
-            console.log(days[1]);
+            // console.log('1');
+            // console.log(days[1]);
             setDays(newarr);
-            console.log(days[1]);
+            // console.log(days[1]);
         }
         else if (value === 2) {
             let newarr = [...days];
             newarr[2] = !newarr[2];
-            console.log('2');
-            console.log(days[2]);
+            // console.log('2');
+            // console.log(days[2]);
             setDays(newarr);
-            console.log(days[2]);
+            // console.log(days[2]);
         }
         else if (value === 3) {
             let newarr = [...days];
             newarr[3] = !newarr[3];
-            console.log('3');
-            console.log(days[3]);
+            // console.log('3');
+            // console.log(days[3]);
             setDays(newarr);
-            console.log(days[3]);
-            console.log(days);
+            // console.log(days[3]);
+            // console.log(days);
         }
     }
 
@@ -190,12 +190,13 @@ export default ({ navigation }) => {
                         title='Three Days Before Expiry'
                         titleStyle={{ color: colors.text }}
                     />
-                    <SettingsList.Header headerText={'Remind Me At: (beta)'} headerStyle={{ color: colors.text, fontSize: 20 }} />
+                    <SettingsList.Header headerText={'Remind Me At:'} headerStyle={{ color: colors.text, fontSize: 20 }} />
                     <SettingsList.Item
                         // icon={<Image style={styles.imageStyle} source={require('./images/blutooth.png')}/>}
                         backgroundColor={colors.background}
                         icon={<Ionicons name="alarm-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text }} />}
-                        title={formatAMPM(date)}
+                        // title={formatAMPM(date)}
+                        title={"1:30 pm"}
                         titleStyle={{ color: colors.text }}
                         titleInfoStyle={styles.titleInfoStyle}
                         onPress={showTimepicker}

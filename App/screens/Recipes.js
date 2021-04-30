@@ -131,6 +131,18 @@ const RecipeCard = (props) => {
     const styles = makeStyles(colors);
     const [color, setColor] = useState("#808080")
 
+    let resetTrigger = props.recipeResetTrigger
+
+    // UseEffect function resets selection buttons upon an undo trigger
+    useEffect(() => {
+        async function resetRecipeScreen() {
+            await setColor('#808080')
+            await props.setRecipeResetTrigger(false)
+        }
+        resetRecipeScreen()
+    }, [resetTrigger]);
+
+
     return (
         <TouchableOpacity style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} onPress={() => {
             
@@ -269,7 +281,7 @@ export default ({route, navigation}) => {
     let [recipes, setRecipes] = useState([]);
     const [recipesAreSelected, setRecipesAreSelected] = useState(false);
     let [recipeSelections, setRecipeSelections] = useState([]);
-
+    const [recipeResetTrigger, setRecipeResetTrigger] = useState(false)
 
     const isFocused = useIsFocused()
     const { colors } = useTheme();
@@ -323,6 +335,7 @@ export default ({route, navigation}) => {
                         console.log("Selected Ingredients");
                         // Reset selected favorites 
                         await setRecipeSelections([]);
+                        await setRecipeResetTrigger(true)
                         setRecipesAreSelected(false);
                         route.params = undefined; // Setting to undefined to reload generation
                     }}>
@@ -344,9 +357,6 @@ export default ({route, navigation}) => {
                   'Content-Type': 'application/json',
                 }
               }
-
-              console.log("TESTY")
-              console.log(currentPantry)
 
             let response = await api.post('/recipes', {
                 ingredients: currentPantry
@@ -401,6 +411,8 @@ export default ({route, navigation}) => {
                                         id={recipe_id}
                                         selectRecipe={setRecipeSelections}
                                         recipeSelections={recipeSelections}
+                                        recipeResetTrigger={recipeResetTrigger}
+                                        setRecipeResetTrigger={setRecipeResetTrigger}
                                         ></RecipeCard>
                                     )
                                 }

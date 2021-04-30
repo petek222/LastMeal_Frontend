@@ -311,29 +311,30 @@ const DeletionModal = (props) => {
 const IngredientSelect = (props) => {
     // const { colors } = useTheme();
 
+    let resetTrigger = props.triggerReset
+
     // const [select, isSelected] = useState('')
     const [color, setColor] = useState('gray');
     const [select, setSelect] = useRecoilState(selected);
 
+    // useEffect function clears recipe card buttons upon a sort
+    // Also a bandaid fix but it works well enough for our purposes
+    useEffect(() => {
+        async function resetCards() {
+            await setColor('gray')
+            await props.setTriggerReset(false)
+        }
+        resetCards()
+    }, [resetTrigger]);
+    
     return (
         <TouchableOpacity onPress={async () => {
             if (color !== '#6be3d9') {
-                setColor('#6be3d9')
-
-                // setSelect((old) => [
-                //     ...old,
-                //     {
-                //       id: props.ingKey,
-                //       val: true,
-                //     },
-                //   ]);
-
+                await setColor('#6be3d9')
                 await props.selectIngredient(currentElements => [...currentElements, props.item])
             }
             else { // Here we will want to remove the element from the ingredientSelections array if this is accessed
-                console.log("BLACK")
-                setColor('gray')
-
+                await setColor('gray')
                 await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.item))
             }
         }}>
@@ -420,7 +421,7 @@ const PantryCard = (props) => {
                 {/* {viewDeletion ? <DeletionModal item={props.title} delete_init={true}></DeletionModal> : null} */}
                 <View style={styles.cardButtons}>
                     {/* <Ionicons name="heart-outline" style={{fontSize: 25}} /> */}
-                    <IngredientSelect item={props.title} ingredientSelections={props.ingredientSelections} selectIngredient={props.selectIngredient} ingKey={props.val}></IngredientSelect>
+                    <IngredientSelect item={props.title} ingredientSelections={props.ingredientSelections} selectIngredient={props.selectIngredient} ingKey={props.val} triggerReset={props.triggerReset} setTriggerReset={props.setTriggerReset}></IngredientSelect>
                     <DeletionModal item={props.title} remove={stateCallback} ></DeletionModal>
                 </View>
             </View>
@@ -442,6 +443,10 @@ export default ({ navigation }) => {
     let [ingredientSelections, setIngredientSelections] = useState([]);
     let [search, setSearch] = useState('');
 
+    const [nameSort, setNameSort] = useState(false);
+    const [dateSort, setDateSort] = useState(false);
+    const [triggerReset, setTriggerReset] = useState(false)
+
     const { colors } = useTheme();
     const styles = makeStyles(colors);
 
@@ -460,7 +465,7 @@ export default ({ navigation }) => {
         const promises = [];
 
         ingredientList.map((ingredient, i) => {
-            ingredient_name = ingredient.name
+            let ingredient_name = ingredient.name
 
             let response = api.get(`/photos?ingredient=${ingredient_name}`)
             promises.push(response)
@@ -542,10 +547,7 @@ export default ({ navigation }) => {
         }
     }
 
-    const [nameSort, setNameSort] = useState(false);
-    const [dateSort, setDateSort] = useState(false);
-
-    const updateSort = (sortType) => {
+    const updateSort = async (sortType) => {
         // console.log(ingredients[0].expiration_date.$date);
         let ing = ingredients;
         // add id property so I can get their indexes
@@ -588,8 +590,14 @@ export default ({ navigation }) => {
             img[i] = imageArray[arr[i]]
         }
 
-        setIngredients(ing);
-        setImageArray(img);
+        await setIngredients(ing);
+        await setImageArray(img);
+
+        // Setting selections to default state upon sort
+        // Kind of a band-aid solution at this point, but it is functional
+        await setIngredientSelections([])
+
+        await setTriggerReset(true)
 
     }
 
@@ -664,7 +672,6 @@ export default ({ navigation }) => {
                             //search through cards
                             if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
 
-
                                 // This code reformats the date object (stored as UTC) to current timezone
                                 let expDateConversion = new Date(ingredient.expiration_date.$date);
                                 var timezoneAdjustedDate = expDateConversion.getTime() + (expDateConversion.getTimezoneOffset() * 60000);
@@ -683,6 +690,10 @@ export default ({ navigation }) => {
                                         selectIngredient={setIngredientSelections}
                                         ingredientSelections={ingredientSelections}
                                         warnNotification={warnNotification}
+                                        dateSort={dateSort}
+                                        nameSort={nameSort}
+                                        triggerReset={triggerReset}
+                                        setTriggerReset={setTriggerReset}
                                     >
                                     </PantryCard>
                                 );
@@ -696,10 +707,6 @@ export default ({ navigation }) => {
                     }
                 </View>
             </ScrollView>
-            {/* <Animatable.View animation={ingredientSelections.length > 0 ? 'slideInUp' : 'lightSpeedIn'}>
-                {actionButton}
-            </Animatable.View> */}
-            {/* {button} */}
         </SafeAreaView>
     );
 }
