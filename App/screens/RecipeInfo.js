@@ -20,12 +20,12 @@ const statusBarHeight = Constants.statusBarHeight;
 const makeStyles = (colors) => StyleSheet.create({
     safeAreaView: {
         height: "100%",
-        width: "100%",
-        marginTop: statusBarHeight
+        width: "100%"
     },
     scrollViewContent: {
         paddingLeft: windowWidth * 0.05,
         paddingRight: windowWidth * 0.05,
+        marginTop: statusBarHeight
     },
     headerContainer: {
         flex: 1,
@@ -89,6 +89,8 @@ const makeStyles = (colors) => StyleSheet.create({
         fontSize: 18,
         color: colors.text,
         lineHeight: 25
+    },
+    backArrow: {
     }
 });
 
@@ -154,7 +156,7 @@ export default ({route, navigation}) => {
             <SafeAreaView style={styles.safeAreaView}>
                 
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                    <BackArrow></BackArrow>
+                    <BackArrow style={styles.backArrow}></BackArrow>
                     <View style={styles.headerContainer}>
                         <View style={styles.nameContainer}>
                             <Text style={styles.recipeNameText}>{recipeDataParsed.title}</Text>

@@ -19,9 +19,20 @@ const cardWidth = window.width * 0.9;
 const cardHeight = window.height * 0.12;
 
 const makeStyles = (colors) => StyleSheet.create({
+    screenHeaderContainer: {
+        marginTop: statusBarHeight * 0.5,
+        marginBottom: statusBarHeight * 0.5,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    screenHeader: {
+        fontSize: 40,
+        color: colors.text,
+        fontWeight: 'bold'
+    },
     safeAreaView: {
         height: "100%",
-        width: "100%",
+        width: "100%"
         //marginTop: statusBarHeight // We need this styling for the reset generated recipes button to appear properly
     },
     scrollViewContent: {
@@ -94,6 +105,24 @@ const makeStyles = (colors) => StyleSheet.create({
     fabContainer: {
         flex: 1,
         alignItems: "center"
+    },
+    favoriteRecipeButton: {
+        borderRadius: 17,
+        height: 35,
+        width: 80,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: '#FF69B4',
+        margin: 5
+    },
+    undoGenerateButton: {
+        borderRadius: 17,
+        height: 35,
+        width: 130,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#6be3d9",
+        margin: 5
     }
 });
 
@@ -143,10 +172,53 @@ const FavoriteRecipeButton = (props) => {
     const { colors } = useTheme();
     const styles = makeStyles(colors);
     return (
-        <FAB
-            style={styles.favfab}
-            small
-            label="Favorite Recipes"
+        // <FAB
+        //     style={styles.favfab}
+        //     small
+        //     label="Favorite Recipes"
+        //     onPress={async () => {
+        //         console.log("Chosen Recipes")
+        //         console.log(props.favorites)
+
+        //         try {
+        //             let username = await AsyncStorage.getItem('username')
+
+        //             let config = {
+        //                 headers: {
+        //                   'Content-Type': 'application/json',
+        //                 }
+        //               }
+                    
+        //             let favoriteArray = JSON.stringify(props.favorites);
+    
+        //             // Make some API call here to actually generate the recipes
+        //             let response = await api.post(`/favorite/create/${username}`, {
+        //                 recipeArray: props.favorites
+        //             }, config);
+
+        //             let recipeInformation = response.data;
+
+        //             if (recipeInformation.success) {
+        //                 // If the request was successful, reroute to the profile
+        //                 console.log(recipeInformation)
+        //                 props.nav.navigate('Profile')
+        //             }
+        //             else {
+        //                 console.log("Your Recipes could not be Favorited")
+        //             }
+
+        //         }
+        //         catch (error) {
+        //             console.log("Error in favoriting recipe selections:")
+        //             console.log(error)
+        //         }
+
+        //         // navigate to recipe page
+        //         // props.nav.navigate('Profile')
+        //     }}
+        // />
+        <TouchableOpacity
+            style={styles.favoriteRecipeButton}
             onPress={async () => {
                 console.log("Chosen Recipes")
                 console.log(props.favorites)
@@ -171,8 +243,8 @@ const FavoriteRecipeButton = (props) => {
 
                     if (recipeInformation.success) {
                         // If the request was successful, reroute to the profile
-                        console.log(recipeInformation)
-                        props.nav.navigate('Profile')
+                        console.log(recipeInformation);
+                        props.nav.navigate('Profile');
                     }
                     else {
                         console.log("Your Recipes could not be Favorited")
@@ -186,16 +258,17 @@ const FavoriteRecipeButton = (props) => {
 
                 // navigate to recipe page
                 // props.nav.navigate('Profile')
-            }}
-        />
+            }}>
+            <Text>Favorite</Text>
+        </TouchableOpacity>
     )
 }
 
 export default ({route, navigation}) => {
 
     let [recipes, setRecipes] = useState([]);
-    const [recipesAreSelected, setRecipesAreSelected] = useState(false)
-    let [recipeSelections, setRecipeSelections] = useState([])
+    const [recipesAreSelected, setRecipesAreSelected] = useState(false);
+    let [recipeSelections, setRecipeSelections] = useState([]);
 
 
     const isFocused = useIsFocused()
@@ -234,16 +307,27 @@ export default ({route, navigation}) => {
         const styles = makeStyles(colors);
         if (recipesAreSelected == true) {
             return (
-                <FAB
-                    style={styles.fab}
-                    small
-                    label="Undo Generation"
-                    onPress={() => {
-                        console.log("Selected Ingredients")
-                        setRecipesAreSelected(false)
-                        route.params = undefined // Setting to undefined to reload generation
-                    }}
-                />
+                // <FAB
+                //     style={styles.fab}
+                //     small
+                //     label="Undo Generation"
+                //     onPress={() => {
+                //         console.log("Selected Ingredients")
+                //         setRecipesAreSelected(false)
+                //         route.params = undefined // Setting to undefined to reload generation
+                //     }}
+                // />
+                <TouchableOpacity
+                    style={styles.undoGenerateButton}
+                    onPress={async () => {
+                        console.log("Selected Ingredients");
+                        // Reset selected favorites 
+                        await setRecipeSelections([]);
+                        setRecipesAreSelected(false);
+                        route.params = undefined; // Setting to undefined to reload generation
+                    }}>
+                    <Text>Undo Generation</Text>
+                </TouchableOpacity>
             )
         }
         else {
@@ -284,16 +368,16 @@ export default ({route, navigation}) => {
 
     if (recipes.length > 0) {
         return (
-            <View>
-            
             <SafeAreaView style={styles.safeAreaView}>
-                {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
-                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+                <View style={styles.screenHeaderContainer}>
+                    <Text style={styles.screenHeader}> Recipes </Text>
+                    <ResetRecipesButton></ResetRecipesButton>
+                    {favoriteRecipeButton}
+                </View>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
                         <View style={styles.fabContainer}>
-                            <ResetRecipesButton></ResetRecipesButton>
-                            {favoriteRecipeButton}
+                            
                         </View>
                         {
                             recipes.map((recipe, i) => {
@@ -323,23 +407,22 @@ export default ({route, navigation}) => {
                     </View>
                 </ScrollView>
             </SafeAreaView>
-            </View>
         )
     }
     else {
         let loadText = "Add items to your Pantry to generate Recipes!"
         return (
-            <View>
             <SafeAreaView style={styles.safeAreaView}>
-                {/* <StatusBar barStyle="dark-content" ></StatusBar> */}
-                <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
+                <View style={styles.screenHeaderContainer}>
+                    <Text style={styles.screenHeader}> Recipes </Text>
+                    {favoriteRecipeButton}
+                </View>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
                         <Loader color={colors} text={loadText}></Loader>
                     </View>
                 </ScrollView>
             </SafeAreaView>
-            </View>
         )
     }
 

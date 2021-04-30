@@ -444,6 +444,7 @@ export default ({ navigation }) => {
                     placeholderTextColor="gray"
                     // placeholderTextColor="#003f5c"
                     autoCapitalize="none"
+                    textContentType='none'
                     onChangeText={(ingredient) => setIngredientName(ingredient)}
                     value={ingredientName}
                 />
@@ -467,6 +468,7 @@ export default ({ navigation }) => {
                     placeholder="Quantity"
                     // placeholderTextColor="#003f5c"
                     placeholderTextColor="gray"
+                    textContentType='none'
                     // secureTextEntry={true}
                     onChangeText={(quantity) => setQuantity(quantity)}
                 />
@@ -507,6 +509,7 @@ export default ({ navigation }) => {
                     style={styles.TextInput}
                     placeholder="Enable Item Notifications"
                     placeholderTextColor="#003f5c"
+                    textContentType='none'
                     // placeholderTextColor="gray"
                     // secureTextEntry={true}
                     editable={false}
