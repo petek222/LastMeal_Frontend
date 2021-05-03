@@ -119,7 +119,7 @@ const makeStyles = (colors) => StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: "#f2c572",
         marginLeft: 'auto',
-        margin: screen.width * 0.01
+        marginRight: screen.width * 0.03
     },
     centeredView: {
         flex: 1,
@@ -170,7 +170,17 @@ const makeStyles = (colors) => StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         padding: cardWidth * 0.010
-    }
+    },
+    screenHeaderContainer: {
+        marginTop: statusBarHeight * 0.5,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    screenHeader: {
+        fontSize: 40,
+        color: colors.text,
+        fontWeight: 'bold'
+    },
 })
 
 // Component for each bit of user info
@@ -294,7 +304,7 @@ const FavoriteRecipeCard = (props) => {
     const stateCallback = async (result) => {
 
         if (!result) { // http://54.237.232.9/v1/favorite/delete/petek222?recipe_id=205099
-            
+
             let username = await AsyncStorage.getItem('username')
 
             console.log("Removing item from favorites")
@@ -326,7 +336,7 @@ const FavoriteRecipeCard = (props) => {
                 props.nav.navigate('RecipeInfo', {
                     recipeID: props.id
                 })
-                }}>
+            }}>
                 <View style={styles.itemCardContent} >
                     <Thumbnail source={props.image ? { uri: props.image } : { source: require('../assets/chicken.jpg') }} />
                     <View style={styles.itemCardText}>
@@ -424,19 +434,23 @@ export default ({ navigation }) => {
     // NOTE: CHECK ABSOLUTE STYLING/POSITION OF THE LOG OUT BUTTON
     return (
         <Fragment>
-            <TouchableOpacity style={styles.logoutButt} onPress={async () => {
+            
+            <View style={styles.screenHeaderContainer}>
+                <Text style={styles.screenHeader}> Profile </Text>
+                <TouchableOpacity style={styles.logoutButt} onPress={async () => {
                     await AsyncStorage.clear();
                     navigation.navigate('Login');
                 }}>
-                <Text>Log Out</Text>
-            </TouchableOpacity>
+                    <Text>Log Out</Text>
+                </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+
             <View style={styles.container}>
                 {/* <StatusBar barStyle="dark-content" backgroundColor={'#ffffff'}></StatusBar> */}
                 <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
 
-                
-                
-                    
                 <Text style={{ fontSize: 40, marginBottom: screen.height * 0.025, color: colors.text }}>Hi, {first}</Text>
 
                 <Gravatar options={{
@@ -446,17 +460,17 @@ export default ({ navigation }) => {
                 }}
                     style={styles.roundedProfileImage} />
 
-                
+
 
                 <UserInfo title={'Name'} info={name} themeText={colors.text} />
                 <UserInfo title={'Username'} info={username} themeText={colors.text} />
                 <UserInfo title={'Email'} info={email} themeText={colors.text} />
-                
-                <View style={styles.section}>
+
+                <View style={[styles.section, {height: cardHeight / 3}]}>
                     <View style={{ padding: 10 }}>
                         <Text style={styles.sectionTitle}>Favorite Recipes</Text>
                     </View>
-                    <View style={styles.separator} />
+                    {/* <View style={styles.separator} /> */}
                 </View>
 
                 {/* <View>
@@ -466,32 +480,33 @@ export default ({ navigation }) => {
                     <View style={styles.separator} />
                 </View>            */}
 
-                <ScrollView showsVerticalScrollIndicator={false}>
+                {/* <ScrollView showsVerticalScrollIndicator={false}> */}
                     <View style={styles.favoritesSection}>
-                    {
-                        favoriteRecipes.map((recipe, i) => {
-                
-                            let recipe_name = recipe.recipe_name;
-                            let recipe_id = recipe.recipe_id;
-                            let recipe_image = recipe.picture
-                            
+                        {
+                            favoriteRecipes.map((recipe, i) => {
+
+                                let recipe_name = recipe.recipe_name;
+                                let recipe_id = recipe.recipe_id;
+                                let recipe_image = recipe.picture
+
                                 return (
-                                    <FavoriteRecipeCard 
-                                    key={i}
-                                    image={recipe_image}
-                                    title={recipe_name} 
-                                    nav={navigation} 
-                                    id={recipe_id}
+                                    <FavoriteRecipeCard
+                                        key={i}
+                                        image={recipe_image}
+                                        title={recipe_name}
+                                        nav={navigation}
+                                        id={recipe_id}
                                     ></FavoriteRecipeCard>
                                 )
-                        })
-                    }
+                            })
+                        }
                     </View>
-                </ScrollView> 
+                {/* </ScrollView> */}
 
                 {/* <View style={{position: 'absolute', right: 0}}> */}
 
             </View>
-        </Fragment>
+            </ScrollView>
+        </Fragment >
     )
 }

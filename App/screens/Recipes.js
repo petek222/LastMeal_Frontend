@@ -113,16 +113,18 @@ const makeStyles = (colors) => StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: '#FF69B4',
-        margin: 5
+        margin: 5,
     },
     undoGenerateButton: {
         borderRadius: 17,
         height: 35,
-        width: 130,
+        width: 110,
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#6be3d9",
-        margin: 5
+        margin: 5,
+        marginRight: window.width * 0.03,
+        marginLeft: 'auto',
     }
 });
 
@@ -145,7 +147,7 @@ const RecipeCard = (props) => {
 
     return (
         <TouchableOpacity style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} onPress={() => {
-            
+
             props.nav.navigate('RecipeInfo', {
                 recipeID: props.id
             })
@@ -157,7 +159,7 @@ const RecipeCard = (props) => {
                 </View>
             </View>
             <View style={styles.cardButtons}>
-            <TouchableOpacity onPress={async () => {
+                <TouchableOpacity onPress={async () => {
                     if (color !== '#FF69B4') {
                         setColor('#FF69B4')
                         // Here we will want to add the item to some favorites object that can be sent to the user's profile
@@ -173,8 +175,8 @@ const RecipeCard = (props) => {
                         // Here we will want to remove the item from the object described above
                     }
                 }}>
-            <Ionicons name="heart-outline" color={color} style={{ fontSize: 25 }} />
-        </TouchableOpacity>
+                    <Ionicons name="heart-outline" color={color} style={{ fontSize: 25 }} />
+                </TouchableOpacity>
             </View>
         </TouchableOpacity>
     )
@@ -200,9 +202,9 @@ const FavoriteRecipeButton = (props) => {
         //                   'Content-Type': 'application/json',
         //                 }
         //               }
-                    
+
         //             let favoriteArray = JSON.stringify(props.favorites);
-    
+
         //             // Make some API call here to actually generate the recipes
         //             let response = await api.post(`/favorite/create/${username}`, {
         //                 recipeArray: props.favorites
@@ -240,12 +242,12 @@ const FavoriteRecipeButton = (props) => {
 
                     let config = {
                         headers: {
-                          'Content-Type': 'application/json',
+                            'Content-Type': 'application/json',
                         }
-                      }
-                    
+                    }
+
                     let favoriteArray = JSON.stringify(props.favorites);
-    
+
                     // Make some API call here to actually generate the recipes
                     let response = await api.post(`/favorite/create/${username}`, {
                         recipeArray: props.favorites
@@ -276,7 +278,7 @@ const FavoriteRecipeButton = (props) => {
     )
 }
 
-export default ({route, navigation}) => {
+export default ({ route, navigation }) => {
 
     let [recipes, setRecipes] = useState([]);
     const [recipesAreSelected, setRecipesAreSelected] = useState(false);
@@ -308,7 +310,7 @@ export default ({route, navigation}) => {
             }
 
             let recipeList = await getRecipes(requestParam);
-                
+
             await setRecipes(recipeList)
         }
         generateRecipes()
@@ -339,7 +341,7 @@ export default ({route, navigation}) => {
                         setRecipesAreSelected(false);
                         route.params = undefined; // Setting to undefined to reload generation
                     }}>
-                    <Text>Undo Generation</Text>
+                    <Text>Reset Recipes</Text>
                 </TouchableOpacity>
             )
         }
@@ -354,9 +356,9 @@ export default ({route, navigation}) => {
         try {
             let config = {
                 headers: {
-                  'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                 }
-              }
+            }
 
             let response = await api.post('/recipes', {
                 ingredients: currentPantry
@@ -372,11 +374,13 @@ export default ({route, navigation}) => {
         }
     }
 
-    const favoriteRecipeButton = recipeSelections.length > 0 && Platform.OS === "ios" && recipes.length > 0 ? 
-    <Animatable.View animation='lightSpeedIn'>
-            <FavoriteRecipeButton favorites={recipeSelections} nav={navigation}></FavoriteRecipeButton> 
-    </Animatable.View>
-    : <View></View>
+    const favoriteRecipeButton = recipeSelections.length > 0 && recipes.length > 0 ?
+
+        // or lightSpeedIn
+        <Animatable.View animation='fadeInDown'>
+            <FavoriteRecipeButton favorites={recipeSelections} nav={navigation}></FavoriteRecipeButton>
+        </Animatable.View>
+        : <View></View>
 
 
     if (recipes.length > 0) {
@@ -384,39 +388,39 @@ export default ({route, navigation}) => {
             <SafeAreaView style={styles.safeAreaView}>
                 <View style={styles.screenHeaderContainer}>
                     <Text style={styles.screenHeader}> Recipes </Text>
-                    <ResetRecipesButton></ResetRecipesButton>
                     {favoriteRecipeButton}
+                    <ResetRecipesButton></ResetRecipesButton>
                 </View>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View>
                         <View style={styles.fabContainer}>
-                            
+
                         </View>
                         {
                             recipes.map((recipe, i) => {
-    
+
                                 let recipe_name = recipe.title;
                                 let recipe_id = recipe.id;
-                                
+
                                 // This regex doesn't display any recipes with numbers in them, since hose are usually
                                 // random lists and not particular recipes (we will probably want to refine this/put
                                 // it on the backend later)
-                                if (!/\d/.test(recipe.title)) { 
+                                if (!/\d/.test(recipe.title)) {
                                     return (
-                                        <RecipeCard 
-                                        key={i}
-                                        image={recipe.image}
-                                        title={recipe_name} 
-                                        nav={navigation} 
-                                        id={recipe_id}
-                                        selectRecipe={setRecipeSelections}
-                                        recipeSelections={recipeSelections}
-                                        recipeResetTrigger={recipeResetTrigger}
-                                        setRecipeResetTrigger={setRecipeResetTrigger}
+                                        <RecipeCard
+                                            key={i}
+                                            image={recipe.image}
+                                            title={recipe_name}
+                                            nav={navigation}
+                                            id={recipe_id}
+                                            selectRecipe={setRecipeSelections}
+                                            recipeSelections={recipeSelections}
+                                            recipeResetTrigger={recipeResetTrigger}
+                                            setRecipeResetTrigger={setRecipeResetTrigger}
                                         ></RecipeCard>
                                     )
                                 }
-    
+
                             })
                         }
                     </View>
