@@ -329,6 +329,10 @@ const IngredientSelect = (props) => {
     
     return (
         <TouchableOpacity onPress={async () => {
+
+            console.log("TESTING SELECT")
+            console.log(props.item)
+
             if (color !== '#6be3d9') {
                 await setColor('#6be3d9')
                 await props.selectIngredient(currentElements => [...currentElements, props.item])
@@ -354,6 +358,7 @@ const PantryCard = (props) => {
     const [deletionChoice, setDeletionChoice] = useState(false)
     const [deletedItem, setDeletedItem] = useState('')
     const [select, setSelect] = useRecoilState(selected);
+    const [expiration, setExpiration] = useState(props.expr)
 
     const { colors } = useTheme();
     const styles = makeStyles(colors);
@@ -407,6 +412,18 @@ const PantryCard = (props) => {
     }
 
     if (props.title != deletedItem) {
+
+        // Check if date is within visual notary time
+        let warnNotification = false
+        let currentDateSeconds = new Date().getTime() / 1000
+        let expirationDateSeconds = expiration.$date / 1000
+
+        // If item is within 2 days (ie. 259200 seconds) of expiring, set styling
+        if (expirationDateSeconds - 259200 < currentDateSeconds) {
+            warnNotification = true
+        }
+
+        // render pantry card
         return (
             <View style={colors.background === 'white' ? styles.lightItemCard : styles.itemCard} id={props.title}>
                 <View style={styles.itemCardContent}>
@@ -414,11 +431,11 @@ const PantryCard = (props) => {
                     <View style={styles.itemCardText}>
                         <Text style={[styles.foodNameText, { color: colors.text }]}>{props.title}</Text>
 
-                        {props.warnNotification
-                            ? <Text style={styles.warnExpirationText}>Expiration: {props.expr
-                                ? formatDate(props.expr) : "Not specified"}</Text>
-                            : <Text style={[styles.expirationText, { color: colors.text }]}>Expiration: {props.expr
-                                ? formatDate(props.expr) : "Not specified"}</Text>}
+                        {warnNotification
+                            ? <Text style={styles.warnExpirationText}>Expiration: {expiration
+                                ? formatDate(expiration) : "Not specified"}</Text>
+                            : <Text style={[styles.expirationText, { color: colors.text }]}>Expiration: {expiration
+                                ? formatDate(expiration) : "Not specified"}</Text>}
                         {/* <Text style={styles.expirationText}>Expiration: {props.expr ? formatDate(props.expr) : "Not specified"}</Text> */}
 
                         <Text style={styles.expirationText}>Quantity (number): {props.quantity ? props.quantity : "Not specified"}</Text>
@@ -669,21 +686,11 @@ export default ({ navigation }) => {
                         // generate ingredient cards
                         ingredients.map((ingredient, i) => {
 
-                            // Grab dates, convert to seconds
-                            let currentDateSeconds = new Date().getTime() / 1000
-                            let expirationDateSeconds = ingredient.expiration_date.$date / 1000
-                            let warnNotification = false
-
-                            // If item is within 2 days (ie. 259200 seconds) of expiring, set styling
-                            if (expirationDateSeconds - 259200 < currentDateSeconds) {
-                                warnNotification = true
-                            }
-
                             //search through cards
                             if (ingredient.name.indexOf(search.toLowerCase()) !== -1) {
 
-                                // This code reformats the date object (stored as UTC) to current timezone
-                                let expDateConversion = new Date(ingredient.expiration_date.$date);
+                                // // This code reformats the date object (stored as UTC) to current timezone
+                                let expDateConversion = new Date(ingredient.expiration_date.$date)
                                 var timezoneAdjustedDate = expDateConversion.getTime() + (expDateConversion.getTimezoneOffset() * 60000);
                                 ingredient.expiration_date.$date = timezoneAdjustedDate
 
@@ -701,7 +708,6 @@ export default ({ navigation }) => {
                                         ingredientSelections={ingredientSelections}
                                         ingredients={ingredients}
                                         setIngredients={setIngredients}
-                                        warnNotification={warnNotification}
                                         dateSort={dateSort}
                                         nameSort={nameSort}
                                         triggerReset={triggerReset}
