@@ -231,8 +231,6 @@ const DeletionModal = (props) => {
     const styles = makeStyles(colors);
 
     const [modalVisible, setModalVisible] = useState(false);
-    console.log("PROPS TEST")
-    console.log(props)
     return (
         <View style={styles.centeredView}>
             <Modal

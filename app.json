@@ -2,9 +2,9 @@
   "expo": {
     "name": "lastmeal2",
     "slug": "lastmeal2",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/lastmeal.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.petek222.lastmeal2"
     },
     "android": {
       "adaptiveIcon": {

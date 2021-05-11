@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image, Alert, Button } from 'react-native';
+import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image, Alert, Button, DatePickerIOS} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -35,15 +35,17 @@ const styles = StyleSheet.create({
 // default notify day before and on the day
 export const notifyDays = atom({
     key: 'notifyDays', // unique ID
-    default: [true, true, true, true], // initial value
+    default: [false, true, false, false], // default is only the day prior
 });
 
 export const notifyTime = atom({
     key: 'notifyTime', // unique ID
-    default: 13.5, // initial value, 1:30pm
+    default: 12.5, // TODO: Figure out how to set this to a Date() object and we should be (relatively) set 
 });
 
 export default ({ navigation }) => {
+
+    const [chosenDate, setChosenDate] = useState(new Date());
 
     // use an array to keep track of which settings are checked, and can iterate over it when creating notifications, in theory
     const [days, setDays] = useRecoilState(notifyDays);
@@ -55,6 +57,12 @@ export default ({ navigation }) => {
     const [show, setShow] = useState(false);
 
     const { colors } = useTheme();
+
+    const testFunc = async (params) => {
+        console.log("IN THE TEST FUNC")
+        console.log(params)
+        await setChosenDate(params)
+    }
     
     const BackArrow = () => {
         return (
@@ -134,6 +142,7 @@ export default ({ navigation }) => {
     };
 
     const showTimepicker = () => {
+        console.log("HERE")
         showMode('time');
     };
 
@@ -151,6 +160,7 @@ export default ({ navigation }) => {
     return (
         <SafeAreaView style={{backgroundColor: colors.background, flex: 1 }}>
             <BackArrow></BackArrow>
+            <Text style={{ fontSize: 40, color: colors.text, fontWeight: 'bold', marginTop: '5%' }}> Notifications </Text>
             <View style={{ backgroundColor: colors.background, flex: 1, marginTop: 15}}>
                 <SettingsList borderColor='#fff' defaultItemSize={50}>
                     <SettingsList.Header headerText='Remind Me:' headerStyle={{ color: colors.text, fontSize: 20 }} />
@@ -196,22 +206,21 @@ export default ({ navigation }) => {
                         backgroundColor={colors.background}
                         icon={<Ionicons name="alarm-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text }} />}
                         // title={formatAMPM(date)}
-                        title={"1:30 pm"}
+                        title={"(feature in progress)"}
                         titleStyle={{ color: colors.text }}
                         titleInfoStyle={styles.titleInfoStyle}
                         onPress={showTimepicker}
                     />
                 </SettingsList>
-                {/* {show && (
-                    <DateTimePicker
-                        testID="timePicker"
-                        value={date}
-                        mode={"time"}
-                        is12Hour={true}
-                        display="default"
-                        onChange={onChange}
-                    />
-                )} */}
+                {show && (
+                    <View styl>
+                        <DatePickerIOS
+                          date={chosenDate}
+                          mode={'time'}
+                          onDateChange={testFunc}
+                        />
+                      </View>
+                )}
             </View>
         </SafeAreaView>
     );

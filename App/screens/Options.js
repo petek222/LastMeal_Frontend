@@ -41,8 +41,9 @@ export default ({ navigation }) => {
     const [dark, setDark] = useRecoilState(darkState);
     const { colors } = useTheme();
 
-    const onRecipeChange = (value) => {
+    const onRecipeChange = async (value) => {
         setPassiveRecipes(value)
+        await AsyncStorage.setItem("restrict-recipes", JSON.stringify(value));
     }
 
     const toggleSwitch = () => {
@@ -52,7 +53,6 @@ export default ({ navigation }) => {
 
     const onThemeChange = async (value) => {
         if (theme === 'light') {
-            console.log("SETTING DARK")
             setTheme('dark');
             await AsyncStorage.setItem("animation-theme", 'dark') // Adding extra value for animation-state-management
             // setThemeButton(value)
@@ -60,7 +60,6 @@ export default ({ navigation }) => {
         }
         else {
             await AsyncStorage.setItem("animation-theme", 'white') // Adding extra value for animation-state-management
-            console.log("SETING LIGHT")
             setTheme('light');
             // setThemeButton(value)
             toggleSwitch();
@@ -108,7 +107,7 @@ export default ({ navigation }) => {
                         title='Recipe Generation Settings'
                         titleStyle={{ color: colors.text }}
                         titleInfoStyle={styles.titleInfoStyle}
-                        onPress={() => Alert.alert('Route to Algorithm Settings Page')}
+                        onPress={() => Alert.alert('Recipe Generation Settings Feature In-Progress')}
                     />
 
                     <SettingsList.Header headerStyle={{ marginTop: 15 }} />
@@ -126,7 +125,7 @@ export default ({ navigation }) => {
                         icon={<Ionicons name="people-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text }} />}
                         title='Account Management'
                         titleStyle={{ color: colors.text }}
-                        onPress={() => Alert.alert('Route To Account Management Page')}
+                        onPress={() => navigation.navigate('AccountManagement')}
                     />
 
                     <SettingsList.Header headerStyle={{ marginTop: 15 }} />
@@ -136,7 +135,7 @@ export default ({ navigation }) => {
                         icon={<Ionicons name="help-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text }} />}
                         title='About the Developers'
                         titleStyle={{ color: colors.text }}
-                        onPress={() => Alert.alert('Route To About Page')}
+                        onPress={() => navigation.navigate('About')}
                     />
                 </SettingsList>
             </View>

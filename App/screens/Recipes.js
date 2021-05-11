@@ -290,9 +290,11 @@ export default ({route, navigation}) => {
     useEffect(() => {
 
         async function generateRecipes() {
-            const currentPantry = await AsyncStorage.getItem('ingredients');
 
-            let requestParam = currentPantry;
+            
+            // Grab restriction setting and pantry
+            let restrict = await AsyncStorage.getItem('restrict-recipes')
+            const requestParam = await AsyncStorage.getItem('ingredients');
 
             // If the route contains a list, we know we were sent via the Generate Recipes button
             if (route.params != undefined) {
@@ -305,11 +307,24 @@ export default ({route, navigation}) => {
 
                 // Set Manual Generation Flag
                 await setRecipesAreSelected(true)
+
+                let recipeList = await getRecipes(requestParam);
+                
+                await setRecipes(recipeList)
             }
 
-            let recipeList = await getRecipes(requestParam);
+            // If the restriction setting is not enabled, passively generate recipes
+            else if (restrict != 'true') {
+                let recipeList = await getRecipes(requestParam);
                 
-            await setRecipes(recipeList)
+                await setRecipes(recipeList)
+            }
+            
+            // Otherwise, leave page as-is
+            else {
+                await setRecipes([])
+                console.log("Passive Generation is locked via Options")
+            }
         }
         generateRecipes()
     }, [isFocused, recipesAreSelected]);

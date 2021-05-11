@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dimensions, StyleSheet, ScrollView, SafeAreaView, Text, View, StatusBar, Alert, Modal, Pressable, TouchableOpacity, TouchableWithoutFeedback, Platform } from 'react-native';
 import { SearchBar } from 'react-native-elements';
@@ -278,9 +279,9 @@ const DeletionModal = (props) => {
                                 <Text style={styles.modalText}>Are you sure you want to delete {props.item} from your pantry?</Text>
                                 <TouchableOpacity
                                     style={[styles.button, styles.buttonClose]}
-                                    onPress={() => {
+                                    onPress={async () => {
                                         setModalVisible(!modalVisible);
-                                        props.remove(false);
+                                        await props.remove(false);
                                     }}
                                 >
                                     <Text style={styles.textStyle}>Yes</Text>
@@ -288,9 +289,9 @@ const DeletionModal = (props) => {
                                 <Text>  </Text>
                                 <TouchableOpacity
                                     style={[styles.button, styles.buttonClose]}
-                                    onPress={() => {
+                                    onPress={async () => {
                                         setModalVisible(!modalVisible);
-                                        props.remove(true);
+                                        await props.remove(true);
                                     }}
                                 >
                                     <Text style={styles.textStyle}>No</Text>
@@ -372,7 +373,7 @@ const PantryCard = (props) => {
     const stateCallback = async (result) => {
 
         // Remove Card from Pantry if 'Yes' confirmation selected
-        setViewComponent(result);
+        await setViewComponent(result);
 
         // Delete card from Pantry storage is 'Yes' confirmation selected (ie. 'false' result)
         if (!result) {
@@ -397,11 +398,17 @@ const PantryCard = (props) => {
                 await setDeletedItem(props.title)
 
                 // Updating the ingredients array accordingly
-                await props.setIngredients(props.ingredients.filter(item => item.name !== props.title))
-                await props.selectIngredient(props.ingredientSelections.filter(item => item !== props.title))
+                let postDeletePantry = await props.ingredients.filter(item => item.name !== props.title)
 
-                console.log("TESTING ARRAY")
-                console.log(props.ingredients)
+                // Updating pantry array for generation
+                let updatedPantry = []
+                for (let i = 0; i < postDeletePantry.length; i++) {
+                    updatedPantry.push(postDeletePantry[i].name);
+                }
+
+                // Setting storage with new array after deletion for better responsiveness
+                await AsyncStorage.setItem('ingredients', JSON.stringify(updatedPantry))
+
 
             } catch (error) {
                 notifyMessage("Deletion Failed");
@@ -413,15 +420,15 @@ const PantryCard = (props) => {
 
     if (props.title != deletedItem) {
 
-        // Check if date is within visual notary time
-        let warnNotification = false
-        let currentDateSeconds = new Date().getTime() / 1000
-        let expirationDateSeconds = expiration.$date / 1000
+        // // Check if date is within visual notary time
+        // let warnNotification = false
+        // let currentDateSeconds = new Date().getTime() / 1000
+        // let expirationDateSeconds = expiration.$date / 1000
 
-        // If item is within 2 days (ie. 259200 seconds) of expiring, set styling
-        if (expirationDateSeconds - 259200 < currentDateSeconds) {
-            warnNotification = true
-        }
+        // // If item is within 2 days (ie. 259200 seconds) of expiring, set styling
+        // if (expirationDateSeconds - 259200 < currentDateSeconds) {
+        //     warnNotification = true
+        // }
 
         // render pantry card
         return (
@@ -431,7 +438,7 @@ const PantryCard = (props) => {
                     <View style={styles.itemCardText}>
                         <Text style={[styles.foodNameText, { color: colors.text }]}>{props.title}</Text>
 
-                        {warnNotification
+                        {true
                             ? <Text style={styles.warnExpirationText}>Expiration: {expiration
                                 ? formatDate(expiration) : "Not specified"}</Text>
                             : <Text style={[styles.expirationText, { color: colors.text }]}>Expiration: {expiration
@@ -526,9 +533,6 @@ export default ({ navigation }) => {
             let username = await getUsername();
             let response = await api.get(`/pantry/${username}`);
             if (response.data.ingredients) {
-
-                console.log("TESTING PANTRY INGREDIENT ARRAY")
-                console.log(response.data.ingredients)
 
                 await setIngredients(response.data.ingredients);
 
