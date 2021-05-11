@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, Image, Alert, Button, FlatList, TextInput} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import api from '../api/api';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SwitchWithIcons from "react-native-switch-with-icons";
@@ -15,6 +16,7 @@ import {
 // import { darkState } from '../config/Navigation';
 import { useTheme } from '@react-navigation/native';
 import { ListItem } from 'react-native-elements/dist/list/ListItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 
 const statusBarHeight = Constants.statusBarHeight;
@@ -84,6 +86,14 @@ export const notifyTime = atom({
     default: 13.5, // initial value, 1:30pm
 });
 
+function notifyMessage(msg) {
+    if (Platform.OS === 'android') {
+        ToastAndroid.show(msg, ToastAndroid.SHORT)
+    } else {
+        Alert.alert(msg);
+    }
+}
+
 // Currently just a template: Fill in with Functionality later
 export default ({ navigation }) => {
 
@@ -92,7 +102,16 @@ export default ({ navigation }) => {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [confirmDelete, setConfirmDelete] = useState("")
-    
+    const [currentUsername, setCurrentUsername] = useState("")
+
+    useEffect(() => {
+        async function getAccount() {
+            let currentUsername = await AsyncStorage.getItem("username")
+            await setCurrentUsername(currentUsername)
+        }
+        getAccount()
+    }, []);
+
     const BackArrow = () => {
         return (
             <TouchableOpacity onPress={() => navigation.goBack()} >
@@ -124,8 +143,31 @@ export default ({ navigation }) => {
                     />
                     <TouchableOpacity style={styles.smallButt}
                         disabled={false} // Add notification here if fields not input
-                        onPress={() => {
-                            // Here is where we call username update API
+                        onPress={async () => {
+                            try {
+                                console.log("IN HERE")
+                                console.log(currentUsername)
+                                // Here is where we call username update API
+                                let response = await api.put(`/user/update/${currentUsername}`, {
+                                    username: username
+                                })
+
+                                console.log("RESPONSE")
+                                console.log(response)
+
+                                if (response.status == 201) {
+
+                                    // update stored username
+                                    await AsyncStorage.setItem("username", username)
+
+                                    // navigate back to the profile page
+                                    navigation.navigate('Profile')
+                                }
+                            }
+                            catch (error) {
+                                console.log(error)
+                                console.log("Error in updating username")
+                            }
                         }}>
                 <Text style={styles.loginText}>Update Username</Text>
                 </TouchableOpacity>
@@ -145,8 +187,31 @@ export default ({ navigation }) => {
                     />
                     <TouchableOpacity style={styles.smallButt}
                         disabled={false} // Add notification here if fields not input
-                        onPress={() => {
+                        onPress={async () => {
+                            try {
+                            console.log("IN HERE")
+                            console.log(currentUsername)
                             // Here is where we call the email update API
+                            let response = await api.put(`/user/update/${currentUsername}`, {
+                                    email: email
+                                })
+
+                                console.log("RESPONSE")
+                                console.log(response)
+
+                                if (response.status == 201) {
+
+                                    // update stored username (not needed for email)
+                                    // await AsyncStorage.setItem("username", username)
+
+                                    // navigate back to the profile page
+                                    navigation.navigate('Profile')
+                                }
+                            }
+                            catch (error) {
+                                console.log(error)
+                                console.log("Error in updating username")
+                            }
                         }}>
                 <Text style={styles.loginText}>Update Email</Text>
                 </TouchableOpacity>
@@ -190,9 +255,30 @@ export default ({ navigation }) => {
             <View style={{marginLeft: '5%'}}>
             <TouchableOpacity style={styles.bigButt}
                         disabled={false} // Add notification here if fields not input
-                        onPress={() => {
-                            // setRenderDropdown(true);
-                            // ingredientSearch(ingredientName);
+                        onPress={async () => {
+                            try {
+                                if (confirmDelete == "permanently delete") {
+                                    // Here is where we call the deletion API
+                                    let response = await api.delete(`/user/delete/${currentUsername}`)
+        
+                                    if (response.status == 201) {
+                                        // navigate back to the profile page
+                                        navigation.navigate('Login')
+                                    }
+                                    else {
+                                        notifyMessage("Error performing account deletion")
+                                    }
+                                }
+                                else {
+                                    console.log("confirmation typo")
+                                    notifyMessage("Deletion Failed (check confirmation spelling)")
+                                }
+                                
+                                }
+                                catch (error) {
+                                    console.log(error)
+                                    console.log("Error in updating username")
+                                }
                         }}>
                 <Text style={styles.loginText}>Delete Account</Text>
             </TouchableOpacity>

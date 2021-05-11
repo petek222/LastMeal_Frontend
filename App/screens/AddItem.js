@@ -253,7 +253,7 @@ export default ({ navigation }) => {
             }
         }
 
-        navigation.navigate('Pantry');
+        // navigation.navigate('Pantry');
 
         let username = await AsyncStorage.getItem("username");
 
@@ -261,8 +261,12 @@ export default ({ navigation }) => {
         console.log(ingredientName)
         console.log(quantity)
         console.log(expiration)
+        console.log(username)
+        console.log("PPOST")
 
         try {
+
+            // console.log(username)
 
             let response = await api.post(`/pantry/create/${username}`, {
                 name: ingredientName,
@@ -276,6 +280,7 @@ export default ({ navigation }) => {
             navigation.navigate('Pantry'); // navigate to pantry upon ingredient submission
             // return json;
         } catch (error) {
+            navigation.navigate('Pantry')
             notifyMessage("Invalid input");
             console.error(error);
         }

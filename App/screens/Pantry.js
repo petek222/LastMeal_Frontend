@@ -488,7 +488,7 @@ export default ({ navigation }) => {
             await generateThumbnail(ingredientList)
         }
         generatePantry()
-    }, [isFocused]);
+    }, [isFocused, ingredients]); // adding param for more responsive renders after adding item
 
     const generateThumbnail = async (ingredientList) => {
 
