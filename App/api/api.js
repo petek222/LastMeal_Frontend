@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api = axios.create({
-    baseURL: 'http://54.237.232.9:80/v1',
+    baseURL: 'http://lastmeal.link/v1',
     timeout: 10000,
 });
 

@@ -33,16 +33,16 @@ const styles = StyleSheet.create({
     }
 });
 
-// default notify day before and on the day
-export const notifyDays = atom({
-    key: 'notifyDays', // unique ID
-    default: [true, true, true, true], // initial value
-});
+// // default notify day before and on the day
+// export const notifyDays = atom({
+//     key: 'notifyDays', // unique ID
+//     default: [false, true, false, false], // initial value
+// });
 
-export const notifyTime = atom({
-    key: 'notifyTime', // unique ID
-    default: 13.5, // initial value, 1:30pm
-});
+// export const notifyTime = atom({
+//     key: 'notifyTime', // unique ID
+//     default: 13.5, // initial value, 1:30pm
+// });
 
 export default ({ navigation }) => {
 

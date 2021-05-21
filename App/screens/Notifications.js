@@ -206,10 +206,9 @@ export default ({ navigation }) => {
                         backgroundColor={colors.background}
                         icon={<Ionicons name="alarm-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text }} />}
                         // title={formatAMPM(date)}
-                        title={"(feature in progress)"}
+                        title={"(feature in development)"}
                         titleStyle={{ color: colors.text }}
                         titleInfoStyle={styles.titleInfoStyle}
-                        onPress={showTimepicker}
                     />
                 </SettingsList>
                 {show && (
