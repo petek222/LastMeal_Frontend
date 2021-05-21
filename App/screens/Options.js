@@ -35,6 +35,7 @@ export default ({ navigation }) => {
 
     // [onValueChange, setOnValueChange] = useState("")
     const [passiveRecipes, setPassiveRecipes] = useState(false)
+    const [expirationSuggestion, setExpirationSuggestion] = useState(false)
     // const [themeButton, setThemeButton] = useState(false)
     const [theme, setTheme] = useState("light")
 
@@ -44,6 +45,11 @@ export default ({ navigation }) => {
     const onRecipeChange = async (value) => {
         setPassiveRecipes(value)
         await AsyncStorage.setItem("restrict-recipes", JSON.stringify(value));
+    }
+
+    const onExpirationSuggestion = async (value) => {
+        setExpirationSuggestion(value)
+        await AsyncStorage.setItem("restrict-expiration", JSON.stringify(value));
     }
 
     const toggleSwitch = () => {
@@ -87,6 +93,18 @@ export default ({ navigation }) => {
                         switchOnValueChange={onRecipeChange}
                         hasNavArrow={false}
                         title='Stop Passive Recipe Generation'
+                        titleStyle={{ color: colors.text }}
+                    />
+                    <SettingsList.Item
+                        backgroundColor={colors.background}
+                        icon={
+                            <Ionicons name="bulb-outline" style={{ fontSize: 25, marginLeft: 15, alignSelf: 'center', color: colors.text }} />
+                        }
+                        hasSwitch={true}
+                        switchState={expirationSuggestion}
+                        switchOnValueChange={onExpirationSuggestion}
+                        hasNavArrow={false}
+                        title='Stop Expiration Date Suggestion'
                         titleStyle={{ color: colors.text }}
                     />
                     <SettingsList.Item

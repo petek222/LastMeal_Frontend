@@ -30,6 +30,7 @@ import {
 } from 'recoil';
 import { Ionicons } from '@expo/vector-icons';
 import DismissKeyboard from "../config/DismissKeyboard.js";
+import { useIsFocused } from "@react-navigation/native";
 
 // Code below surpresses warning log boxes at bottom of app
 import { LogBox, YellowBox } from 'react-native';
@@ -178,6 +179,7 @@ export default ({ navigation }) => {
     const [quantity, setQuantity] = useState(0);
     const [expiration, setExpiration] = useState(new Date().toISOString().slice(0, 10)); // Set a value for the expiration date
     const [expirationSuggestion, setExpirationSuggestion] = useState(new Date().toISOString().slice(0, 10)); // Set a value for the expiration date
+    const [restrictExpiration, setRestrictExpiration] = useState("");
 
     const [renderDropdown, setRenderDropdown] = useState(false);
     const [suggestionList, setSuggestionList] = useState([]);
@@ -191,6 +193,8 @@ export default ({ navigation }) => {
 
     const { colors } = useTheme();
 
+    const isFocused = useIsFocused()
+
     function notifyMessage(msg) {
         if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT)
@@ -198,6 +202,15 @@ export default ({ navigation }) => {
             Alert.alert(msg);
         }
     }
+
+    useEffect(() => {
+
+        async function setFlags() {
+            let restrict = await AsyncStorage.getItem('restrict-expiration');
+            await setRestrictExpiration(restrict)
+        }
+        setFlags()
+    }, [isFocused]);
 
     const addPantryItem = async () => {
 
@@ -302,9 +315,6 @@ export default ({ navigation }) => {
         }
 
         // return the list of value suggestions
-        console.log("HOLA");
-        console.log(resultList);
-
         setSuggestionList(resultList);
         return resultList;
     }
@@ -378,21 +388,27 @@ export default ({ navigation }) => {
 
     const expirationSearch = async (item) => {
 
-        try {
-            let response = await api.get(`/exp?ingredient=${item}`);
-
-            let ingredientData = response.data;
-            // console.log(ingredientData)
-            let expResult = minExpDate(ingredientData)
-            console.log("Checking Exp Result")
-            console.log(expResult)
-            setModalVisible(true)
-            setExpirationSuggestion(expResult)
-
+        // If the user hasn't restricted expiration suggestions, perform the following oprtations
+        if (restrictExpiration != 'true') {
+            try {
+                let response = await api.get(`/exp?ingredient=${item}`);
+    
+                let ingredientData = response.data;
+                // console.log(ingredientData)
+                let expResult = minExpDate(ingredientData)
+                console.log("Checking Exp Result")
+                console.log(expResult)
+                setModalVisible(true)
+                setExpirationSuggestion(expResult)
+    
+            }
+            catch (error) {
+                console.log("Error in Expiration Fetapich")
+                console.log(error)
+            }
         }
-        catch (error) {
-            console.log("Error in Expiration Fetapich")
-            console.log(error)
+        else {
+            // Otherwise, nothing to do
         }
     }
 
