@@ -127,7 +127,7 @@ export default ({ navigation }) => {
         <Text style={{ fontSize: 40, color: colors.text, fontWeight: 'bold', marginTop: '5%' }}> Account Management </Text>
         <View style={{ backgroundColor: colors.background, flex: 1, marginTop: 15}}>
             <SettingsList borderColor='#fff' defaultItemSize={50}>
-            <SettingsList.Header headerText='Profile Updates:' headerStyle={{ color: colors.text, fontSize: 20 }} />
+            <SettingsList.Header headerText='Profile Updates (Requires Re-Login):' headerStyle={{ color: colors.text, fontSize: 20 }} />
 
             {/*Username Update*/}
             <View style={styles.inputView}>
@@ -145,28 +145,24 @@ export default ({ navigation }) => {
                         disabled={false} // Add notification here if fields not input
                         onPress={async () => {
                             try {
-                                console.log("IN HERE")
-                                console.log(currentUsername)
                                 // Here is where we call username update API
                                 let response = await api.put(`/user/update/${currentUsername}`, {
                                     username: username
                                 })
 
-                                console.log("RESPONSE")
-                                console.log(response)
-
                                 if (response.status == 201) {
-
-                                    // update stored username
-                                    await AsyncStorage.setItem("username", username)
-
                                     // navigate back to the profile page
-                                    navigation.navigate('Profile')
+                                    await AsyncStorage.clear();
+                                    navigation.navigate('Login');
+                                }
+                                else {
+                                    notifyMessage("Error Updating Account Username: Please Try Again")
                                 }
                             }
                             catch (error) {
                                 console.log(error)
                                 console.log("Error in updating username")
+                                notifyMessage("Error Updating Account Username: Please Try Again")
                             }
                         }}>
                 <Text style={styles.loginText}>Update Username</Text>
@@ -189,28 +185,26 @@ export default ({ navigation }) => {
                         disabled={false} // Add notification here if fields not input
                         onPress={async () => {
                             try {
-                            console.log("IN HERE")
-                            console.log(currentUsername)
-                            // Here is where we call the email update API
-                            let response = await api.put(`/user/update/${currentUsername}`, {
-                                    email: email
-                                })
-
-                                console.log("RESPONSE")
-                                console.log(response)
+                                console.log("IN HERE")
+                                console.log(currentUsername)
+                                // Here is where we call the email update API
+                                let response = await api.put(`/user/update/${currentUsername}`, {
+                                        email: email
+                                    })
 
                                 if (response.status == 201) {
-
-                                    // update stored username (not needed for email)
-                                    // await AsyncStorage.setItem("username", username)
-
                                     // navigate back to the profile page
-                                    navigation.navigate('Profile')
+                                    await AsyncStorage.clear();
+                                    navigation.navigate('Login');
+                                }
+                                else {
+                                    notifyMessage("Error Updating Account Email: Please Try Again")
                                 }
                             }
                             catch (error) {
                                 console.log(error)
-                                console.log("Error in updating username")
+                                console.log("Error in updating email")
+                                notifyMessage("Error Updating Account Username: Please Try Again")
                             }
                         }}>
                 <Text style={styles.loginText}>Update Email</Text>

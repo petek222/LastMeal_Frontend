@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
 export default ({ navigation }) => {
 
     // use an array to keep track of which settings are checked, and can iterate over it when creating notifications, in theory
-    const [days, setDays] = useRecoilState(notifyDays);
-    const [time, setTime] = useRecoilState(notifyTime);
+    // const [days, setDays] = useRecoilState(notifyDays);
+    // const [time, setTime] = useRecoilState(notifyTime);
 
     // default in 5 mins for demo purposes
     const [date, setDate] = useState(new Date(new Date().getTime() + 5*60000));

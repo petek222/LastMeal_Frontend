@@ -265,9 +265,6 @@ export default ({ navigation }) => {
         console.log("PPOST")
 
         try {
-
-            // console.log(username)
-
             let response = await api.post(`/pantry/create/${username}`, {
                 name: ingredientName,
                 quantity: quantity,
