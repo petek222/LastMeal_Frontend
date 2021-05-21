@@ -354,7 +354,7 @@ export default ({route, navigation}) => {
                         setRecipesAreSelected(false);
                         route.params = undefined; // Setting to undefined to reload generation
                     }}>
-                    <Text>Undo Generation</Text>
+                    <Text>Reset Recipes</Text>
                 </TouchableOpacity>
             )
         }
