@@ -186,7 +186,10 @@ const makeStyles = (colors) => StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#6be3d9",
-        margin: 5
+        margin: 5,
+        marginRight: window.width * 0.03,
+        marginLeft: 'auto',
+
     },
     generateRecipesButton: {
         borderRadius: 17,
@@ -327,7 +330,7 @@ const IngredientSelect = (props) => {
         }
         resetCards()
     }, [resetTrigger]);
-    
+
     return (
         <TouchableOpacity onPress={async () => {
 
@@ -604,7 +607,7 @@ export default ({ navigation }) => {
         }
 
         // fix images
-        
+
         const arr = [];
         // take out the ids from ingredients to make an array of indexes
         for (let i = 0; i < ing.length; ++i) {
@@ -630,21 +633,19 @@ export default ({ navigation }) => {
 
     let button;
 
-    if(ingredientSelections.length > 0 && ingredients.length > 0) {
+    if (ingredientSelections.length > 0 && ingredients.length > 0) {
 
         console.log("TESTING LENGTH FOR BUTTION")
         console.log(ingredients.length)
+        
+        // or lightSpeedIn
+        button = (<Animatable.View animation={'fadeInDown'}>
+            <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>
+        </Animatable.View>)
 
-        if (Platform.OS === "ios") {
-            button = (<Animatable.View animation={'lightSpeedIn'}>
-                <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>
-            </Animatable.View>)
-        } else {
-            button = <GenerateRecipesButton items={ingredientSelections} delete_init={true} nav={navigation}></GenerateRecipesButton>; 
-        }
     }
 
-    
+
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -652,22 +653,23 @@ export default ({ navigation }) => {
             <StatusBar barStyle={colors.background === 'white' ? 'dark-content' : "light-content"} backgroundColor={colors.background}></StatusBar>
             <View style={styles.screenHeaderContainer}>
                 <Text style={styles.screenHeader}> Pantry </Text>
-                <AddIngredientButton nav={navigation}/>
                 {button}
+                <AddIngredientButton nav={navigation} />
+
             </View>
             <SearchBar
-                    // platform={'android'}
-                    platform={Platform.OS === "ios" ? "ios" : "android"}
-                    placeholder="Search"
-                    // placeholderTextColor="black"
-                    // searchIcon={{ color: "black" }}
-                    // cancelIcon={{ color: "black" }}
-                    // clearIcon={{ color: "black" }}
-                    onChangeText={setSearch}
-                    value={search}
-                    inputStyle={{ color: colors.text }}
-                    containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 'auto', marginLeft: 'auto', marginTop: window.height * 0.005  }}>
+                // platform={'android'}
+                platform={Platform.OS === "ios" ? "ios" : "android"}
+                placeholder="Search"
+                // placeholderTextColor="black"
+                // searchIcon={{ color: "black" }}
+                // cancelIcon={{ color: "black" }}
+                // clearIcon={{ color: "black" }}
+                onChangeText={setSearch}
+                value={search}
+                inputStyle={{ color: colors.text }}
+                containerStyle={{ backgroundColor: colors.background, borderColor: 'white', text: 'white', paddingTop: window.height * 0.01, paddingBottom: 0 }} />
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 'auto', marginLeft: 'auto', marginTop: window.height * 0.005 }}>
                 <Text style={{ color: colors.text }}>Sort: </Text>
                 <TouchableOpacity
                     style={styles.sortButt}
