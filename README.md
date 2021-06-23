@@ -1,4 +1,4 @@
-https://apps.apple.com/us/app/lastmeal/id1566740173
+LastMeal for iOS: https://apps.apple.com/us/app/lastmeal/id1566740173
 
 ## LastMeal: Native App Frontend
 
