@@ -1,6 +1,8 @@
+https://apps.apple.com/us/app/lastmeal/id1566740173
+
 ## LastMeal: Native App Frontend
 
-Frontend for group 3 project, built in React-Native using Expo.
+Frontend for LastMeal, built in React-Native using Expo. Built as final project for Vanderbilt Computer Science Degree
 
 # Build
 
