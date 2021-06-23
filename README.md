@@ -1,10 +1,11 @@
-LastMeal for iOS: https://apps.apple.com/us/app/lastmeal/id1566740173
+# LastMeal for iOS
+https://apps.apple.com/us/app/lastmeal/id1566740173
 
 ## LastMeal: Native App Frontend
 
 Frontend for LastMeal, built in React-Native using Expo. Built as final project for Vanderbilt Computer Science Degree
 
-# Build
+## Build
 
 Make sure that the ExpoGo app is installed on your phone (iOS or Android)
 After cloning and navigating to the root directory:
